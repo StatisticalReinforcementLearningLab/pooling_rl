@@ -4,3 +4,4 @@ data/
 .p
 .R
 .csv
+**/*.ipynb_checkpoints/
