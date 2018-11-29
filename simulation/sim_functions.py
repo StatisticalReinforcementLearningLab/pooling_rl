@@ -319,7 +319,15 @@ def get_context_revised(current_index,current_context,current_steps,decision_tim
         
     return [current_context[0],day_of_week,time_of_day,\
             dosage,location,weather,pretreatment_new,ysc,variation]
+ 
+def to_yid(steps):
+    with open('{}yesterday_step_ids.pkl'.format(root),'rb') as f:
+         yesterday_chunks  = pickle.load(f)
+
     
+    for i in range(len(yesterday_chunks)):
+        if steps>=yesterday_chunks[i][0] and steps<yesterday_chunks[i][1]:
+            return i
     
 def get_new_lsc(step_slice):
     ##should threshold (is thresholded elsewhere?)
@@ -329,7 +337,7 @@ def get_new_lsc(step_slice):
         return 0
     if s>203:
         return 203
-    return s
+    return to_yid(s)
 
 def get_variation_pre_week(variation,all_steps,time_indices,i):
     
