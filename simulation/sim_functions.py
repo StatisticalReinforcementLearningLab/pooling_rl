@@ -90,6 +90,7 @@ def get_initial_context(num_people,first_index):
     
     all_people = []
     for person in range(num_people):
+        ##.95 is an approximation
         group_id = int(random.random()>.95)+1
         #group_id = 2
         day_of_week = get_time_of_day(first_index)
@@ -100,9 +101,11 @@ def get_initial_context(num_people,first_index):
         dosage = 1
         variation = 1
         pretreatment = 0 
+        ##yesterday's step count could be drawn from distribution
         ysc = 0
         #day_of_week,time_of_day,dosage,location,last_steps,last_steps_hour,varia
-        all_people.append([group_id,day_of_week,time_of_day,dosage,first_location,weather,pretreatment,ysc,variation])
+        all_people.append([group_id,day_of_week,\
+                           time_of_day,dosage,first_location,weather,pretreatment,ysc,variation])
         
     return all_people
 
@@ -169,7 +172,8 @@ def get_steps_no_action(context):
 def get_steps_action(context,action):
     #nkey = '{}-{}'.format(action,context)
 
-    
+   # print(context)
+    #print(action)
     
     this_context = [action]
     this_context.extend(context)
@@ -208,6 +212,9 @@ def modify_context_no_dosage(context):
 
 
 def get_steps(context,action):
+    
+
+    
     if action==-1:
         return get_steps_no_action(context)
 
@@ -282,7 +289,7 @@ def get_new_dosage(current_dosage,action):
         current_dosage=100
     if current_dosage<1:
         current_dosage=1 
-    return current_dosage
+    return int(current_dosage)
 
 def get_context_revised(current_index,current_context,current_steps,decision_time,ysc,variation,last_action):
         
@@ -290,7 +297,7 @@ def get_context_revised(current_index,current_context,current_steps,decision_tim
     time_of_day = get_day_of_week(current_index)
     
     
-    new_previous_step_count = get_pretreatment(current_steps)
+    #new_ysc = get_new_lsc(current_steps)
     
     
     if decision_time:
@@ -310,10 +317,12 @@ def get_context_revised(current_index,current_context,current_steps,decision_tim
         pretreatment_new = get_pretreatment(current_steps)
         
         
-    return [current_context[0],day_of_week,time_of_day,dosage,location,weather,pretreatment_new,ysc,variation]
+    return [current_context[0],day_of_week,time_of_day,\
+            dosage,location,weather,pretreatment_new,ysc,variation]
     
     
 def get_new_lsc(step_slice):
+    ##should threshold (is thresholded elsewhere?)
     #print('hi there')
     s =sum(step_slice)**.5
     if s<0:
@@ -359,100 +368,107 @@ def get_action(initial_context,steps):
 def simulate_run(num_people,time_indices,decision_times):
     
     
-    initial_context = get_initial_context(num_people,time_indices[0])
+    initial_contexts = get_initial_context(num_people,time_indices[0])
+    
+
+    
+    all_people = []
     
     
-    initial_context = initial_context[0]
+    for n in range(num_people):
+        #print('person')
+        initial_context = initial_contexts[n]
     
     
     
     
-    initial_steps = get_steps(initial_context,0)
-    current_steps = initial_steps
-    action = -1 
-    all_steps = []
+        initial_steps = get_steps(initial_context,-1)
+        current_steps = initial_steps
+        action = -1 
+        all_steps = []
     
-    last_day = time_indices[0]
+        last_day = time_indices[0]
     
-    new_day = False
+        new_day = False
     
-    #for d in range(num_days):
-    
-    
-    start_of_day = 0 
-    end_of_day=0
-    current_index=0
+        #for d in range(num_days):
     
     
-    first_week = time_indices[0].date()+pd.DateOffset(days=7)
+        start_of_day = 0 
+        end_of_day=0
+        current_index=0
     
-    for i in time_indices:
+    
+        first_week = time_indices[0].date()+pd.DateOffset(days=7)
+    
+        for i in time_indices:
         
-        if i.date()!=last_day.date():
+            if i.date()!=last_day.date():
             #print('trigger')
             #print(i.date())
             #print(last_day.date())
             #print('hi there')
-            new_day=True
+                new_day=True
             
             
             
-        decision_time = bool(i in decision_times)
+            decision_time = bool(i in decision_times)
         #print(decision_time)
-        if i!=time_indices[0]:
+            if i!=time_indices[0]:
             #decision_time = bool(i in decision_times)
             
             ##need to modify this
             #my_context = get_context(initial_context,current_steps,i,decision_time)
-            lsc = initial_context[get_index('yesterday')]
-            variation = initial_context[get_index('variation')]
-            if new_day:
+                lsc = initial_context[get_index('yesterday')]
+                variation = initial_context[get_index('variation')]
+                if new_day:
                 #lsc=0
                 
                 
                 ##would love to break this out more cleanly 
-                if i<first_week:
-                    variation = get_variation_pre_week(variation,all_steps,time_indices,last_day)
-                else:
-                    variation = get_variation(all_steps,time_indices,last_day)
+                    if i<first_week:
+                        variation = get_variation_pre_week(variation,all_steps,time_indices,last_day)
+                    else:
+                        variation = get_variation(all_steps,time_indices,last_day)
                 
                 
-                lsc = get_new_lsc(all_steps[start_of_day:end_of_day])
+                    lsc = get_new_lsc(all_steps[start_of_day:end_of_day])
                 #variation = get_new_variation()
                 
             
             ##action will be the last action
-            my_context = get_context_revised(i,initial_context,current_steps,decision_time,lsc,variation,action)
+                my_context = get_context_revised(i,initial_context,current_steps,decision_time,lsc,variation,action)
             #return my_context
-            if i in decision_times:
-                print('decision time')
-                action = get_action(my_context,current_steps)
+                if i in decision_times:
+                    #print('decision time')
+                    action = get_action(my_context,current_steps)
                 #print(action)
-            else:
-                action = -1
+                else:
+                    action = -1
             ##redo get_steps
-            next_steps = get_steps(my_context,action) 
-            all_steps.append(next_steps)
-            initial_context = my_context
-            current_steps = next_steps
-        else:
-            if i in decision_times:
-                print('decision time')
-                action = get_action(initial_context,current_steps)
+                next_steps = get_steps(my_context,action) 
+                all_steps.append(next_steps)
+                initial_context = my_context
+                current_steps = next_steps
             else:
-                action = -1
-            next_steps = get_steps(initial_context,action) 
-            all_steps.append(next_steps)
-            current_steps = next_steps
-        if new_day:
+                if i in decision_times:
+                    #print('type two decision time')
+                    action = get_action(initial_context,current_steps)
+                else:
+                    action = -1
+                next_steps = get_steps(initial_context,action) 
+                all_steps.append(next_steps)
+                current_steps = next_steps
+            if new_day:
             
-            start_of_day = current_index
-            new_day=False
-        last_day = i
-        end_of_day = current_index  
-        current_index = current_index+1
+                start_of_day = current_index
+                new_day=False
+            last_day = i
+            end_of_day = current_index  
+            current_index = current_index+1
+        all_people.append(all_steps)
             
-    return all_steps
+    return all_people
 
 
 
