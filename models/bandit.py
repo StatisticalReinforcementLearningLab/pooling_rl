@@ -27,6 +27,11 @@ def calculate_prob(z, x, mu, Sigma, eta, input):
     
     
     pos_mean = np.dot(feat2_function(z,x),mu)
-
-    print(pos_mean)
+    #pos.var <- c(t(input$feat2(z, x)) %*% Sigma %*% input$feat2(z, x))
+    pos_var = np.dot(np.dot(np.transpose(feat2_function(z,x)),Sigma),feat2_function(z,x))
+    pos_var = max(0,pos_var)
+    
+    #margin = eta (x) * input$xi
+    
+    print(pos_var)
 
