@@ -417,6 +417,7 @@ prob.cal.ts = function(z, x, mu, Sigma, input){
   # immediate effect
   pos.mean <- c(input$feat2(z, x) %*% mu)
   pos.var <- c(t(input$feat2(z, x)) %*% Sigma %*% input$feat2(z, x))
+  print(pos.var)
   pos.var <- max(0, pos.var) # stability
   
   # probability
@@ -430,7 +431,7 @@ prob.cal.ts = function(z, x, mu, Sigma, input){
 
 # policy update
 policy.update.ts = function(batch, input){
-  
+  print(batch) 
   post.cal = function(X, Y, sigma, mu, Sigma){
     
     inv.Sigma <- solve(Sigma)
@@ -508,6 +509,8 @@ sim.ts = function(){
     
     anti.sed <- as.numeric(runif(1) < 0.3)
     event <- (anti.sed+a)>0
+    #print('event')
+    #print(event)
     x.next <- 0.9*x + event
     
     return(x.next)
@@ -579,8 +582,9 @@ sim.ts = function(){
     
     if(t%%5 == 0){
       
-      # update the txt effect posterior
+       #update the txt effect posterior
       temp = policy.update.ts(batch, input)
+      print(temp)
       mu.beta = temp$mean
       Sigma.beta = temp$var
       
@@ -591,8 +595,8 @@ sim.ts = function(){
     
     
   }
-  
-  return(tot.rwrd)
+  print(tot.rwrd)
+  return(batch)
   
 }
 
