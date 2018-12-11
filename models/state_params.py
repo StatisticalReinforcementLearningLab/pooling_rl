@@ -49,7 +49,7 @@ class state_params:
         self.avail_index = self.x_index+1
         self.action_index = self.avail_index+1
         self.prob_index = self.action_index+1
-        self.rwrd_index = self.prob_index+1
+        self.reward_index = self.prob_index+1
         
         
         self.mu_0 = [0 for i in range(len(self.feat0_function(self.z_init,0)))]
