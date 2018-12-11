@@ -1,33 +1,35 @@
 import numpy as np
 import bandit
 
-class state_params:
+class eta:
     
     def get_vec_indices(self,pZ):
         return [i for i in range(2,pZ+1)]
     
-    def feat2_function(self,z,x):
-        return [1,z[0],x]
-
-    def function_zero(self,x):
-        return 0
-
-
-    def feat0_function(self,z,x):
-        temp =  [1]
-        temp.extend(z)
-        temp.append(x)
-        return temp
-
-    def feat1_function(self,z,x):
-        temp =  [1]
-        temp.extend(z)
-        temp.append(x)
-        return temp
+    
     
     def eta_init(self,x):
         return 0
     
+    def eta_function(self,x):
+        
+        
+        
+        eta_hat = (1-self.p_sed)*np.dot(np.transpose(self.theta_bar),psi(self.lambda*x))-psi(self.lambda*x+1)*(1-self.gamma_mdp)
+        
+        return self.weight*eta_hat+(1-self.weight)*(self.eta_init(x))
+    
+    def update_vars(self,state_params):
+        
+        
+         eta.fn = function(x) {
+      
+      eta.hat <- c((1-input$p.sed)* t(theta.bar)%*%(psi(input$lambda*x)-psi(input$lambda*x+1)) * (1-input$gamma.mdp))
+      input$weight * eta.hat + (1-input$weight) * input$eta.init(x)
+      
+      
+    }
+        
     def __init__(self,xi=10):
         
         self.pZ = 2
