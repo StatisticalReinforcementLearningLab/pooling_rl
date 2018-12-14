@@ -203,6 +203,8 @@ policy.update = function(batch, input, proxy = T){
     # F2 <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) input$feat2(z, x)), 1, mean)))
     
     F.all <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) c(input$feat0(z, x), input$feat1(z, x), input$feat2(z, x))), 1, mean)))
+    print('this is F.all')
+    print(F.all)
     index0 <- 1:length(alpha0)
     index1 <- length(alpha0) + 1:length(alpha1)
     index2 <- tail(1:ncol(F.all), length(alpha2))
@@ -246,7 +248,7 @@ policy.update = function(batch, input, proxy = T){
     while(kk < kmax & delta > delta.thres){
       
       # new theta
-      theta1 <- inv.cov %*% t(psi.mat) %*% Y1
+      theta1 <- inv.cov %*% t(psi.mat) %*% Y1 # bspline fit of (X.null, Y1, bspline = 50 dim)
       theta0 <- inv.cov %*% t(psi.mat) %*% Y0
       
       theta.bar = theta1 * p.avail + (1-p.avail) * theta0

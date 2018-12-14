@@ -202,39 +202,67 @@ policy.update = function(batch, input, proxy = T){
     # F1 <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) input$feat1(z, x)), 1, mean)))
     # F2 <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) input$feat2(z, x)), 1, mean)))
     
+    
+    
+    print(dim(Z.trn))
+   #tr<-apply(Z.trn, 1, function(z) c(input$feat0(z, x), input$feat1(z, x), input$feat2(z, x)))
+   #print('tr')
+   #print(dim(tr))
+   
     F.all <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) c(input$feat0(z, x), input$feat1(z, x), input$feat2(z, x))), 1, mean)))
     index0 <- 1:length(alpha0)
     index1 <- length(alpha0) + 1:length(alpha1)
     index2 <- tail(1:ncol(F.all), length(alpha2))
+
+    print(index2)
     F0 <- F.all[, index0]
     F1 <- F.all[, index1]
     F2 <- F.all[, index2]
+    print(dim(F2))
     
+    print(dim(F1))
+  print(dim(F0))
+    #print('this is F.all')
+    #print(dim(F.all))
     
     r0.vec = c(F0 %*% alpha0)
     r1.vec = c(F1 %*% alpha1)
     r2.vec = r1.vec + c(F2 %*% alpha2) 
-    
+    print('r1 dim')
+    print(length(r0.vec))
+    #print(r1.vec)
+    #print(r2.vec)
+   
     bsb <- create.bspline.basis (range=c(0, 1/(1-input$lambda)), nbasis=50, norder = 4)
     psi = function(x) c(eval.basis(x, bsb))
     
     psi.mat <- t(sapply(X.null, function(x) psi(x)))
     inv.cov <- solve(t(psi.mat) %*% psi.mat)
-    
+    print('psi dim')
+    print(dim(psi.mat))
+    print(psi.mat[,c(1,2,3)])
     psi.mat.irs = t(sapply(X.null, function(x) psi(input$lambda * x + 1)))
     psi.mat.drs = t(sapply(X.null, function(x) psi(input$lambda * x)))
     psi.mat.bar <- input$p.sed * psi.mat.irs  + (1-input$p.sed) * psi.mat.drs
-    
+    print(dim(psi.mat))
+    print(dim(psi.mat.irs))
     
     kmax <- 100;
     kk <- 1
     
     theta1 = rep(0, length(psi(0)));
     theta0 = rep(0, length(psi(0)));
+    print(length(theta1))
+    print(theta1)
+    pause(30)
     theta.bar = theta1 * p.avail + (1-p.avail) * theta0
     
     Y1.0 <- r1.vec + input$gamma.mdp * psi.mat.bar %*% theta.bar
     Y1.1 <- r2.vec + input$gamma.mdp * psi.mat.irs %*% theta.bar
+    print('Y1.0')
+    print(Y1.0)
+    print(Y1.1)
+    
     index <- (Y1.1 - Y1.0 > 0)
     Y1 <- Y1.0
     Y1[index] <- Y1.1[index]
@@ -605,8 +633,8 @@ sim.ts = function(){
 
 
 #### Sample Run ####
-sim()
-sim.ts()
+#sim()
+#sim.ts()
 
 
 

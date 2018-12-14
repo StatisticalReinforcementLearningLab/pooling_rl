@@ -7,28 +7,48 @@ class state_params:
         return [i for i in range(2,pZ+1)]
     
     def feat2_function(self,z,x):
-        return [1,z[0],x]
+        temp = [1,z[0]]
+        if type(x) in self.nums:
+        
+            temp.append(x)
+        else:
+            temp.extend(x)
+        
+        return temp
 
     def function_zero(self,x):
         return 0
 
 
     def feat0_function(self,z,x):
+        
+        
         temp =  [1]
         temp.extend(z)
-        temp.append(x)
+        #print(type(x))
+        if type(x) in self.nums:
+        
+            temp.append(x)
+        else:
+            temp.extend(x)
         return temp
 
     def feat1_function(self,z,x):
         temp =  [1]
         temp.extend(z)
-        temp.append(x)
+        if type(x) in self.nums:
+        
+            temp.append(x)
+        else:
+            temp.extend(x)
         return temp
     
     def eta_init(self,x):
         return 0
     
     def __init__(self,xi=10):
+        
+        self.nums = set([np.float64,int,float])
         
         self.pZ = 2
         self.pi_max = .8
