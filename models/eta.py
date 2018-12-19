@@ -17,7 +17,12 @@ class eta:
          c(eval.basis(x, bsb))
     
     def eta_init(self,x):
-        return 0
+        
+        
+        if self.function_init:
+            return 0
+        else:
+            return self.eta_function(x)
     
     
     def eta_function(self,x):
@@ -36,6 +41,7 @@ class eta:
         self.lamda = state_params['lamda']
         self.gamma_mdp = state_params['gamma_mdp']
         
+        self.function_init = True
        
         
    

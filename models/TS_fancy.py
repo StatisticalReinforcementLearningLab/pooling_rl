@@ -282,7 +282,81 @@ def policy_update(batch, init,proxy=False):
         
         
         psi_mat = the_psi.eval_all_x_all_dim(X_null)
-        return psi_mat
+        print(np.array(psi_mat).shape)
+        tx = np.matmul(np.transpose(psi_mat),psi_mat)
+        inv_cov = solve(tx+np.random.rand(tx.shape[0],tx.shape[0]),np.eye(tx.shape[0]))
+        psi_mat_irs = the_psi.eval_all_x_all_dim(np.transpose(X_null)*init.lambda_knot+1)
+        psi_mat_drs = the_psi.eval_all_x_all_dim(np.transpose(X_null)*init.lambda_knot)
+        
+        
+        
+        #psi_mat_irs = np.transpose([the_psi.eval_all_x_all_dim(xrow*init.lambda_knot+1) for xrow in X_null])
+        #psi_mat_drs = np.transpose([the_psi.eval_all_x_all_dim(xrow*init.lambda_knot)for xrow in X_null])
+        psi_mat_bar = init.prob_sedentary*psi_mat_irs+(1-init.prob_sedentary)*psi_mat_drs
+        
+        theta_zero = np.zeros(psi_mat.shape[1])
+        theta_one = np.zeros(psi_mat.shape[1])
+        
+        
+        theta_bar = theta_one*p_avail + (1-p_avail)*theta_zero
+        
+        Yone_zero = r1_vec+init.gamma_mdp * np.matmul(psi_mat_bar,theta_bar)
+        Yone_one = r1_vec+init.gamma_mdp * np.matmul(psi_mat_irs,theta_bar)
+        
+        #print(Yone_zero.shape)
+        #print(Yone_one.shape)
+        
+        good_indices = set([i for i in range(len(Yone_one)) if Yone_one[i]-Yone_zero[i]>0])
+        Y_one = [Yone_one[i] if i in good_indices else Yone_zero[i] for i in range(len(Yone_zero))]
+        
+        
+        
+        Y_zero =  r0_vec+init.gamma_mdp * np.matmul(psi_mat_bar,theta_bar)
+        
+        #print(Y_one-np.matmul(psi_mat,theta_one))
+        
+        delta = max(abs(Y_one-np.matmul(psi_mat,theta_one)).all(),abs(Y_zero-np.matmul(psi_mat,theta_zero)).all())
+        
+        threshold = 1e-2
+        
+        
+        iter_max = 100 
+        iter_now = 0
+        
+        
+        ##what is going on here?
+        while iter_now<iter_max and delta>threshold:
+            theta_one = np.matmul(inv_cov,np.matmul(np.transpose(psi_mat),Y_one))
+            theta_zero = np.matmul(inv_cov,np.matmul(np.transpose(psi_mat),Y_zero))
+            
+            theta_bar = theta_one*p_avail + (1-p_avail)*theta_zero
+            
+            
+            ##Bellman Operator
+            
+            
+            Yone_one = r1_vec+init.gamma_mdp * np.matmul(psi_mat_irs,theta_bar)
+            Yone_zero = r1_vec+init.gamma_mdp * np.matmul(psi_mat_bar,theta_bar)
+            
+            good_indices = set([i for i in range(len(Yone_one)) if Yone_one[i]-Yone_zero[i]>0])
+            Y_one = [Yone_one[i] if i in good_indices else Yone_zero[i] for i in range(len(Yone_zero))]
+            
+            Y_zero =  r0_vec+init.gamma_mdp * np.matmul(psi_mat_bar,theta_bar)
+            
+            delta = max(abs(Y_one-np.matmul(psi_mat,theta_one)).all(),abs(Y_zero-np.matmul(psi_mat,theta_zero)).all())
+        
+            
+            
+            iter_now = iter_now+1
+        
+        
+        ##UPDATE eta
+        
+        
+        
+        return txt_est
+        
+        #return delta
         #print(r0_vec.shape)
             
         #index0 <- 1:length(alpha0)

@@ -102,6 +102,7 @@ policy.update = function(batch, input, proxy = T){
       # calculate posterior (batch update)
       X.trn <- cbind(F1, prob * F2, (action-prob) * F2)
       Y.trn <- batch[index, input$rwrd.index]
+      
       temp <- post.cal(X.trn, Y.trn, input$sigma, mu.tmp, Sigma.tmp)
       
       # return the post dist of txt eff
@@ -238,38 +239,61 @@ policy.update = function(batch, input, proxy = T){
     
     psi.mat <- t(sapply(X.null, function(x) psi(x)))
     inv.cov <- solve(t(psi.mat) %*% psi.mat)
-    print('psi dim')
-    print(dim(psi.mat))
-    print(psi.mat[,c(1,2,3)])
+    
+    #print('psi dim')
+    #print(dim(psi.mat))
+    #print('inv dim')
+    #print(dim(t(psi.mat) %*% psi.mat))
+
+    #print(psi.mat[,c(1,2,3)])
     psi.mat.irs = t(sapply(X.null, function(x) psi(input$lambda * x + 1)))
+   
     psi.mat.drs = t(sapply(X.null, function(x) psi(input$lambda * x)))
     psi.mat.bar <- input$p.sed * psi.mat.irs  + (1-input$p.sed) * psi.mat.drs
-    print(dim(psi.mat))
-    print(dim(psi.mat.irs))
-    
+   
+    #print(dim(psi.mat))
+    #print(dim(psi.mat.irs))
+    #print(dim(psi.mat.bar))
+     
+
+ 
     kmax <- 100;
     kk <- 1
     
     theta1 = rep(0, length(psi(0)));
+     #print('look')
+    # print(length(theta1))
+      # pause(30)
     theta0 = rep(0, length(psi(0)));
-    print(length(theta1))
-    print(theta1)
-    pause(30)
+  #  print(length(theta1))
+  #  print(theta1)
+  
     theta.bar = theta1 * p.avail + (1-p.avail) * theta0
     
     Y1.0 <- r1.vec + input$gamma.mdp * psi.mat.bar %*% theta.bar
     Y1.1 <- r2.vec + input$gamma.mdp * psi.mat.irs %*% theta.bar
     print('Y1.0')
-    print(Y1.0)
-    print(Y1.1)
-    
+    print(dim(Y1.0))
+    #print(Y1.1)
+
     index <- (Y1.1 - Y1.0 > 0)
+    print(index[2,])
+
     Y1 <- Y1.0
+   # print((Y1[2,]))
     Y1[index] <- Y1.1[index]
+    
+    #print((Y1[2,]))
+    #print(Y1.0[2,])
+    
+   # print(Y1.1[2,])
+    
+    #pause(30)
     Y0 <- r0.vec + input$gamma.mdp * psi.mat.bar %*% theta.bar
     delta <- max(abs(Y1 - psi.mat%*% theta1), abs(Y0 - psi.mat %*% theta0))
-    
-    
+    #print(abs(Y1 - psi.mat%*% theta1))
+   # print(delta)
+            # pause(30)
     delta.thres <- 1e-2;
     while(kk < kmax & delta > delta.thres){
       
@@ -302,7 +326,7 @@ policy.update = function(batch, input, proxy = T){
       
       eta.hat <- c((1-input$p.sed)* t(theta.bar)%*%(psi(input$lambda*x)-psi(input$lambda*x+1)) * (1-input$gamma.mdp))
       input$weight * eta.hat + (1-input$weight) * input$eta.init(x)
-      
+      #print('eta function called')
       
     }
     
