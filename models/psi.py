@@ -31,6 +31,22 @@ class psi:
         #end = time.time()
         #print(end-start)
         return np.transpose(np.array(psi_mat))
+    
+    
+    def simple_psi(self,x):
+        psi_mat = [[] for i in range(self.num_dim)]
+        #psi_mat = [[] for i in range(len(x))]
+        #start = time.time()
+        
+        for i in range(self.num_dim):
+            psi_mat[i]=self.eval_function_index(np.array(x).astype(np.float),i)
+        
+        #for xi in range(len(x)):
+            #psi_mat[xi]=[self.eval_function_index(xi,i) for i in range(self.num_dim)]
+        #end = time.time()
+        #print(end-start)
+        return np.array(psi_mat).sum()    
+
     #np.transpose(np.array(psi_mat))
 
         

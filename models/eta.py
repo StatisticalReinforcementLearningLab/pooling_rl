@@ -9,7 +9,9 @@ class eta:
         self.theta_bar = 0 
         self.lamda =0 
         self.gamma_mdp = 0 
-    
+        self.weight = 0 
+        self.function_init = True
+        self.psi = None
     
     #bsb <- create.bspline.basis (range=c(0, 1/(1-input$lambda)), nbasis=50, norder = 4)
     #psi = function(x) c(eval.basis(x, bsb))
@@ -19,31 +21,28 @@ class eta:
     def eta_init(self,x):
         
         
-        if self.function_init:
-            return 0
-        else:
-            return self.eta_function(x)
+        return 0
     
     
     def eta_function(self,x):
-        
+        #print('called eta function')
        
     
         
-        eta_hat = (1-self.p_sed)*np.dot(np.transpose(self.theta_bar),psi(self.lamda*x))-psi(self.lamda*x+1)*(1-self.gamma_mdp)
+        eta_hat = (1-self.p_sed)*np.dot(np.transpose(self.theta_bar),self.psi.simple_psi(self.lamda*x))-self.psi.simple_psi(self.lamda*x+1)*(1-self.gamma_mdp)
         
         return self.weight*eta_hat+(1-self.weight)*(self.eta_init(x))
     
-    def update_vars(self,state_params):
+    def update_params(self,state_params):
         self.p_sed = state_params['p_sed']
         
         self.theta_bar = state_params['theta_bar']
         self.lamda = state_params['lamda']
         self.gamma_mdp = state_params['gamma_mdp']
         
-        self.function_init = True
-       
-        
+        self.function_init = state_params['init_function']
+        self.psi = state_params['psi']
+        self.weight = state_params['weight']
    
         
         

@@ -26,7 +26,8 @@ def prob_cal(z,x,mu,Sigma,init,eta):
 
   
     margin  = eta(x)*init.xi
-  
+    print('margin')
+    print(margin)
     # probability
     pit_zero = norm.cdf((pos_mean-margin)/(pos_var**.5))
   
@@ -251,7 +252,7 @@ def get_F_all(X_null,Z_trn,init):
 def get_r(f,alpha):
     return np.matmul(f,alpha)
 
-def policy_update(batch, init,proxy=False):
+def policy_update(batch, init,proxy=False,etaf=None):
     the_psi = psi()
     txt_est = txt_effect_update(batch,init)
     if proxy:
@@ -351,10 +352,22 @@ def policy_update(batch, init,proxy=False):
         
         
         ##UPDATE eta
+        eta_params = {}
+        eta_params['p_sed']=init.prob_sedentary
+        eta_params['gamma_mdp']=init.gamma_mdp
+        eta_params['theta_bar']=theta_bar
+        eta_params['lamda']=init.lambda_knot
+        eta_params['init_function']=False
+        eta_params['psi']=the_psi
+        eta_params['weight']=init.weight
+        
+        return [txt_est[0],txt_est[1],eta_params]
+        
+        #etaf.update_params(eta_params)
         
         
-        
-        return txt_est
+      
+        #return txt_est
         
         #return delta
         #print(r0_vec.shape)

@@ -50,7 +50,8 @@ prob.cal = function(z, x, mu, Sigma, eta, input){
   
   # delay effect
   margin <- eta (x) * input$xi
-  
+  print('margin')
+  print(margin)
   # probability
   pit0 <- pnorm((pos.mean-margin)/sqrt(pos.var))
   
