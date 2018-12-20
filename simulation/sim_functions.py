@@ -370,10 +370,14 @@ def get_variation_pre_week(variation,all_steps,time_indices,i):
     
 #will be algorithm, needs to communicate with algorithm
 #will be algorithm, needs to communicate with algorithm
-def get_action(initial_context,steps):
-    return int(random.random()>.5)
+def get_action(initial_context,steps,action_algorithm):
+    
+    if action_algorithm==None:
+        return int(random.random()>.5)
+    elif action_algorithm=='TS':
+        algo_input = get_input(action_algorithm,context)
 
-def simulate_run(num_people,time_indices,decision_times):
+def simulate_run(num_people,time_indices,decision_times,action_algorithm = None):
     
     
     initial_contexts = get_initial_context(num_people,time_indices[0])
@@ -461,7 +465,7 @@ def simulate_run(num_people,time_indices,decision_times):
             else:
                 if i in decision_times:
                     #print('type two decision time')
-                    action = get_action(initial_context,current_steps)
+                    action = get_action(initial_context,current_steps,action_algorithm)
                 else:
                     action = -1
                 next_steps = get_steps(initial_context,action) 
