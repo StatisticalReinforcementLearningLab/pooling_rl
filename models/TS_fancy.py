@@ -26,8 +26,8 @@ def prob_cal(z,x,mu,Sigma,init,eta):
 
   
     margin  = eta(x)*init.xi
-    print('margin')
-    print(margin)
+    #print('margin')
+    #print(margin)
     # probability
     pit_zero = norm.cdf((pos_mean-margin)/(pos_var**.5))
   
@@ -283,7 +283,7 @@ def policy_update(batch, init,proxy=False,etaf=None):
         
         
         psi_mat = the_psi.eval_all_x_all_dim(X_null)
-        print(np.array(psi_mat).shape)
+        #print(np.array(psi_mat).shape)
         tx = np.matmul(np.transpose(psi_mat),psi_mat)
         inv_cov = solve(tx+np.random.rand(tx.shape[0],tx.shape[0]),np.eye(tx.shape[0]))
         psi_mat_irs = the_psi.eval_all_x_all_dim(np.transpose(X_null)*init.lambda_knot+1)

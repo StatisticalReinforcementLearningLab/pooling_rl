@@ -27,9 +27,13 @@ class eta:
     def eta_function(self,x):
         #print('called eta function')
        
-    
+        #print(self.psi.simple_psi(self.lamda*x))
+        #print((1-self.p_sed)*np.dot(np.transpose(self.theta_bar),self.psi.eval_all_x_all_dim(self.lamda*x)-self.psi.eval_all_x_all_dim(self.lamda*x+1))*(1-self.gamma_mdp))
         
-        eta_hat = (1-self.p_sed)*np.dot(np.transpose(self.theta_bar),self.psi.simple_psi(self.lamda*x))-self.psi.simple_psi(self.lamda*x+1)*(1-self.gamma_mdp)
+        #eta_hat = (1-self.p_sed)*np.dot(np.transpose(self.theta_bar),self.psi.simple_psi(self.lamda*x))-self.psi.simple_psi(self.lamda*x+1)*(1-self.gamma_mdp)
+        
+        
+        eta_hat = (1-self.p_sed)*np.dot(np.transpose(self.theta_bar),self.psi.eval_all_x_all_dim(self.lamda*x)-self.psi.eval_all_x_all_dim(self.lamda*x+1))*(1-self.gamma_mdp)
         
         return self.weight*eta_hat+(1-self.weight)*(self.eta_init(x))
     

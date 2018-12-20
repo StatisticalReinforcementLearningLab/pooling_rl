@@ -50,8 +50,8 @@ prob.cal = function(z, x, mu, Sigma, eta, input){
   
   # delay effect
   margin <- eta (x) * input$xi
-  print('margin')
-  print(margin)
+  #print('margin')
+  #print(margin)
   # probability
   pit0 <- pnorm((pos.mean-margin)/sqrt(pos.var))
   
@@ -206,7 +206,7 @@ policy.update = function(batch, input, proxy = T){
     
     
     
-    print(dim(Z.trn))
+    #(dim(Z.trn))
    #tr<-apply(Z.trn, 1, function(z) c(input$feat0(z, x), input$feat1(z, x), input$feat2(z, x)))
    #print('tr')
    #print(dim(tr))
@@ -216,22 +216,22 @@ policy.update = function(batch, input, proxy = T){
     index1 <- length(alpha0) + 1:length(alpha1)
     index2 <- tail(1:ncol(F.all), length(alpha2))
 
-    print(index2)
+    #print(index2)
     F0 <- F.all[, index0]
     F1 <- F.all[, index1]
     F2 <- F.all[, index2]
-    print(dim(F2))
+    #print(dim(F2))
     
-    print(dim(F1))
-  print(dim(F0))
+    #print(dim(F1))
+  #print(dim(F0))
     #print('this is F.all')
     #print(dim(F.all))
     
     r0.vec = c(F0 %*% alpha0)
     r1.vec = c(F1 %*% alpha1)
     r2.vec = r1.vec + c(F2 %*% alpha2) 
-    print('r1 dim')
-    print(length(r0.vec))
+    #print('r1 dim')
+    #print(length(r0.vec))
     #print(r1.vec)
     #print(r2.vec)
    
@@ -273,12 +273,12 @@ policy.update = function(batch, input, proxy = T){
     
     Y1.0 <- r1.vec + input$gamma.mdp * psi.mat.bar %*% theta.bar
     Y1.1 <- r2.vec + input$gamma.mdp * psi.mat.irs %*% theta.bar
-    print('Y1.0')
-    print(dim(Y1.0))
+    #print('Y1.0')
+    #print(dim(Y1.0))
     #print(Y1.1)
 
     index <- (Y1.1 - Y1.0 > 0)
-    print(index[2,])
+    #print(index[2,])
 
     Y1 <- Y1.0
    # print((Y1[2,]))
@@ -324,7 +324,8 @@ policy.update = function(batch, input, proxy = T){
     
     
     eta.fn = function(x) {
-      
+    	#print('psi stuff')
+      #print(t(theta.bar)%*%(psi(input$lambda*x)-psi(input$lambda*x+1)))
       eta.hat <- c((1-input$p.sed)* t(theta.bar)%*%(psi(input$lambda*x)-psi(input$lambda*x+1)) * (1-input$gamma.mdp))
       input$weight * eta.hat + (1-input$weight) * input$eta.init(x)
       #print('eta function called')
@@ -455,7 +456,7 @@ sim = function(){
     
     
   }
-  
+  print(tot.rwd)
   return(tot.rwrd)
   
 }
