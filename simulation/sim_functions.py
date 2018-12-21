@@ -91,7 +91,7 @@ def get_initial_context(num_people,first_index):
     all_people = []
     for person in range(num_people):
         ##.95 is an approximation
-        group_id = int(random.random()>.95)+1
+        group_id = int(random.random()>6.0/36)+1
         #group_id = 2
         day_of_week = get_time_of_day(first_index)
         time_of_day = get_day_of_week(first_index)
@@ -339,6 +339,9 @@ def get_new_lsc(step_slice):
         return 203
     return to_yid(s)
 
+
+
+
 def get_variation_pre_week(variation,all_steps,time_indices,i):
     
     two_days = time_indices[0].date()+pd.DateOffset(days=1)
@@ -368,12 +371,72 @@ def get_variation_pre_week(variation,all_steps,time_indices,i):
     else:
         return variation
     
+def get_day_indices(indices):
+    
+    days = set([])
+    day_indices = []
+    
+    to_return = {}
+    
+    lookup = {}
+    
+    j=0
+    for i in indices:
+        if i.date() not in to_return:
+            to_return[i.date()]=[]
+            #days.add(i.date())
+            day_indices.append(i)
+            
+        to_return[i.date()].append(i)
+        lookup[i]=j
+        j=j+1
+    return day_indices,to_return,lookup
+    
+
+def get_variation(all_steps,time_indices,i):
+    
+    #two_days = time_indices[0].date()+pd.DateOffset(days=1)
+    is_set = False
+    
+    day_indices,dd,lookup = get_day_indices(time_indices)
+    
+    one_week_ago = i.date()-pd.DateOffset(days=7)
+    #print(i)
+    #print(one_week_ago)
+    
+    #print(all_steps)
+    
+    ##same length?
+    #first_index,middle_index,last_index = get_indices(time_indices,one_week_ago,)
+    
+    last_index = dd[one_week_ago.date()][0]
+    last = all_steps[lookup[last_index]:lookup[dd[i.date()][0]]][:-1]
+    
+    #print(dd[i.date()][0])
+    c = all_steps[lookup[dd[i.date()][0]]:lookup[dd[i.date()][-1]]]
+            #return c
+  
+        
+        #print(pre_steps)
+        #print(post_steps)
+        
+    return int(np.array(last).std()>np.array(c).std())
+        
+  
+
+    
 #will be algorithm, needs to communicate with algorithm
 #will be algorithm, needs to communicate with algorithm
 def get_action(initial_context,steps,action_algorithm):
     
     if action_algorithm==None:
-        return int(random.random()>.5)
+        available = random.random()>.8
+        
+        if available:
+            
+        
+            return int(random.random()>.4)
+        return 0
     elif action_algorithm=='TS':
         algo_input = get_input(action_algorithm,context)
 
@@ -411,7 +474,7 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None)
         current_index=0
     
     
-        first_week = time_indices[0].date()+pd.DateOffset(days=7)
+        first_week = time_indices[0].date()+pd.DateOffset(days=8)
     
         for i in time_indices:
         
