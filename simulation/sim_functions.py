@@ -12,11 +12,11 @@ with open('{}steps_both_groups_logs_no_dosage.pkl'.format(root),'rb') as f:
     dists = pickle.load(f)
     
     
-with open('{}interventions_both_groups.pkl'.format(root),'rb') as f:
+with open('{}interventions_both_groups_estf.pkl'.format(root),'rb') as f:
     intervention_dists = pickle.load(f)
 
 def get_location_prior(group_id,day_of_week,time_of_day):
-    with open('{}initial_location_distributions.pkl'.format(root),'rb') as f:
+    with open('{}initial_location_distributions_estf.pkl'.format(root),'rb') as f:
         loc_lookup = pickle.load(f)
     key = '{}-{}-{}'.format(group_id,day_of_week,time_of_day)
     
@@ -40,7 +40,7 @@ def get_location_prior(group_id,day_of_week,time_of_day):
 
 
 def get_weather_prior(group_id,day_of_week,time_of_day):
-    with open('{}initial_weather_distributions.pkl'.format(root),'rb') as f:
+    with open('{}initial_weather_distributions_est.pkl'.format(root),'rb') as f:
         loc_lookup = pickle.load(f)
     key = '{}-{}-{}'.format(group_id,day_of_week,time_of_day)
     
@@ -75,23 +75,26 @@ def get_day_of_week(an_index):
 
 def get_index(key):
     
-    keys = ['group_id','day_of_week','time_of_day','dosage','location','weather','pretreatment','yesterday','variation']
+    keys = ['group_id','day_of_week','time_of_day','location','weather','pretreatment','yesterday','variation','dosage',]
     
     kl = {keys[i]:i for i in range(len(keys))}
     
     return kl[key]
 
 
-def get_initial_context(num_people,first_index):
+def get_initial_context(num_people,first_index,group_ids=None):
     '''States:
-    [group,day_of_week,time_of_day,location,weather,dosage,previous_step_count]
+    [group,day_of_week,time_of_day,location,weather,previous_step_count,dosage,]
     
     '''
     
     all_people = []
     for person in range(num_people):
         ##.95 is an approximation
-        group_id = int(random.random()>6.0/36)+1
+        if group_ids==None:
+            group_id = int(random.random()>4.0/36)+1
+        else:
+            group_id=group_ids[i]
         #group_id = 2
         day_of_week = get_time_of_day(first_index)
         time_of_day = get_day_of_week(first_index)
@@ -202,7 +205,7 @@ def get_steps_action(context,action):
     
 def modify_context_no_dosage(context):
     
-    lkeys = ['group_id','day_of_week','time_of_day','dosage','location','weather','pretreatment','yesterday','variation']
+    lkeys = ['group_id','day_of_week','time_of_day','location','weather','pretreatment','yesterday','variation','dosage']
     
     kl = {i:lkeys[i] for i in range(len(lkeys))}
     
@@ -440,10 +443,10 @@ def get_action(initial_context,steps,action_algorithm):
     elif action_algorithm=='TS':
         algo_input = get_input(action_algorithm,context)
 
-def simulate_run(num_people,time_indices,decision_times,action_algorithm = None):
+def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,group_ids=None):
     
     
-    initial_contexts = get_initial_context(num_people,time_indices[0])
+    initial_contexts = get_initial_context(num_people,time_indices[0],group_ids)
     
 
     
