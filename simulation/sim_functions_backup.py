@@ -5,27 +5,10 @@ import random
 import os
 import math
 
-root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
+#root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
 
-
-#with open('{}steps_both_groups_logs_dosage_estf_bbiit_swapped.pkl'.format(root),'rb') as f:
-#    dists = pickle.load(f)
-
-
-####
-with open('{}label_to_temperature_value_stats.pkl'.format(root),'rb') as f:
-    weather_label_to_val = pickle.load(f)
-
-
-with open('{}conversion_pretreatment.pkl'.format(root),'rb') as f:
-    hour_pretreatment_label_to_val = pickle.load(f)f
-
-    
-with open('{}trial_dists.pkl'.format(root),'rb') as f:
+with open('{}steps_both_groups_logs_dosage_estf_bbiit_swapped.pkl'.format(root),'rb') as f:
     dists = pickle.load(f)
-    
-with open('{}key_matches.pkl'.format(root),'rb') as f:
-    matched = pickle.load(f)
     
     
 with open('{}interventions_both_groups_estf.pkl'.format(root),'rb') as f:
@@ -51,24 +34,31 @@ def get_location_prior(group_id,day_of_week,time_of_day):
             else:
                 ps = loc_lookup['mean']
                 
-    val = np.argmax(np.random.multinomial(1,ps))
+    val = np.argmax(np.random.multinomial(100,ps))
     return val
 
 
-def get_weather_prior(time_of_day,month):
-    with open('{}initial_temperature_distributions_est.pkl'.format(root),'rb') as f:
+def get_weather_prior(group_id,day_of_week,time_of_day):
+    with open('{}initial_weather_distributions_est.pkl'.format(root),'rb') as f:
         loc_lookup = pickle.load(f)
-    key = '{}-{}'.format(time_of_day,month)
+    key = '{}-{}-{}'.format(group_id,day_of_week,time_of_day)
     
     ##make a bit smoother while loop instead 
     if key in loc_lookup:
         ps = loc_lookup[key]
     else:
-        key =  '{}'.format(time_of_day)
-        ps = loc_lookup[key]
-        
+        key =  '{}-{}'.format(group_id,day_of_week)
+        if key  in loc_lookup:
+            ps = loc_lookup[key]
+        else:
+            key =  '{}'.format(group_id)
+            if key  in loc_lookup:
+                ps = loc_lookup[key]
                 
-    val = np.argmax(np.random.multinomial(1,ps))
+            else:
+                ps = loc_lookup['mean']
+                
+    val = np.argmax(np.random.multinomial(100,ps))
     return val
 
 def get_time_of_day(an_index):
@@ -109,7 +99,7 @@ def get_initial_context(num_people,first_index,group_ids=None):
         day_of_week = get_day_of_week(first_index)
         time_of_day = get_time_of_day(first_index)
         first_location = get_location_prior(group_id,day_of_week,time_of_day)
-        weather = get_weather_prior(time_of_day,first_index.month)
+        weather = get_weather_prior(group_id,day_of_week,time_of_day)
         #weather = 0 
         dosage = 1
         variation = 1
@@ -129,11 +119,6 @@ def get_initial_steps(contexts):
     
     return [steps_given_context(person_context) for person_context in contexts]
 
-
-def get_location_inter(context):
-    
-    ##lookup for this dictionary is: location label, group id, time of day (processed), day of week (processed)
-    
     
     
 def get_time(current_time):
@@ -163,59 +148,19 @@ def get_possible_keys(context):
 def get_other_key(context):
     return ['-'.join([str(c) for c in context[:3]])]
 
-def get_dosage_simple(dosage):
-    dosage = int(dosage)
-    if dosage<=33:
-        return 0 
-    elif dosage>33 and dosage<=66:
-        return 1
-    return 2
+def get_steps_no_action(context):
     
-
-def context_to_key(context,duration):
-    #'group_id','time_of_day','pretreatment','day_of_week','location','variation','yesterday','weather','dosage'
-    ##this could be a mapping
-    #'var',context[5]
-    #'yst',context[6],,'wea',context[7],'loc',context[4]
-    #,'pre',context[2],'var',context[5]
-    #,'tod',context[1],'dow',context[3]
-    context = [str(c) for c in context]
  
-    selected_context = ['gid',context[0],'tod',context[1],'dow',context[3],'loc',context[4],'pre',str(duration),'wea',str(get_dosage_simple(context[7]))]
+    new_context = modify_context_no_dosage(context)
     
-    return '-'.join(selected_context)
-
-def get_steps_no_action(context,duration):
-    
-    
-    if context[2]==1:
-        if duration==0:
-            prekey = 0
-        else:
-            prekey=1
-    else:
-        if duration==1:
-            prekey=3
-        else:
-            prekey=2
-    
-    new_key = context_to_key(context,prekey)
-    
-    dist_key = matched[new_key]
-    #if len(dist_key)>17:
-        #print(dist_key)
-
-    dist = dists[dist_key]
-    #new_context = modify_context_no_dosage(context)
-    
-    #context_key = '-'.join([str(c) for c in new_context[:7]])
-    #possible_keys = get_possible_keys(new_context[:7])
+    context_key = '-'.join([str(c) for c in new_context[:7]])
+    possible_keys = get_possible_keys(new_context[:7])
     #get_possible_keys(new_context)
     #get_other_key(context)
     #get_possible_keys(new_context)
-    #keys = [context_key]
+    keys = [context_key]
     #keys = []
-    #keys.extend(possible_keys)
+    keys.extend(possible_keys)
     
     
     
@@ -223,13 +168,13 @@ def get_steps_no_action(context,duration):
     #print(keys)
     #keys = [k+'-{}'.format(action) for k in keys]
     #print(keys)
-    #i=0
-    #while keys[i] not in dists:
+    i=0
+    while keys[i] not in dists:
         #print(i)
-        #i=i+1
+        i=i+1
     #print(keys[i])
     #print(keys[-1])
-    #dist = dists[keys[i]]
+    dist = dists[keys[i]]
     
     #dist = dists['{}-mean'.format(context[0])]
     
@@ -241,7 +186,7 @@ def get_steps_no_action(context,duration):
     x = np.random.normal(loc=dist[0],scale=dist[1])
     while(x<0):
          x = np.random.normal(loc=dist[0],scale=dist[1])
-    return x
+    return dist[0]
 
 
 
@@ -288,19 +233,19 @@ def modify_context_no_dosage(context):
     return new_context
 
 
-def get_steps(context,action,duration):
+def get_steps(context,action):
     
-    
+
     
     if action==-1:
-        return get_steps_no_action(context,duration)
+        return get_steps_no_action(context)
 
     return get_steps_action(context,action)
 
 
 def get_next_location(context):
     
-    with open('{}location_conditiononed_on_last_location.pkl'.format(root),'rb') as f:
+    with open('{}location_conditiononed_on_last_location_merged.pkl'.format(root),'rb') as f:
         loc_dists =pickle.load(f)
     
     #relevant_context = [context[get_index('group_id')],context[get_index('day_of_week')],context[get_index('time_of_day')],context[get_index('location')]]
@@ -313,33 +258,25 @@ def get_next_location(context):
     #print(possible_keys)
     i=0
     #print(keys[-1])
-    while  i<len(keys) and keys[i] not in loc_dists:
+    while keys[i] not in loc_dists and i<len(keys):
         i=i+1
-    if i==len(keys):
-        context_key = '-'.join([str(c) for c in context[:-1]])
-        with open('{}initial_location_distributions_est.pkl'.format(root),'rb') as f:
-            loc_lookup = pickle.load(f)
-        dist = loc_lookup[context_key]
-        val = np.argmax(np.random.multinomial(1,dist))
-        
-    else:
-        dist = loc_dists[keys[i]]
+    dist = loc_dists[keys[i]]
     
-        val = np.argmax(np.random.multinomial(1,dist))
+    val = np.argmax(np.random.multinomial(100,dist))
     
     return val
             
                 
     
     
-def get_next_weather(context,month):
-    #print('weather changed')
-    with open('{}temperature_conditiononed_on_last_temperature_est.pkl'.format(root),'rb') as f:
+def get_next_weather(context):
+    
+    with open('{}weather_conditiononed_on_last_weather_merged.pkl'.format(root),'rb') as f:
         loc_dists =pickle.load(f)
     
 
     
-    relevant_context = [context[get_index('time_of_day')],str(month),context[get_index('weather')]]
+    relevant_context = [context[get_index('time_of_day')],context[get_index('weather')]]
     
     context_key = '-'.join([str(c) for c in relevant_context])
     possible_keys = get_possible_keys(relevant_context)
@@ -353,7 +290,7 @@ def get_next_weather(context,month):
         i=i+1
     dist = loc_dists[keys[i]]
     
-    val = np.argmax(np.random.multinomial(1,dist))
+    val = np.argmax(np.random.multinomial(100,dist))
     
     return val
 
@@ -394,7 +331,7 @@ def get_context_revised(current_index,current_context,current_steps,decision_tim
     
         dosage = get_new_dosage(current_context[get_index('dosage')],last_action)
         
-        weather = get_next_weather(current_context,current_index.month)
+        weather = get_next_weather(current_context)
         
         pretreatment_new = get_pretreatment(current_steps)
         
@@ -424,7 +361,6 @@ def get_new_lsc(step_slice):
     ##should threshold (is thresholded elsewhere?)
     #print('hi there')
     s =sum(step_slice)**.5
-    return to_yid(s)
     if s<0:
         return 0
     if s>203:
@@ -513,26 +449,15 @@ def get_variation(all_steps,time_indices,i):
         #print(post_steps)
         
     return int(np.array(last).std()>np.array(c).std())
-
-
-
-def transform_to_required(context):
-    #'group_id','time_of_day','pretreatment','day_of_week','location','variation','yesterday','weather','dosage'
-    weather_id = context[get_index('weather')]
-    pretreatment_id = context[get_index('preatreatment')]
-    #location_id = context[get_index('location')]
-    #variation_id = context[get_index('variation')]
-    
-    yesterday_id = context[get_index('yesterday_id')]
-    
+        
+  
 
     
 #will be algorithm, needs to communicate with algorithm
 #will be algorithm, needs to communicate with algorithm
 def get_action(initial_context,steps,action_algorithm):
-    return -1
+    
     if action_algorithm==None:
-        
         available = random.random()>.8
         
         if available:
@@ -560,14 +485,11 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,
         #print('group id')
         #print(initial_context[0])
         
-        inaction_duration = 0 
-        action_duration = 0 
     
-        initial_steps = get_steps(initial_context,-1,0)
+    
+        initial_steps = get_steps(initial_context,-1)
 
         current_steps = initial_steps
-        hour_steps = 0 
-        steps_last_half_hour =0
         action = -1 
         all_steps = []
     
@@ -586,9 +508,6 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,
         first_week = time_indices[0].date()+pd.DateOffset(days=8)
     
         for i in time_indices:
-            
-            
-            
             states.append(initial_context)
             if i.date()!=last_day.date():
             #print('trigger')
@@ -597,23 +516,11 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,
             #print('hi there')
                 new_day=True
             
-            ##durations
-            if hour_steps>0:
-                action_duration = action_duration+1
-                inaction_duration=0
-            else:
-                inaction_duration = inaction_duration+1
-                action_duration = 0 
-            duration = action_duration
-            if action_duration==0:
-                duration = inaction_duration
             
-            duration = int(duration>5)
             
             decision_time = bool(i in decision_times)
         #print(decision_time)
             if i!=time_indices[0]:
-                hour_steps = current_steps+steps_last_half_hour
             #decision_time = bool(i in decision_times)
             
             ##need to modify this
@@ -636,28 +543,26 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,
                 
             
             ##action will be the last action
-                my_context = get_context_revised(i,initial_context,hour_steps,decision_time,lsc,variation,action)
+                my_context = get_context_revised(i,initial_context,current_steps,decision_time,lsc,variation,action)
             #return my_context
                 if i in decision_times:
                     #print('decision time')
-                    action = get_action(my_context,hour_steps,action_algorithm)
+                    action = get_action(my_context,current_steps)
                 #print(action)
                 else:
                     action = -1
             ##redo get_steps
-                next_steps = get_steps(my_context,action,duration) 
+                next_steps = get_steps(my_context,action) 
                 all_steps.append(next_steps)
                 initial_context = my_context
-                steps_last_half_hour=current_steps
                 current_steps = next_steps
-                
             else:
                 if i in decision_times:
                     #print('type two decision time')
-                    action = get_action(initial_context,hour_steps,action_algorithm)
+                    action = get_action(initial_context,current_steps,action_algorithm)
                 else:
                     action = -1
-                next_steps = get_steps(initial_context,action,duration) 
+                next_steps = get_steps(initial_context,action) 
                 all_steps.append(next_steps)
                 current_steps = next_steps
             if new_day:
