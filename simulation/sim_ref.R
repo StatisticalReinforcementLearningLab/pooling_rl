@@ -196,6 +196,7 @@ policy.update = function(batch, input, proxy = T){
     
     p.avail <- mean(batch[, input$avail.index])
     X.null <- seq(0, 1/(1-input$lambda), by = 0.01)
+    print(X.null)
     Z.trn <- batch[, input$z.index]
     
     # F0 <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) input$feat0(z, x)), 1, mean)))
@@ -203,8 +204,8 @@ policy.update = function(batch, input, proxy = T){
     # F2 <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) input$feat2(z, x)), 1, mean)))
     
     F.all <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) c(input$feat0(z, x), input$feat1(z, x), input$feat2(z, x))), 1, mean)))
-    print('this is F.all')
-    print(F.all)
+    #print('this is F.all')
+    #print(F.all)
     index0 <- 1:length(alpha0)
     index1 <- length(alpha0) + 1:length(alpha1)
     index2 <- tail(1:ncol(F.all), length(alpha2))
@@ -219,12 +220,15 @@ policy.update = function(batch, input, proxy = T){
     
     bsb <- create.bspline.basis (range=c(0, 1/(1-input$lambda)), nbasis=50, norder = 4)
     psi = function(x) c(eval.basis(x, bsb))
-    
+    print(bsb)
+    #print(x)
+  
     psi.mat <- t(sapply(X.null, function(x) psi(x)))
     inv.cov <- solve(t(psi.mat) %*% psi.mat)
     
     psi.mat.irs = t(sapply(X.null, function(x) psi(input$lambda * x + 1)))
     psi.mat.drs = t(sapply(X.null, function(x) psi(input$lambda * x)))
+    
     psi.mat.bar <- input$p.sed * psi.mat.irs  + (1-input$p.sed) * psi.mat.drs
     
     
@@ -237,6 +241,9 @@ policy.update = function(batch, input, proxy = T){
     
     Y1.0 <- r1.vec + input$gamma.mdp * psi.mat.bar %*% theta.bar
     Y1.1 <- r2.vec + input$gamma.mdp * psi.mat.irs %*% theta.bar
+    print(Y1.0)
+   # print(psi.mat.drs)
+    pause(5)
     index <- (Y1.1 - Y1.0 > 0)
     Y1 <- Y1.0
     Y1[index] <- Y1.1[index]
@@ -433,7 +440,7 @@ prob.cal.ts = function(z, x, mu, Sigma, input){
 
 # policy update
 policy.update.ts = function(batch, input){
-  print(batch) 
+  #print(batch) 
   post.cal = function(X, Y, sigma, mu, Sigma){
     
     inv.Sigma <- solve(Sigma)
@@ -586,7 +593,7 @@ sim.ts = function(){
       
        #update the txt effect posterior
       temp = policy.update.ts(batch, input)
-      print(temp)
+      #print(temp)
       mu.beta = temp$mean
       Sigma.beta = temp$var
       
@@ -597,7 +604,7 @@ sim.ts = function(){
     
     
   }
-  print(tot.rwrd)
+ # print(tot.rwrd)
   return(batch)
   
 }

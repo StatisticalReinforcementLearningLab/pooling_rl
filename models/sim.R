@@ -237,7 +237,8 @@ policy.update = function(batch, input, proxy = T){
    
     bsb <- create.bspline.basis (range=c(0, 1/(1-input$lambda)), nbasis=50, norder = 4)
     psi = function(x) c(eval.basis(x, bsb))
-    
+    break
+   pause(3)
     psi.mat <- t(sapply(X.null, function(x) psi(x)))
     inv.cov <- solve(t(psi.mat) %*% psi.mat)
     

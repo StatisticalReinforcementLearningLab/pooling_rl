@@ -60,6 +60,9 @@ def txt_effect_update(batch,init):
     else:
         #what is this line doing?
         xz = get_xz_matrix(batch,init)
+        #print(batch)
+       # print(len(xz))
+        
         #action <- batch[index, input$action.index]
         
         mu_tmp = init.mu_1+ init.mu_2
@@ -78,6 +81,10 @@ def txt_effect_update(batch,init):
         
         
         temp = post_cal_ts(X_trn, Y_trn, init.sigma, mu_tmp, Sigma_tmp)
+        
+        #print(len(temp))
+        #print(len(f_two))
+        
         nm,nS = clip_mean_sigma(temp[0],temp[1],len(f_two[0])) 
       
         return [nm,nS]
