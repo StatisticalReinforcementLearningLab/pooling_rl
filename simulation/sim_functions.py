@@ -17,8 +17,11 @@ root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions
 
 
 ####
-#with open('{}label_to_temperature_value_stats.pkl'.format(root),'rb') as f:
-#    weather_label_to_val = pickle.load(f)
+with open('{}label_to_temperature_value_stats.pkl'.format(root),'rb') as f:
+    weather_label_to_val = pickle.load(f)
+    
+with open('{}loc_label_to_intervention_label_tref.pkl'.format(root),'rb') as f:
+    loc_label_to_val = pickle.load(f)
 
 
 #with open('{}conversion_pretreatment.pkl'.format(root),'rb') as f:
@@ -451,27 +454,29 @@ def get_variation_pre_week(variation,all_steps,time_indices,i):
     #first_index_last_day=-1
     if i>two_days:
         #print(i)
-        for j in range(len(time_indices)):
-            if time_indices[j].date()==i.date():
-                if not is_set:
-                    #print('set')
-                    #print(j)
-                    first_index_last_day = j
-                    #print(first_index_last_day)
-                    is_set = True
-            if time_indices[j]== i:
-                last_index_last_day = j
+        #print(two_days)
+        day_indices,dd,lookup = get_day_indices(time_indices)
     
-        pre_steps = all_steps[:first_index_last_day]
-        post_steps = all_steps[first_index_last_day:last_index_last_day]
+        one_week_ago = time_indices[0]
         
-        #print(pre_steps)
-        #print(post_steps)
+        last_index = dd[one_week_ago.date()][0]
+        #print(last_index)
+        #print(dd[i.date()][0])
+        day_slices=get_all_day_slices(last_index,dd[i.date()][0])
+    
+        median = day_slices_to_median(day_slices,lookup,all_steps)
+    
+        today_var = get_today_variance(i,lookup,all_steps)
         
-        return int(np.array(pre_steps).std()>np.array(post_steps).std())
+        return int(today_var>median)
+    
         
     else:
         return variation
+    
+     
+
+   
     
 def get_day_indices(indices):
     
@@ -493,49 +498,111 @@ def get_day_indices(indices):
         lookup[i]=j
         j=j+1
     return day_indices,to_return,lookup
+
+def get_all_day_slices(first,last):
+    slices = []
+    day = first
     
+    while day<last:
+        slice_one = [day]
+        #slice_one.append(day.replace(hour=23,minute=30))
+        
+        day_two = day+pd.DateOffset(days=1)
+        slice_one.append(day_two)
+        slices.append(slice_one)
+        day=day_two
+    return slices
+    
+def transform_to_hour(steps):
+    to_return = []
+    for i in range(0,len(steps)-1,2):
+        to_return.append(steps[i]+steps[i+1])
+    return to_return
+    
+def day_slices_to_median(day_slices,day_lookup,all_steps):
+    days_steps = []
+    for ds in day_slices:
+        steps = all_steps[day_lookup[ds[0]]:day_lookup[ds[1]]]
+       
+        steps = transform_to_hour(steps)
+        days_steps.append(np.array(steps).std())
+
+    return np.median(np.array(days_steps))
+
+def get_today_variance(today,lookup,all_steps):
+    morning = today.replace(hour=0,minute=0)
+    
+    tonight = today.replace(hour=23,minute=30)
+    
+    steps = all_steps[lookup[morning]:lookup[tonight]+1]
+    
+   
+    
+    steps = transform_to_hour(steps)
+    
+    return np.array(steps).std()
 
 def get_variation(all_steps,time_indices,i):
     
-    #two_days = time_indices[0].date()+pd.DateOffset(days=1)
+    
     is_set = False
     
     day_indices,dd,lookup = get_day_indices(time_indices)
     
     one_week_ago = i.date()-pd.DateOffset(days=7)
-    #print(i)
-    #print(one_week_ago)
+  
     
-    #print(all_steps)
-    
-    ##same length?
-    #first_index,middle_index,last_index = get_indices(time_indices,one_week_ago,)
+    #last_index = dd[one_week_ago.date()][0]
     
     last_index = dd[one_week_ago.date()][0]
-    last = all_steps[lookup[last_index]:lookup[dd[i.date()][0]]][:-1]
     
-    #print(dd[i.date()][0])
-    c = all_steps[lookup[dd[i.date()][0]]:lookup[dd[i.date()][-1]]]
-            #return c
-  
-        
-        #print(pre_steps)
-        #print(post_steps)
-        
-    return int(np.array(last).std()>np.array(c).std())
+    day_slices=get_all_day_slices(last_index,dd[i.date()][0])
+    
+    median = day_slices_to_median(day_slices,lookup,all_steps)
+    
+    today_var = get_today_variance(i,lookup,all_steps)
+    #print(median)
+    #print(today_var)
+    return int(today_var>median)
 
+def get_raw_temperature(weather_key):
+    
+    dist = weather_label_to_val[weather_key]
 
+    x = np.random.normal(loc=dist[0],scale=dist[1])
+    
+    
+    ##wrong way to do this?
+    while(x<0):
+         x = np.random.normal(loc=dist[0],scale=dist[1])
+    return x
+    
+def get_raw_location(loc_key):
+    ##gid, location, tod, dow
+    
+    dist = loc_label_to_val[weather_key]
+
+    val = np.argmax(np.random.multinomial(1,dist))
+    
+    return val
 
 def transform_to_required(context):
     #'group_id','time_of_day','pretreatment','day_of_week','location','variation','yesterday','weather','dosage'
     weather_id = context[get_index('weather')]
     pretreatment_id = context[get_index('preatreatment')]
-    #location_id = context[get_index('location')]
-    #variation_id = context[get_index('variation')]
+    location_id = context[get_index('location')]
     
     yesterday_id = context[get_index('yesterday_id')]
     
-
+    ##output should be: [dosage,temperature,location,variation,pre-treatment steps, yesterday steps]
+    
+    variation = context[get_index('variation')]
+    dosage = context[get_index('dosage_id')]
+    
+    raw_temperature = get_raw_temperature(weather_id)
+    
+    loc_key = 
+    
     
 #will be algorithm, needs to communicate with algorithm
 #will be algorithm, needs to communicate with algorithm
@@ -638,8 +705,9 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,
                     if i<first_week:
                         variation = get_variation_pre_week(variation,all_steps,time_indices,last_day)
                     else:
+                        #print('got variation')
                         variation = get_variation(all_steps,time_indices,last_day)
-                
+                        #return variation
                 
                     lsc = get_new_lsc(all_steps[start_of_day:end_of_day])
                 #variation = get_new_variation()
