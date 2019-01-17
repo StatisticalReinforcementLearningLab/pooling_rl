@@ -11,6 +11,7 @@ input$pi_max <- 0.8;
 input$pi_min <- 0.1;
 
 # prior and model spec
+#features for unavaiable 
 input$feat0 = function(z, x) c(1, z, x)
 input$feat1 = function(z, x) c(1, z, x)
 input$feat2 = function(z, x) c(1, z[1], x)
@@ -368,7 +369,10 @@ sim = function(){
     }
     
     # Collect Reward and State Transition
+    
     R <-  1 + Z[1] + Z[1]^2 - 0.05 * X + A * (1 - 0.1*X) + rnorm(1, sd = 1)
+    
+    
     Z.next <- runif(pZ)
     X.next <- gen_nextdosage(X, A)
     I.next <- (runif(1) < 0.8)

@@ -23,7 +23,8 @@ with open('{}label_to_temperature_value_stats.pkl'.format(root),'rb') as f:
 with open('{}loc_label_to_intervention_label_tref.pkl'.format(root),'rb') as f:
     loc_label_to_val = pickle.load(f)
 
-
+with open('{}yesterday_step_ids.pkl'.format(root),'rb') as f:
+         yesterday_chunks  = pickle.load(f)
 #with open('{}conversion_pretreatment.pkl'.format(root),'rb') as f:
 #    hour_pretreatment_label_to_val = pickle.load(f)
 
@@ -158,200 +159,32 @@ def get_next_location(gid,dow,tod,loc):
         
     return val
 
-def get_pretreatment(steps):
-    steps = math.log(steps+.5)
-    #chunks =  [[0, 117.],[ 117.,330.],[330.,759.8],[759.8,100000000]]
-    chunks =  [[-.7, 3.23867845],[ 3.23867845,4.95229972],[4.95229972,5.95713187],[5.95713187,100000000]]
-    
-    #for i in range(len(chunks)):
-    #    if steps>=chunks[i][0] and steps<chunks[i][1]:
-    #        return i
-        
-    return int(steps>math.log(.5))
-        
-##what do I need here
-def get_new_dosage(current_dosage,action):
-    if action==1:
-        current_dosage = current_dosage+2
-    else:
-        current_dosage=current_dosage-1
-    if current_dosage>100:
-        current_dosage=100
-    if current_dosage<1:
-        current_dosage=1 
-    return int(current_dosage)
 
-def get_context_revised(current_index,current_context,hour_steps,decision_time,ysc,variation,last_action):
-        
-    day_of_week = get_day_of_week(current_index)
-    time_of_day = get_time_of_day(current_index)
+def get_steps_no_action(gid,tod,dow,loc,wea):
+    
+    keys = ['gid',gid,'tod',tod,'dow',dow,'loc',loc,'wea',wea]
+    
+    new_key = '-'.join(keys)
     
     
-    #new_ysc = get_new_lsc(current_steps)
-    
-    
-    if decision_time:
-        location = get_next_location([current_context[get_index('group_id')],day_of_week,time_of_day,current_context[get_index('location')]])
-    
-        dosage = get_new_dosage(current_context[get_index('dosage')],last_action)
-        
-        weather = get_next_weather(current_context,current_index.month)
-        
-        pretreatment_new = get_pretreatment(hour_steps)
-        
-        
-    else:
-        location = current_context[get_index('location')]
-        dosage = current_context[get_index('dosage')]
-        weather = current_context[get_index('weather')]
-        pretreatment_new = get_pretreatment(hour_steps)
-        
-        #'group_id','day_of_week','time_of_day','weather','location','dosage','yesterday','pretreatment','variation
-    #'group_id','day_of_week','time_of_day','yesterday','weather','location','dosage','pretreatment','variation'
-    #'group_id','day_of_week','time_of_day','yesterday','pretreatment','location','variation','weather','dosage'
-    return [current_context[0],time_of_day,  pretreatment_new,day_of_week,\
-    location,variation,ysc,    weather, get_dosage_simple(dosage)  ]
+    dist_key = matched[new_key]
+
+    dist = dists[dist_key]
+       
+    x = np.random.normal(loc=dist[0],scale=dist[1])
+    while(x<0):
+         x = np.random.normal(loc=dist[0],scale=dist[1])
+    return x
+
+
 
 def to_yid(steps):
-    with open('{}yesterday_step_ids.pkl'.format(root),'rb') as f:
-         yesterday_chunks  = pickle.load(f)
-
     
     for i in range(len(yesterday_chunks)):
         if steps>=yesterday_chunks[i][0] and steps<yesterday_chunks[i][1]:
             return i
     
-def get_new_lsc(step_slice):
-    ##should threshold (is thresholded elsewhere?)
-    #print('hi there')
-    s =sum(step_slice)**.5
-    return to_yid(s)
-    if s<0:
-        return 0
-    if s>203:
-        return 203
-    return to_yid(s)
 
-
-
-
-def get_variation_pre_week(variation,all_steps,time_indices,i):
-    
-    two_days = time_indices[0].date()+pd.DateOffset(days=1)
-    is_set = False
-    #first_index_last_day=-1
-    if i>two_days:
-        #print(i)
-        #print(two_days)
-        day_indices,dd,lookup = get_day_indices(time_indices)
-    
-        one_week_ago = time_indices[0]
-        
-        last_index = dd[one_week_ago.date()][0]
-        #print(last_index)
-        #print(dd[i.date()][0])
-        day_slices=get_all_day_slices(last_index,dd[i.date()][0])
-    
-        median = day_slices_to_median(day_slices,lookup,all_steps)
-    
-        today_var = get_today_variance(i,lookup,all_steps)
-        
-        return int(today_var>median)
-    
-        
-    else:
-        return variation
-    
-     
-
-   
-    
-def get_day_indices(indices):
-    
-    days = set([])
-    day_indices = []
-    
-    to_return = {}
-    
-    lookup = {}
-    
-    j=0
-    for i in indices:
-        if i.date() not in to_return:
-            to_return[i.date()]=[]
-            #days.add(i.date())
-            day_indices.append(i)
-            
-        to_return[i.date()].append(i)
-        lookup[i]=j
-        j=j+1
-    return day_indices,to_return,lookup
-
-def get_all_day_slices(first,last):
-    slices = []
-    day = first
-    
-    while day<last:
-        slice_one = [day]
-        #slice_one.append(day.replace(hour=23,minute=30))
-        
-        day_two = day+pd.DateOffset(days=1)
-        slice_one.append(day_two)
-        slices.append(slice_one)
-        day=day_two
-    return slices
-    
-def transform_to_hour(steps):
-    to_return = []
-    for i in range(0,len(steps)-1,2):
-        to_return.append(steps[i]+steps[i+1])
-    return to_return
-    
-def day_slices_to_median(day_slices,day_lookup,all_steps):
-    days_steps = []
-    for ds in day_slices:
-        steps = all_steps[day_lookup[ds[0]]:day_lookup[ds[1]]]
-       
-        steps = transform_to_hour(steps)
-        days_steps.append(np.array(steps).std())
-
-    return np.median(np.array(days_steps))
-
-def get_today_variance(today,lookup,all_steps):
-    morning = today.replace(hour=0,minute=0)
-    
-    tonight = today.replace(hour=23,minute=30)
-    
-    steps = all_steps[lookup[morning]:lookup[tonight]+1]
-    
-   
-    
-    steps = transform_to_hour(steps)
-    
-    return np.array(steps).std()
-
-def get_variation(all_steps,time_indices,i):
-    
-    
-    is_set = False
-    
-    day_indices,dd,lookup = get_day_indices(time_indices)
-    
-    one_week_ago = i.date()-pd.DateOffset(days=7)
-  
-    
-    #last_index = dd[one_week_ago.date()][0]
-    
-    last_index = dd[one_week_ago.date()][0]
-    
-    day_slices=get_all_day_slices(last_index,dd[i.date()][0])
-    
-    median = day_slices_to_median(day_slices,lookup,all_steps)
-    
-    today_var = get_today_variance(i,lookup,all_steps)
-    #print(median)
-    #print(today_var)
-    return int(today_var>median)
 
 def get_raw_temperature(weather_key):
     
@@ -394,7 +227,7 @@ def transform_to_required(context):
     
 #will be algorithm, needs to communicate with algorithm
 #will be algorithm, needs to communicate with algorithm
-def get_action(initial_context,action_algorithm):
+def get_action(action_algorithm):
 
     if action_algorithm==None:
         
@@ -405,8 +238,7 @@ def get_action(initial_context,action_algorithm):
         
             return int(random.random()>.4)
         return 0
-    elif action_algorithm=='TS':
-        algo_input = get_input(action_algorithm,context)
+    
 
 def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,group_ids=None):
     
