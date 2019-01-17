@@ -162,7 +162,7 @@ def get_next_location(gid,dow,tod,loc):
 
 def get_steps_no_action(gid,tod,dow,loc,wea):
     
-    keys = ['gid',gid,'tod',tod,'dow',dow,'loc',loc,'wea',wea]
+    keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'loc',str(loc),'wea',str(wea)]
     
     new_key = '-'.join(keys)
     
