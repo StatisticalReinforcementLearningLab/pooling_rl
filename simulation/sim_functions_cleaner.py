@@ -88,60 +88,7 @@ def get_day_of_week(an_index):
         hour_lookup = pickle.load(f)
     return hour_lookup[an_index.dayofweek]
 
-def get_index(key):
-    #day_of_week,time_of_day,las_steps,last_steps_hour,location,varia,weather,dosage
-    keys = ['group_id','time_of_day','pretreatment','day_of_week','location','variation','yesterday','weather','dosage']
-   
-    kl = {keys[i]:i for i in range(len(keys))}
-    
-    return kl[key]
 
-
-def get_initial_context(num_people,first_index,group_ids=None):
-    '''States:
-    [group,day_of_week,time_of_day,location,weather,previous_step_count,dosage,]
-    
-    '''
-    
-    all_people = []
-    for person in range(num_people):
-        ##.95 is an approximation
-        if group_ids==None:
-            #print('hello')
-            group_id = int(random.random()>4.0/36)+1
-        else:
-            group_id=group_ids[person]
-        #group_id = 2
-        day_of_week = get_day_of_week(first_index)
-        time_of_day = get_time_of_day(first_index)
-        first_location = get_location_prior(group_id,day_of_week,time_of_day)
-        weather = get_weather_prior(time_of_day,first_index.month)
-        #weather = 0 
-        dosage = 1
-        variation = 1
-        pretreatment = 0 
-        ##yesterday's step count could be drawn from distribution
-        ysc = 0
-        #day_of_week,time_of_day,dosage,location,last_steps,last_steps_hour,varia
-        #'group_id','day_of_week','time_of_day','weather','location','dosage','yesterday','pretreatment','variation'#'group_id','day_of_week','time_of_day','yesterday','weather','location','dosage','pretreatment','variation'
-        #'group_id','day_of_week','time_of_day','yesterday','pretreatment','location','variation','weather','dosage'
-        all_people.append([group_id,time_of_day,pretreatment,day_of_week,\
-                           first_location,variation,ysc,weather,dosage])
-      
-    return all_people
-
-
-def get_initial_steps(contexts):
-    
-    return [steps_given_context(person_context) for person_context in contexts]
-
-    
-    
-def get_time(current_time):
-    
-    #needs to be a time delta
-    
-    return current_time+1
 
 
 def get_possible_keys(context):
@@ -159,178 +106,49 @@ def get_possible_keys(context):
         keys.append(key)
     keys.append('{}-mean'.format(context[0]))
     return keys
-
-
-def get_other_key(context):
-    return ['-'.join([str(c) for c in context[:3]])]
-
-def get_dosage_simple(dosage):
-    dosage = int(dosage)
-    if dosage<=33:
-        return 0 
-    elif dosage>33 and dosage<=66:
-        return 1
-    return 2
-    
-
-def context_to_key(context,duration):
-    #'group_id','time_of_day','pretreatment','day_of_week','location','variation','yesterday','weather','dosage'
-    ##this could be a mapping
-    #'var',context[5]
-    #'yst',context[6],,'wea',context[7],'loc',context[4]
-    #,'pre',context[2],'var',context[5]
-    #,'tod',context[1],'dow',context[3]
-    context = [str(c) for c in context]
- #context[7]
-#,'pre',str(duration),'wea',context[7]
-#,'tod',context[1],'dow',context[3],'loc',context[4],'wea',context[7]
-    selected_context = ['gid',context[0],'tod',context[1],'dow',context[3],'loc',context[4],'wea',context[7]]
-    
-    return '-'.join(selected_context)
-
-
-def context_to_key_intervention(context,duration,action):
-    #'group_id','time_of_day','pretreatment','day_of_week','location','variation','yesterday','weather','dosage'
-    ##this could be a mapping
-    #'var',context[5]
-    #'yst',context[6],,'wea',context[7],'loc',context[4]
-    #,'pre',context[2],'var',context[5]
-    #,'tod',context[1],'dow',context[3]
-    context = [str(c) for c in context]
- #context[7]
-#,'pre',str(duration),'wea',context[7]
-#,'tod',context[1],'dow',context[3],'loc',context[4],'wea',context[7]
-    selected_context = ['aint',str(action),'gid',context[0],'tod',context[1],'dow',context[3],'loc',context[4],'wea',context[7],'pre',str(duration),'yst',context[6],'var',context[5],'dos',str(get_dosage_simple(context[8]))]
-    
-    return '-'.join(selected_context)
-
-def get_steps_no_action(context,duration):
+      
     
     
-    if context[2]==1:
-        if duration==0:
-            prekey = 0
-        else:
-            prekey=1
-    else:
-        if duration==1:
-            prekey=3
-        else:
-            prekey=2
-    
-    new_key = context_to_key(context,prekey)
-    
-    dist_key = matched[new_key]
-    #if len(dist_key)>17:
-        #print(dist_key)
-
-    dist = dists[dist_key]
-    #new_context = modify_context_no_dosage(context)
-    
-    #context_key = '-'.join([str(c) for c in new_context[:7]])
-    #possible_keys = get_possible_keys(new_context[:7])
-    #get_possible_keys(new_context)
-    #get_other_key(context)
-    #get_possible_keys(new_context)
-    #keys = [context_key]
-    #keys = []
-    #keys.extend(possible_keys)
-    
-    
-    
-    #keys = possible_keys
-    #print(keys)
-    #keys = [k+'-{}'.format(action) for k in keys]
-    #print(keys)
-    #i=0
-    #while keys[i] not in dists:
-        #print(i)
-        #i=i+1
-    #print(keys[i])
-    #print(keys[-1])
-    #dist = dists[keys[i]]
-    
-    #dist = dists['{}-mean'.format(context[0])]
-    
-    #if i==len(keys)-1:
-    #    print(keys)
-    #    print(new_context)
-     #   print( context)
-    
-    x = np.random.normal(loc=dist[0],scale=dist[1])
-    while(x<0):
-         x = np.random.normal(loc=dist[0],scale=dist[1])
-    return x
-
-
-
-def get_steps_action(context,duration,action):
-    if context[2]==1:
-        if duration==0:
-            prekey = 0
-        else:
-            prekey=1
-    else:
-        if duration==1:
-            prekey=3
-        else:
-            prekey=2
-    
-    new_key = context_to_key_intervention(context,prekey,action)
-    
-    dist_key = matched_intervention[new_key]
-
-    dist = dists_intervention[dist_key]
-
-    x = np.random.normal(loc=dist[0],scale=dist[1])
-    while(x<0):
-         x = np.random.normal(loc=dist[0],scale=dist[1])
-    return x
-    
-def modify_context_no_dosage(context):
-    
-    lkeys = ['group_id','time_of_day','pretreatment','day_of_week','location','variation','yesterday','weather','dosage'  ]
-    
-    kl = {i:lkeys[i] for i in range(len(lkeys))}
-    
-    ##dosage at end
-    new_context = [context[i] for i in range(len(lkeys)) if kl[i]!='dosage' ]
-    
-    return new_context
-
-
-def get_steps(context,action,duration):
-    
-    
-    
-    if action==-1:
-        return get_steps_no_action(context,duration)
-
-    return get_steps_action(context,duration,action)
-
-
-def get_next_location(context):
-    
-    with open('{}location_conditiononed_on_last_location_tref.pkl'.format(root),'rb') as f:
+def get_next_weather(tod,month,weather):
+    #print('weather changed')
+    with open('{}temperature_conditiononed_on_last_temperature_est.pkl'.format(root),'rb') as f:
         loc_dists =pickle.load(f)
     
-    #relevant_context = [context[get_index('group_id')],context[get_index('day_of_week')],context[get_index('time_of_day')],context[get_index('location')]]
+
+    
+    relevant_context = [tod,month,weather]
+    
+    context_key = '-'.join([str(c) for c in relevant_context])
+    possible_keys = get_possible_keys(relevant_context)
+    
+    keys = [context_key]
+    keys.extend(possible_keys)
+ 
+    i=0
+ 
+    while keys[i] not in loc_dists and i<len(keys):
+        i=i+1
+        
+
+    dist = loc_dists[keys[i]]
+    
+    val = np.argmax(np.random.multinomial(1,dist))
+    
+    return val
+
+
+def get_next_location(gid,dow,tod,loc):
+    
+    context = [gid,dow,tod,loc]
+    with open('{}location_conditiononed_on_last_location_tref.pkl'.format(root),'rb') as f:
+        loc_dists =pickle.load(f)
     
     context_key = '-'.join([str(c) for c in context])
     if context_key in loc_dists:
         dist = loc_dists[context_key]
     
         val = np.argmax(np.random.multinomial(1,dist))
-    #possible_keys = get_possible_keys(context)
-    
-    #keys = [context_key]
-    #keys.extend(possible_keys)
-    #print(possible_keys)
-    #i=0
-    #print(keys[-1])
-    #while keys[i] not in loc_dists:
-       # i=i+1
-   # if i==len(keys):
+
     else:
         context_key = '-'.join([str(c) for c in context[:-1]])
         with open('{}initial_location_distributions_est_tref.pkl'.format(root),'rb') as f:
@@ -338,36 +156,6 @@ def get_next_location(context):
         dist = loc_lookup[context_key]
         val = np.argmax(np.random.multinomial(1,dist))
         
- 
-    
-    return val
-            
-                
-    
-    
-def get_next_weather(context,month):
-    #print('weather changed')
-    with open('{}temperature_conditiononed_on_last_temperature_est.pkl'.format(root),'rb') as f:
-        loc_dists =pickle.load(f)
-    
-
-    
-    relevant_context = [context[get_index('time_of_day')],str(month),context[get_index('weather')]]
-    
-    context_key = '-'.join([str(c) for c in relevant_context])
-    possible_keys = get_possible_keys(relevant_context)
-    
-    keys = [context_key]
-    keys.extend(possible_keys)
-    #print(keys)
-    i=0
-    #print(keys[-1])
-    while keys[i] not in loc_dists and i<len(keys):
-        i=i+1
-    dist = loc_dists[keys[i]]
-    
-    val = np.argmax(np.random.multinomial(1,dist))
-    
     return val
 
 def get_pretreatment(steps):

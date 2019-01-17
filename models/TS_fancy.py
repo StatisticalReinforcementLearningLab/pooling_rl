@@ -270,13 +270,7 @@ def policy_update(batch, init,proxy=False,etaf=None):
         F0 = [f[:len(alpha_0)] for f in F_all]
         F1 = [f[len(alpha_0):len(alpha_0)+len(alpha_1)] for f in F_all]
         F2 = [f[len(alpha_0)+len(alpha_1):] for f in F_all]
-        #print(np.array(F2).shape)
-        #print(np.array(F1).shape)
-        #print(np.array(F0).shape)
-        # r0.vec = c(F0 %*% alpha0)
-        #r1.vec = c(F1 %*% alpha1)
-    #   r2.vec = r1.vec + c(F2 %*% alpha2) 
-        #F_0 = F_all[]    
+           
             
         r0_vec = get_r(np.array(F0),np.array(alpha_0)) 
         r1_vec = get_r(np.array(F1),np.array(alpha_1)) 
