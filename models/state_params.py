@@ -6,42 +6,13 @@ class state_params:
     def get_vec_indices(self,pZ):
         return [i for i in range(2,pZ+1)]
     
-    def feat2_function(self,z,x):
-        temp = [1,z[0]]
-        if type(x) in self.nums:
-        
-            temp.append(x)
-        else:
-            temp.extend(x)
-        
-        return temp
+
 
     def function_zero(self,x):
         return 0
 
 
-    def feat0_function(self,z,x):
-        
-        
-        temp =  [1]
-        temp.extend(z)
-        #print(type(x))
-        if type(x) in self.nums:
-        
-            temp.append(x)
-        else:
-            temp.extend(x)
-        return temp
 
-    def feat1_function(self,z,x):
-        temp =  [1]
-        temp.extend(z)
-        if type(x) in self.nums:
-        
-            temp.append(x)
-        else:
-            temp.extend(x)
-        return temp
     
     def eta_init(self,x):
         return 0
@@ -80,7 +51,6 @@ class state_params:
         self.sigma_0 = np.diag([10 for i in range(len(self.mu_0))])
         self.sigma_1 = np.diag([10 for i in range(len(self.mu_1))])
         self.sigma_2 = np.diag([10 for i in range(len(self.mu_2))])
-        
-        
-        
+
+    
         

@@ -18,7 +18,7 @@ def gen_nextdosage(x,a):
 def get_probs(batch,init):
     return [b[init.prob_index] for b in batch if b[init.avail_index]==1]
 
-def prob_cal_ts(z,x,mu,Sigma,init):
+def prob_cal_ts(z,x,mu,Sigma,global_params):
     pos_mean = np.dot(bandit.feat2_function(z,x),mu)
     pos_var = np.dot(np.dot(np.transpose(bandit.feat2_function(z,x)),Sigma),bandit.feat2_function(z,x))
     pos_var = max(0,pos_var)
@@ -30,7 +30,7 @@ def prob_cal_ts(z,x,mu,Sigma,init):
     pit_zero = norm.cdf((pos_mean)/(pos_var**.5))
   
     # clipping
-    prob =  min(bandit.py_c_func(init.pi_max, max(bandit.py_c_func(init.pi_min, pit_zero))))
+    prob =  min(bandit.py_c_func(global_params.pi_max, max(bandit.py_c_func(global_params.pi_min, pit_zero))))
   
     return prob
 
@@ -40,51 +40,54 @@ def make_batch(t,Z,X,I,A,prob,R):
     temp.extend([X,I,A,prob,R])
     return temp
 
-def policy_update_ts(batch, init):
-    return txt_effect_update(batch,init)
+def policy_update_ts(global_params,batch,  mu_1,Sigma_1,mu_2,Sigma_2):
+    return txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2)
 
 
 #what does this stand for? change the name
-def txt_effect_update(batch,init):
+def txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
     #print(init.avail_index)
     #print(len(batch))
-    avail = [b[init.avail_index] for b in batch]
+    avail = [b[global_params.avail_index] for b in batch]
     #avail <- batch[, input$avail.index]
     
     ##how can this ever equal 1?
     index = [int(a==1) for a in avail]
     
-    if sum(index)==1:
+    if sum(index)==0:
         
-        return [init.mu_2,init.sigma_2]
+        return [mu_2,Sigma_2]
     else:
         #what is this line doing?
-        xz = get_xz_matrix(batch,init)
+        #check get xz matrix, why does it need global params? 
+        #I think just for indexing?
+        xz = get_xz_matrix(batch,global_params)
         #print(batch)
-       # print(len(xz))
+        #print(len(xz))
         
         #action <- batch[index, input$action.index]
         
-        mu_tmp = init.mu_1+ init.mu_2
-        Sigma_tmp = block_diag(init.sigma_1,init.sigma_2)
+        mu_tmp = mu_1+ mu_2
+        Sigma_tmp = block_diag(Sigma_1,Sigma_2)
         
-        actions = get_actions(batch,init)
-        probs = get_probs(batch,init)
+        actions = get_actions(batch,global_params)
+        probs = get_probs(batch,global_params)
         
         f_one = transform_f1(xz)
         f_two = transform_f2(xz)
         
         X_trn = get_X_trn(f_one,actions,f_two)
-        Y_trn = get_Y_trn(batch,init)
+        Y_trn = get_Y_trn(batch,global_params)
         
         
         
         
-        temp = post_cal_ts(X_trn, Y_trn, init.sigma, mu_tmp, Sigma_tmp)
+        temp = post_cal_ts(X_trn, Y_trn, global_params.sigma, mu_tmp, Sigma_tmp)
         
         #print(len(temp))
         #print(len(f_two))
-        
+        #print(len(temp))
+        #print(len(f_two))
         nm,nS = clip_mean_sigma(temp[0],temp[1],len(f_two[0])) 
       
         return [nm,nS]
@@ -135,5 +138,9 @@ def transform_f1(xz):
     return [[1,row[2],row[0],row[1]] for row in xz]
 
 def get_xz_matrix(batch,init):
-    new_matrix = [[b[init.x_index]]+b[init.z_index[0]:init.z_index[-1]+1] for b in batch if b[init.avail_index]==1]
-    return new_matrix
+    
+   
+        new_matrix = [[b[init.x_index]]+b[init.z_index[0]:init.z_index[-1]+1] for b in batch if b[init.avail_index]==1]
+        return new_matrix
+    
+   

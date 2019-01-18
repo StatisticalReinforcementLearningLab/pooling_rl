@@ -38,12 +38,67 @@ class participant:
         self.ltps = None
         self.pds = None
         self.variation = None
-
+        self.dosage = None
+        self.duration = None
+        self.inaction_dur = None
+        self.action_dur = None
+        
+        self.available = None
+        
     def set_current_day(self):
         pass
     
     def get_current_day(self):
         pass
+
+    def set_inaction_duration(self,duration):
+        self.inaction_dur=duration
+        
+    def set_action_duration(self,duration):
+        self.action_dur=duration
+        
+    def set_duration(self,duration):
+        self.duration=duration
+        
+    def set_available(self,available):
+        self.available=available
+        
+    def update_inaction_duration(self):
+        self.inaction_dur=self.inaction_dur+1
+        
+    def update_action_duration(self):
+        self.action_dur=self.action_dur+1  
+        
+        
+    def update_duration(self,steps):
+        if steps>0:
+            self.update_action_duration()
+            self.set_inaction_duration(0)
+        else:
+            self.update_inaction_duration()
+            self.set_action_duration(0)
+        duration = self.action_dur
+        if self.action_dur==0:
+            duration = self.inaction_dur
+            
+        duration = int(duration>5)
+        self.duration = duration
+        
+    def set_dosage(self,dosage):
+        self.dosage = dosage
+    
+    def update_dosage(self,action):
+        current_dosage = self.dosage
+        if action==1:
+            current_dosage = current_dosage+2
+        else:
+            current_dosage=current_dosage-1
+        if current_dosage>100:
+            current_dosage=100
+        if current_dosage<1:
+            current_dosage=1 
+        self.set_dosage(current_dosage)
+        
 
         
     def set_tod(self,tod):
@@ -80,6 +135,18 @@ class participant:
     def set_variation(self,var):
         self.variation = var
     
+    def get_prekey(self,duration,pre):
+        if pre==1:
+            if duration == 0:
+                prekey = 0
+            else:
+                prekey = 1
+        else:
+            if duration == 1:
+                prekey= 3
+            else:
+                prekey = 2
+        return prekey
     
     def get_pretreatment(self,steps):
         steps = math.log(steps+.5)
@@ -148,4 +215,3 @@ class participant:
         return int(yesterday_steps>median)
         
         
-         

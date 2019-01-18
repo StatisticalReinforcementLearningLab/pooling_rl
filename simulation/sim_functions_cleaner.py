@@ -89,7 +89,14 @@ def get_day_of_week(an_index):
         hour_lookup = pickle.load(f)
     return hour_lookup[an_index.dayofweek]
 
-
+def dosage_to_dosage_key(dosage):
+        
+        dosage = int(dosage)
+        if dosage<=33:
+            return 0 
+        elif dosage>33 and dosage<=66:
+            return 1
+        return 2
 
 
 def get_possible_keys(context):
@@ -176,6 +183,24 @@ def get_steps_no_action(gid,tod,dow,loc,wea):
          x = np.random.normal(loc=dist[0],scale=dist[1])
     return x
 
+def get_steps_action(context):
+    ids = ['aint','gid','tod','dow','loc','wea','pre','yst','var','dos']
+    context = [str(c) for c in context]
+    new_key = []
+    for i in range(len(ids)):
+        new_key.append(ids[i])
+        new_key.append(context[i])
+    new_key = '-'.join(new_key)
+    
+    dist_key = matched_intervention[new_key]
+
+    dist = dists_intervention[dist_key]
+
+    x = np.random.normal(loc=dist[0],scale=dist[1])
+    while(x<0):
+         x = np.random.normal(loc=dist[0],scale=dist[1])
+    return x
+    
 
 
 def to_yid(steps):

@@ -10,6 +10,8 @@ class psi:
         self.num_dim = num_dim 
         self.degree = degree 
         
+        
+        
     def eval_function_index(self,x,index):
         knots = np.arange(self.xmin,self.xmax,(self.xmax-self.xmin)/self.num_dim)
             

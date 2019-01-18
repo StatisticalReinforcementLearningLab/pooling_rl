@@ -242,9 +242,9 @@ policy.update = function(batch, input, proxy = T){
     
     Y1.0 <- r1.vec + input$gamma.mdp * psi.mat.bar %*% theta.bar
     Y1.1 <- r2.vec + input$gamma.mdp * psi.mat.irs %*% theta.bar
-    print(Y1.0)
+   # print(Y1.0)
    # print(psi.mat.drs)
-    pause(5)
+    #(5)
     index <- (Y1.1 - Y1.0 > 0)
     Y1 <- Y1.0
     Y1[index] <- Y1.1[index]
@@ -470,6 +470,9 @@ policy.update.ts = function(batch, input){
     }else{
       
       xz = matrix(batch[index, c(input$x.index, input$z.index)], nrow = sum(index))
+      print(xz)
+      print(batch)
+      pause(10)
       action <- batch[index, input$action.index]
       prob <- batch[index, input$prob.index]
       
@@ -618,7 +621,7 @@ sim.ts = function(){
 
 
 #### Sample Run ####
-sim()
+#sim()
 sim.ts()
 
 
