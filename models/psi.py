@@ -9,9 +9,26 @@ class psi:
         self.xmax = xmax
         self.num_dim = num_dim 
         self.degree = degree 
+        self.bs = {}
+        self.init_bs()
         
         
+    def init_bs(self):
         
+        for i in range(self.num_dim):
+            knots = np.arange(self.xmin,self.xmax,(self.xmax-self.xmin)/self.num_dim)
+            
+            c = np.zeros(self.num_dim)
+            c.put(i,1)
+            b = BSpline(knots,c,self.degree)
+            self.bs[i]=b
+    
+    
+    def eval_function_index_short(self,x,index):
+        
+        return self.bs[index](x)
+    
+    
     def eval_function_index(self,x,index):
         knots = np.arange(self.xmin,self.xmax,(self.xmax-self.xmin)/self.num_dim)
             
