@@ -12,11 +12,17 @@ class eta:
         self.weight = 0 
         self.function_init = True
         self.psi = None
+        self.which_function='init'
     
     #bsb <- create.bspline.basis (range=c(0, 1/(1-input$lambda)), nbasis=50, norder = 4)
     #psi = function(x) c(eval.basis(x, bsb))
     def psi(self,x):
          c(eval.basis(x, bsb))
+    
+    def eta_f(self,x):
+        if self.which_function=='init':
+            return self.eta_init(x)
+        return self.eta_function(x)
     
     def eta_init(self,x):
         

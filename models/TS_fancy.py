@@ -26,7 +26,7 @@ def prob_cal(z,x,mu,Sigma,init,eta):
     pos_var = max(0,pos_var)
 
   
-    margin  = eta(x)*init.xi
+    margin  = eta.eta_f(x)*init.xi
     #print('margin')
     #print(margin)
     # probability
@@ -62,7 +62,7 @@ def make_batch(t,Z,X,I,A,prob,R):
 
 
 #what does this stand for? change the name
-def txt_effect_update(batch,init):
+def txt_effect_update(batch,init,mu_1,sigma_1,mu_2,sigma_2):
     #print(init.avail_index)
     #print(len(batch))
     avail = [b[init.avail_index] for b in batch]
@@ -73,14 +73,14 @@ def txt_effect_update(batch,init):
     
     if sum(index)==0:
         
-        return [init.mu_2,init.sigma_2]
+        return [mu_2,sigma_2]
     else:
         #what is this line doing?
         xz = get_xz_matrix(batch,init)
         #action <- batch[index, input$action.index]
         
-        mu_tmp = init.mu_1+ init.mu_2+init.mu_2
-        Sigma_tmp = block_diag(init.sigma_1,init.sigma_2,init.sigma_2)
+        mu_tmp = mu_1+ mu_2+mu_2
+        Sigma_tmp = block_diag(sigma_1,sigma_2,sigma_2)
         
         actions = get_actions(batch,init)
         probs = get_probs(batch,init)
@@ -160,7 +160,7 @@ def get_unavailable(batch,init):
 def get_X_trn_unavail_update(xz):
     return [[1,row[2],row[0],row[1]] for row in xz]
 
-def unavail_update(batch,init):
+def unavail_update(batch,init,mu_0,sigma_0):
 
     
     # available, no txt, subset
@@ -170,7 +170,7 @@ def unavail_update(batch,init):
     if(len(avail) == 0):
       
       # return the prior
-        return [init.mu_0,init.sigma_0]
+        return [mu_0,sigma_0]
       
       
     else:
@@ -178,8 +178,8 @@ def unavail_update(batch,init):
         xz = get_xz_matrix_gen_key(batch,init,0)
       
       # forming the prior 
-        mu_tmp = init.mu_0
-        sigma_tmp = init.sigma_0
+        mu_tmp = mu_0
+        sigma_tmp = sigma_0
       
       
         # calculate posterior (batch update)
@@ -201,7 +201,7 @@ def get_Z_trn(batch,init):
     return [b[init.z_index[0]:init.z_index[-1]+1] for b in batch]
 
 
-def main_effect_update(batch,init):
+def main_effect_update(batch,init,mu_1,sigma_1):
     
     
         
@@ -212,11 +212,11 @@ def main_effect_update(batch,init):
     if(len(valid_mains) == 0):
       
      # return the prior
-        return [init.mu_1,init.sigma_1]
+        return [mu_1,sigma_1]
     else:
         xz = get_xz_matrix_main_effect(batch,init,valid_mains)
-        mu_tmp = init.mu_1
-        sigma_tmp = init.sigma_1
+        mu_tmp = mu_1
+        sigma_tmp = sigma_1
         X_trn = get_X_trn_unavail_update(xz)
         Y_trn = [batch[i][init.reward_index] for i in valid_mains]
         
@@ -253,13 +253,14 @@ def get_F_all(X_null,Z_trn,init):
 def get_r(f,alpha):
     return np.matmul(f,alpha)
 
-def policy_update(batch, init,proxy=False,etaf=None):
-    the_psi = psi()
-    txt_est = txt_effect_update(batch,init)
+def policy_update( init,batch,mu_0,sigma_0,mu_1,sigma_1,mu_2,sigma_2,proxy=False,etaf=None):
+    #the_psi = psi()
+    the_psi = init.psi
+    txt_est = txt_effect_update(batch,init,mu_1,sigma_1,mu_2,sigma_2)
     if proxy:
-        unavail_params =  unavail_update(batch,init)
+        unavail_params =  unavail_update(batch,init,mu_0,sigma_0)
         alpha_0 = unavail_params[0]
-        main_params = main_effect_update(batch,init)
+        main_params = main_effect_update(batch,init,mu_1,sigma_1)
         alpha_1 = main_params[0]
         alpha_2 = txt_est[0]
         
@@ -277,12 +278,12 @@ def policy_update(batch, init,proxy=False,etaf=None):
         r2_vec = get_r(np.array(F2),np.array(alpha_2)) 
         
         
-        psi_mat = the_psi.eval_all_x_all_dim(X_null)
+        psi_mat = init.psi.eval_all_x_all_dim(X_null)
         #print(np.array(psi_mat).shape)
         tx = np.matmul(np.transpose(psi_mat),psi_mat)
         inv_cov = solve(tx+np.random.rand(tx.shape[0],tx.shape[0]),np.eye(tx.shape[0]))
-        psi_mat_irs = the_psi.eval_all_x_all_dim(np.transpose(X_null)*init.lambda_knot+1)
-        psi_mat_drs = the_psi.eval_all_x_all_dim(np.transpose(X_null)*init.lambda_knot)
+        psi_mat_irs = init.psi.eval_all_x_all_dim(np.transpose(X_null)*init.lambda_knot+1)
+        psi_mat_drs = init.psi.eval_all_x_all_dim(np.transpose(X_null)*init.lambda_knot)
         
         
         

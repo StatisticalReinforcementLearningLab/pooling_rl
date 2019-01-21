@@ -2,6 +2,7 @@ import pickle
 import participant
 import random
 import numpy as np
+import psi
 
 class TS_fancy_global_params:
     
@@ -32,7 +33,7 @@ class TS_fancy_global_params:
         self.action_index = self.avail_index+1
         self.prob_index = self.action_index+1
         self.reward_index = self.prob_index+1
-    
+        self.psi = psi.psi()
     
     
         
