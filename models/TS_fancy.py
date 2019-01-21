@@ -21,8 +21,8 @@ def get_probs(batch,init):
     return [b[init.prob_index] for b in batch if b[init.avail_index]==1]
 
 def prob_cal(z,x,mu,Sigma,init,eta):
-    pos_mean = np.dot(bandit.feat2_function(z,x),mu)
-    pos_var = np.dot(np.dot(np.transpose(bandit.feat2_function(z,x)),Sigma),bandit.feat2_function(z,x))
+    pos_mean = np.dot(init.feat2_function(z,x),mu)
+    pos_var = np.dot(np.dot(np.transpose(init.feat2_function(z,x)),Sigma),init.feat2_function(z,x))
     pos_var = max(0,pos_var)
 
   
@@ -78,20 +78,28 @@ def txt_effect_update(batch,init,mu_1,sigma_1,mu_2,sigma_2):
         #what is this line doing?
         xz = get_xz_matrix(batch,init)
         #action <- batch[index, input$action.index]
-        
-        mu_tmp = mu_1+ mu_2+mu_2
+        #print(type(mu_1))
+        mu_tmp =[m for m in mu_1]
+        mu_tmp.extend([m for m in mu_2])
+        mu_tmp.extend([m for m in mu_2])
+        #[mu_1[0]]+ [mu_2[0]]+[mu_2[0]]
+        #print(mu_tmp)
         Sigma_tmp = block_diag(sigma_1,sigma_2,sigma_2)
         
         actions = get_actions(batch,init)
         probs = get_probs(batch,init)
         
-        f_one = transform_f1(xz)
+        f_one = transform_f1(xz,init)
         f_two = transform_f2(xz)
         
         X_trn = get_X_trn(f_one,actions,f_two,probs)
         Y_trn = get_Y_trn(batch,init)
         
-        
+       # print((Sigma_tmp.shape))
+    #    print(len(mu_tmp))
+    #    print(len(X_trn[0]))
+    #    print(len(X_trn))
+    #    print(len(Y_trn))
         
         
         temp = post_cal(X_trn, Y_trn, init.sigma, mu_tmp, Sigma_tmp)
@@ -136,10 +144,11 @@ def get_actions(batch,init):
     return [b[init.action_index] for b in batch if b[init.avail_index]==1]
 
 def transform_f2(xz):
-    return [[1,row[-1],row[0]] for row in xz]
+    return [[1,row[1],row[0]] for row in xz]
 
-def transform_f1(xz):
-    return [[1,row[2],row[0],row[1]] for row in xz]
+def transform_f1(xz,init):
+    return [[1]+row[1:len(init.z_index)+1] + [row[0]] for row in xz]
+   
 
 def get_xz_matrix(batch,init):
     new_matrix = [[b[init.x_index]]+b[init.z_index[0]:init.z_index[-1]+1] for b in batch if b[init.avail_index]==1]
@@ -157,8 +166,8 @@ def get_unavailable(batch,init):
     return [b for b in batch if b[init.avail_index]==0]
 
 
-def get_X_trn_unavail_update(xz):
-    return [[1,row[2],row[0],row[1]] for row in xz]
+def get_X_trn_unavail_update(xz,init):
+    return [[1]+row[1:len(init.z_index)+1] + [row[0]] for row in xz]
 
 def unavail_update(batch,init,mu_0,sigma_0):
 
@@ -184,7 +193,7 @@ def unavail_update(batch,init,mu_0,sigma_0):
       
         # calculate posterior (batch update)
        
-        X_trn = get_X_trn_unavail_update(xz)
+        X_trn = get_X_trn_unavail_update(xz,init)
         Y_trn = get_Y_trn_gen(batch,init,0)
         temp = post_cal(X_trn, Y_trn, init.sigma, mu_tmp, sigma_tmp)
       
@@ -217,7 +226,7 @@ def main_effect_update(batch,init,mu_1,sigma_1):
         xz = get_xz_matrix_main_effect(batch,init,valid_mains)
         mu_tmp = mu_1
         sigma_tmp = sigma_1
-        X_trn = get_X_trn_unavail_update(xz)
+        X_trn = get_X_trn_unavail_update(xz,init)
         Y_trn = [batch[i][init.reward_index] for i in valid_mains]
         
         

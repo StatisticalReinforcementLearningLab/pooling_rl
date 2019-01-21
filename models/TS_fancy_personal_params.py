@@ -39,7 +39,7 @@ class TS_fancy_personal_params:
         if which_mu==1:
             self.mus1[pid]=mu_value
             
-        if which_mu==0:
+        if which_mu==2:
             self.mus2[pid]=mu_value
             
     def update_sigmas(self,pid,sigma_value,which_sigma):
@@ -49,7 +49,7 @@ class TS_fancy_personal_params:
         if which_sigma==1:
             self.sigmas1[pid]=sigma_value
             
-        if which_sigma==0:
+        if which_sigma==2:
             self.sigmas2[pid]=sigma_value
     
     def update_batch(self,pid,context):

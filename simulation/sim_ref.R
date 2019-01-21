@@ -2,7 +2,7 @@
 require(Matrix)
 require(fda)
 
-pZ <- 2
+pZ <- 3
 
 #### INPUT LIST ####
 input = list()
@@ -22,6 +22,9 @@ input$mu2 = rep(0, length(input$feat2(z = rep(0, pZ), x = 0)))
 input$Sigma0 <- diag(10, length(input$feat0(z = rep(0, pZ), x = 0)));
 input$Sigma1 <- diag(10, length(input$feat1(z = rep(0, pZ), x = 0)));
 input$Sigma2 <- diag(10, length(input$feat2(z = rep(0, pZ), x = 0)));
+
+#print(dim(input$Sigma0))
+#pause(1)
 
 # dosage and proxy spec
 input$xi <- 10
@@ -197,7 +200,7 @@ policy.update = function(batch, input, proxy = T){
     
     p.avail <- mean(batch[, input$avail.index])
     X.null <- seq(0, 1/(1-input$lambda), by = 0.01)
-    print(X.null)
+    #print(X.null)
     Z.trn <- batch[, input$z.index]
     
     # F0 <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) input$feat0(z, x)), 1, mean)))
@@ -206,7 +209,7 @@ policy.update = function(batch, input, proxy = T){
     
     F.all <- t(sapply(X.null, function(x) apply(apply(Z.trn, 1, function(z) c(input$feat0(z, x), input$feat1(z, x), input$feat2(z, x))), 1, mean)))
     #print('this is F.all')
-    #print(F.all)
+    #(F.all)
     index0 <- 1:length(alpha0)
     index1 <- length(alpha0) + 1:length(alpha1)
     index2 <- tail(1:ncol(F.all), length(alpha2))
@@ -221,8 +224,8 @@ policy.update = function(batch, input, proxy = T){
     
     bsb <- create.bspline.basis (range=c(0, 1/(1-input$lambda)), nbasis=50, norder = 4)
     psi = function(x) c(eval.basis(x, bsb))
-    print(bsb)
-    #print(x)
+    #print(bsb)
+    #(x)
   
     psi.mat <- t(sapply(X.null, function(x) psi(x)))
     inv.cov <- solve(t(psi.mat) %*% psi.mat)
@@ -470,9 +473,9 @@ policy.update.ts = function(batch, input){
     }else{
       
       xz = matrix(batch[index, c(input$x.index, input$z.index)], nrow = sum(index))
-      print(xz)
-      print(batch)
-      pause(10)
+     # print(xz)
+     # (batch)
+      #pause(10)
       action <- batch[index, input$action.index]
       prob <- batch[index, input$prob.index]
       
@@ -483,7 +486,11 @@ policy.update.ts = function(batch, input){
       # feature matrix
       F1 <- t(apply(xz, 1, function(s) input$feat1(x = s[1], z = s[-1])))
       F2 <- t(apply(xz, 1, function(s) input$feat2(x = s[1], z = s[-1])))
-      
+      print(F1)
+      print(dim(F1))
+      print(xz)
+      print(F2)
+      pause(3)
       # calculate posterior (batch update)
       X.trn <- cbind(F1, action * F2)
       Y.trn <- batch[index, input$rwrd.index]
@@ -526,7 +533,7 @@ sim.ts = function(){
     anti.sed <- as.numeric(runif(1) < 0.3)
     event <- (anti.sed+a)>0
     #print('event')
-    #print(event)
+    #(event)
     x.next <- 0.9*x + event
     
     return(x.next)
