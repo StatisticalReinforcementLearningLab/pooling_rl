@@ -22,7 +22,7 @@ class TS_fancy_global_params:
         self.xi  = xi
         
  
-        self.gamma_mdp = .9
+        self.gamma_mdp = .9 
         self.lambda_knot = .9 
         self.prob_sedentary = .9 
         self.weight = .5 
