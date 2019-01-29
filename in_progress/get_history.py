@@ -35,7 +35,7 @@ class get_history:
 
             
         std = 2
-        return [[np.random.normal(mean,std) for i in range(self.dim_features)] \
+        return [[np.random.normal(mean,std)/100.0 for i in range(self.dim_features)] \
             for n in range(self.num_train_examples)]
 
     def action_function(self):
