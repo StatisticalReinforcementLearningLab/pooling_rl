@@ -18,6 +18,11 @@ input$sigma <- 1
 input$mu0 = rep(0, length(input$feat0(z = rep(0, pZ), x = 0)))
 input$mu1 = rep(0, length(input$feat1(z = rep(0, pZ), x = 0)))
 input$mu2 = rep(0, length(input$feat2(z = rep(0, pZ), x = 0)))
+
+print(input$mu0)
+print(input$mu1)
+print(input$mu2)
+
 input$Sigma0 <- diag(10, length(input$feat0(z = rep(0, pZ), x = 0)));
 input$Sigma1 <- diag(10, length(input$feat1(z = rep(0, pZ), x = 0)));
 input$Sigma2 <- diag(10, length(input$feat2(z = rep(0, pZ), x = 0)));
