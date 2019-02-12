@@ -28,17 +28,17 @@ with open('{}loc_label_to_intervention_label_tref.pkl'.format(root),'rb') as f:
 #    hour_pretreatment_label_to_val = pickle.load(f)
 
     
-with open('{}trial_dists_rec.pkl'.format(root),'rb') as f:
+with open('{}trial_dists_rec_new_dosage.pkl'.format(root),'rb') as f:
     dists = pickle.load(f)
     
-with open('{}key_matches_rec.pkl'.format(root),'rb') as f:
+with open('{}key_matches_rec_new_dosage.pkl'.format(root),'rb') as f:
     matched = pickle.load(f)
     
     
-with open('{}trial_dists_intervention.pkl'.format(root),'rb') as f:
+with open('{}trial_dists_new_dosage_intervention.pkl'.format(root),'rb') as f:
     dists_intervention = pickle.load(f)
     
-with open('{}key_matches_intervention.pkl'.format(root),'rb') as f:
+with open('{}key_matches_new_dosage_intervention.pkl'.format(root),'rb') as f:
     matched_intervention = pickle.load(f)    
     
     
@@ -184,7 +184,7 @@ def context_to_key(context,duration):
  #context[7]
 #,'pre',str(duration),'wea',context[7]
 #,'tod',context[1],'dow',context[3],'loc',context[4],'wea',context[7]
-    selected_context = ['gid',context[0],'tod',context[1],'dow',context[3],'loc',context[4],'wea',context[7]]
+    selected_context = ['gid',context[0],'tod',context[1],'dow',context[3],'loc',context[4],'wea',context[7],'pre',context[2]]
     
     return '-'.join(selected_context)
 
