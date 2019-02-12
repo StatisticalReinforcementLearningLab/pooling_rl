@@ -47,12 +47,9 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         sigmav = np.array([[10.0,0.0],[0.0,10.0]]).reshape(1,2,2)
         
         
-        self.sigma_u1 = gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                                                 dtype=gpflow.settings.float_type)
-        self.sigma_u2 = gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                                                 dtype=gpflow.settings.float_type)
-        self.sigma_rho =gpflow.Param(1.0, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
-                                    
+        self.sigma_u1 = tf.constant([1],dtype=tf.float64)
+        self.sigma_u2 = tf.constant([1],dtype=tf.float64)
+        self.sigma_rho =tf.constant([.2],dtype=tf.float64)
         self.sigma_theta = tf.constant(theta)
                                     #gpflow.Param(theta, transform=gpflow.transforms.DiagMatrix(6)(gpflow.transforms.positive),
                                     #                           dtype=gpflow.settings.float_type,fix_shape=True)
@@ -60,12 +57,10 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
                                     #gpflow.Param(1.0, transform=gpflow.transforms.positive,
                                     #dtype=gpflow.settings.float_type)
                                     
-        self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),
-                                                                 dtype=gpflow.settings.float_type)
+        self.sigma_v =  tf.constant(sigmav)
                                     
                                     
-        self.noise_term = gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                                                   dtype=gpflow.settings.float_type)
+        self.noise_term = tf.constant([1],dtype=tf.float64)
                                     
                                     #gpflow.Param(1.0, transform=gpflow.transforms.positive,
                                     #dtype=gpflow.settings.float_type)

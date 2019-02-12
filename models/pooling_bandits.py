@@ -6,6 +6,7 @@ import sys
 import pickle
 import pandas as pd
 import CustomKernelStatic
+import CustomKernel
 from sklearn import preprocessing
 tf.logging.set_verbosity(tf.logging.ERROR)
 import warnings
@@ -48,7 +49,7 @@ def rbf_custom_np( X, X2=None):
 
 
 
-def run(X,y):
+def run(X,y,gp_train_type='Static'):
     users = np.array([[float(X[i][8]==X[j][8]) for j in range(len(X))] for i in range(len(X))])
 
     rdayone = [x[9] for x in X]
@@ -56,7 +57,11 @@ def run(X,y):
     rhos = np.array([[rbf_custom_np( rdayone[i], X2=rdaytwo[j]) for j in range(len(X))] for i in range(len(X))])
     #print(type(rhos))
     sess = tf.Session()
-    k = CustomKernelStatic.CustomKernelStatic(10,mysession=sess,rhos=rhos,select_users=users,baseline_indices=[0,1,2,3,4,5,6],psi_indices=[0,7],user_day_index=9,user_index=8,num_data_points=X.shape[0])
+    
+    if gp_train_type=='empirical_bayes':
+        k = CustomKernel.CustomKernel(10,mysession=sess,rhos=rhos,select_users=users,baseline_indices=[0,1,2,3,4,5,6],psi_indices=[0,7],user_day_index=9,user_index=8,num_data_points=X.shape[0])
+    else:
+        k = CustomKernelStatic.CustomKernelStatic(10,mysession=sess,rhos=rhos,select_users=users,baseline_indices=[0,1,2,3,4,5,6],psi_indices=[0,7],user_day_index=9,user_index=8,num_data_points=X.shape[0])
 
     m = gpflow.models.GPR(X,y, kern=k)
 
@@ -67,9 +72,18 @@ def run(X,y):
     term = m.kern.K(X,X2=X)
 
     trm = term.eval(session=sess)
-    return {'sigma_u':m.kern.sigma_u.value,'sigma_v':m.kern.sigma_u.value,'cov':trm,'noise':m.kern.noise_term.value}
+
+    if gp_train_type=='empirical_bayes':
+        sigma_u = np.array([[m.kern.sigma_u1.value,m.kern.sigma_u1.value**.5*m.kern.sigma_u2.value**.5*m.kern.sigma_rho.value],\
+                            [m.kern.sigma_u1.value**.5*m.kern.sigma_u2.value**.5*m.kern.sigma_rho.value,m.kern.sigma_u2.value]])
+#np.array([[1.0,0.1],[0.1,1.0]])
 
 
+        return {'sigma_u':sigma_u,'sigma_v':m.kern.sigma_v.value,'cov':trm,'noise':m.kern.noise_term.value}
+    else:
+        sigma_u = np.array([[m.kern.sigma_u1.eval(session=sess),m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess)],\
+                            [m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess),m.kern.sigma_u2.eval(session=sess)]])
+        return {'sigma_u':sigma_u,'sigma_v':m.kern.sigma_v.eval(session=sess),'cov':trm,'noise':m.kern.noise_term.eval(session=sess)}
 ###get posterior mu and theta for each user .... at the end of the night calculate once for the next day or what?
 
 def create_phi(exp,pi):
