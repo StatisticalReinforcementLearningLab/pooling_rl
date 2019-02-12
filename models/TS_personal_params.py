@@ -54,7 +54,7 @@ class TS_personal_params:
         
         temp = [context[0]]
         temp.extend(context[1])
-        temp.extend(context[1:])
+        temp.extend(context[len(context[1])+1:])
         #print(self.batch_index[pid])
         self.batch[pid][self.batch_index[pid]]=temp
         self.batch_index[pid]=self.batch_index[pid]+1

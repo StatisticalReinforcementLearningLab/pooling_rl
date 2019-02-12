@@ -23,7 +23,8 @@ class participant:
         
         self.gid = gid 
         
-        self.current_day = None
+        self.current_day_counter = 0
+        self.current_day=times[0]
         
         self.first_week = None
         
@@ -45,8 +46,10 @@ class participant:
         
         self.available = None
         
-    def set_current_day(self):
-        pass
+    def set_current_day(self,time):
+        if time.date()!=self.current_day.date():
+            self.current_day=time
+            self.current_day_counter=self.current_day_counter+1
     
     def get_current_day(self):
         pass
