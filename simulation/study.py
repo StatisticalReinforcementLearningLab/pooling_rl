@@ -13,14 +13,14 @@ class study:
     '''
     
     def __init__(self):
-        root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
+        #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
+        root = '../../murphy_lab/lab/pooling/distributions'
         
-        
-        with open('{}person_to_time_indices.pkl'.format(root),'rb') as f:
+        with open('{}u_to_time_indices.pkl'.format(root),'rb') as f:
             pse=pickle.load(f)
-        with open('{}person_to_decision_time_indices.pkl'.format(root),'rb') as f:
+        with open('{}u_time_indices.pkl'.format(root),'rb') as f:
             dts=pickle.load(f)
-        with open('{}time_to_active_participants.pkl'.format(root),'rb') as f:
+        with open('{}active_u.pkl'.format(root),'rb') as f:
             dates_to_people=pickle.load(f)
         with open('{}all_ordered_times.pkl'.format(root),'rb') as f:
             study_days=pickle.load(f)
