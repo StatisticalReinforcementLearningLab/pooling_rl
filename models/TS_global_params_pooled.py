@@ -40,6 +40,7 @@ class TS_global_params:
         self.noise_term=None
         self.cov=None
         self.psi = psi.psi()
+        self.decision_times = 0
     
     def feat0_function(self,z,x):
         

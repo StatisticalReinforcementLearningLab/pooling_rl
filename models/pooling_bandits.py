@@ -50,13 +50,20 @@ def rbf_custom_np( X, X2=None):
 
 
 def run(X,y,gp_train_type='Static'):
+    #init_g = tf.global_variables_initializer()
+    #init_l = tf.local_variables_initializer()
+    #with tf.Session() as sess:
+    #sess.run(init_g)
+    #sess.run(init_l)
     users = np.array([[float(X[i][8]==X[j][8]) for j in range(len(X))] for i in range(len(X))])
 
     rdayone = [x[9] for x in X]
     rdaytwo = rdayone
     rhos = np.array([[rbf_custom_np( rdayone[i], X2=rdaytwo[j]) for j in range(len(X))] for i in range(len(X))])
     #print(type(rhos))
-    sess = tf.Session()
+    from tensorflow.python.framework import ops
+    ops.reset_default_graph()
+    sess = tf.InteractiveSession()
     
     if gp_train_type=='empirical_bayes':
         k = CustomKernel.CustomKernel(10,mysession=sess,rhos=rhos,select_users=users,baseline_indices=[0,1,2,3,4,5,6],psi_indices=[0,7],user_day_index=9,user_index=8,num_data_points=X.shape[0])
@@ -64,27 +71,93 @@ def run(X,y,gp_train_type='Static'):
         k = CustomKernelStatic.CustomKernelStatic(10,mysession=sess,rhos=rhos,select_users=users,baseline_indices=[0,1,2,3,4,5,6],psi_indices=[0,7],user_day_index=9,user_index=8,num_data_points=X.shape[0])
 
     m = gpflow.models.GPR(X,y, kern=k)
-
-
-    gpflow.train.ScipyOptimizer().minimize(m,session=sess)
+    #m.initialize(session=sess)
+    if gp_train_type=='empirical_bayes':
+        gpflow.train.ScipyOptimizer().minimize(m,session=sess)
 
 
     term = m.kern.K(X,X2=X)
-
-    trm = term.eval(session=sess)
-
     if gp_train_type=='empirical_bayes':
-        sigma_u = np.array([[m.kern.sigma_u1.value,m.kern.sigma_u1.value**.5*m.kern.sigma_u2.value**.5*m.kern.sigma_rho.value],\
+        trm = term.eval(session=sess)
+    else:
+        
+        trm = term.eval(session=sess)
+#if gp_train_type=='empirical_bayes':
+    sigma_u = np.array([[m.kern.sigma_u1.value,m.kern.sigma_u1.value**.5*m.kern.sigma_u2.value**.5*m.kern.sigma_rho.value],\
                             [m.kern.sigma_u1.value**.5*m.kern.sigma_u2.value**.5*m.kern.sigma_rho.value,m.kern.sigma_u2.value]])
 #np.array([[1.0,0.1],[0.1,1.0]])
+    sigma_v =m.kern.sigma_v.value
+    noise =m.kern.noise_term.value
 
-
-        return {'sigma_u':sigma_u,'sigma_v':m.kern.sigma_v.value,'cov':trm,'noise':m.kern.noise_term.value}
-    else:
-        sigma_u = np.array([[m.kern.sigma_u1.eval(session=sess),m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess)],\
-                            [m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess),m.kern.sigma_u2.eval(session=sess)]])
-        return {'sigma_u':sigma_u,'sigma_v':m.kern.sigma_v.eval(session=sess),'cov':trm,'noise':m.kern.noise_term.eval(session=sess)}
+    return {'sigma_u':sigma_u,'sigma_v':sigma_v,'cov':trm,'noise':noise}
+        #else:
+        
+        #sigma_u = np.array([[m.kern.sigma_u1.eval(session=sess),m.kern.sigma_u1.eval(session=sess)**5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess)],[m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess),m.kern.sigma_u2.eval(session=sess)]])
+#return {'sigma_u':sigma_u,'sigma_v':m.kern.sigma_v.eval(session=sess),'cov':trm,'noise':m.kern.noise_term.eval(session=sess)}
 ###get posterior mu and theta for each user .... at the end of the night calculate once for the next day or what?
+
+def get_history(write_dir,dt):
+    to_return = {}
+    for d in [f for f in os.listdir(write_dir) if f!='.DS_Store']:
+        participant = {}
+        for f in os.listdir('{}/{}'.format(write_dir,d)):
+            if f!='.DS_Store':
+                time = int(f.split('_')[1])
+                if time <=dt:
+                    with open('{}/{}/{}'.format(write_dir,d,f),'rb') as f:
+                        ld = pickle.load(f)
+                    participant[time]=ld
+    
+        pid = d.split('_')[1]
+        if len(participant)>0:
+            to_return[int(pid)]=participant
+    return to_return
+
+def create_phi_new(history_dict,pi,global_params):
+    #these things will be accessed by the global params
+    indices = ['weather','location']
+    g0 = ['location']
+    f1=['ltps']
+    
+    ##returns phi and psi indices
+    ##this could be a bit faster not appending all the time
+    all_data = []
+    steps=[]
+    for user_id,history in history_dict.items():
+        #history = d.history
+        #history_keys = sorted(history)
+        for hk,h in history.items():
+            
+            h = history[hk]
+            if h['decision_time']:
+                v = [1]
+                v.extend([h[i] for i in indices])
+                v.append(pi*1)
+                v.extend([pi*h[i] for i in f1])
+                action = h['action']
+                if action<0:
+                    action=0
+                
+                v.append((action-pi)*1)
+                v.extend([(action-pi)*h[i] for i in f1])
+                v.append(action)
+                v.append(float(user_id))
+                v.append(float(h['study_day']))
+                all_data.append(v)
+                steps.append(h['steps'])
+    return all_data,steps
+
+def make_history_new(write_directory,pi,glob):
+    g = get_history(write_directory,glob.decision_times)
+    ad = create_phi_new(g,pi,glob)
+    if len(ad[0])==0:
+        return [[],[]]
+    
+    new_x = preprocessing.scale(np.array(ad[0]))
+    new_y = preprocessing.scale(np.array(ad[1]))
+    y = np.array([[float(r)] for r in new_y])
+    X = new_x
+    return [X,y]
 
 def create_phi(exp,pi):
     indices = ['weather','location']
@@ -92,7 +165,7 @@ def create_phi(exp,pi):
     f1=['ltps']
     
     ##returns phi and psi indices
-    
+    ##this could be a bit faster not appending all the time
     all_data = []
     steps=[]
     for user_id,d in exp.population.items():

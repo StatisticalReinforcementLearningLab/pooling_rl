@@ -1,0 +1,757 @@
+calculating gp updates
+called
+(3, 3)
+calculating posterior
+calculating gp updates
+called
+(6, 6)
+calculating posterior
+calculating gp updates
+called
+(16, 16)
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(29, 29)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(40, 40)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(61, 61)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(92, 92)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(128, 128)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(170, 170)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(206, 206)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(245, 245)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(288, 288)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(330, 330)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(366, 366)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(406, 406)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(446, 446)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(488, 488)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(532, 532)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(576, 576)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(617, 617)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(652, 652)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(689, 689)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(729, 729)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(770, 770)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(811, 811)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(851, 851)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(891, 891)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(933, 933)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(972, 972)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1013, 1013)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+calculating gp updates
+called
+(4, 4)
+calculating posterior
+calculating gp updates
+called
+(7, 7)
+calculating posterior
+calculating gp updates
+called
+(14, 14)
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(27, 27)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(36, 36)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(58, 58)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(87, 87)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(124, 124)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(159, 159)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(195, 195)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(232, 232)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(274, 274)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(317, 317)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(352, 352)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(399, 399)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(440, 440)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(485, 485)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(527, 527)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(564, 564)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(601, 601)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(646, 646)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(684, 684)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(725, 725)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(764, 764)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(807, 807)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(846, 846)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(883, 883)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(918, 918)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(961, 961)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1006, 1006)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1040, 1040)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1079, 1079)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1117, 1117)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1160, 1160)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1197, 1197)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior
+calculating gp updates
+called
+(1236, 1236)
+calculating posterior
+calculating posterior
+calculating posterior
+calculating posterior

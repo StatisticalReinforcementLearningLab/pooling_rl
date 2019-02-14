@@ -9,8 +9,8 @@ import random
 from datetime import datetime
 random.seed(datetime.now())
 
-root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
-
+#root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
+root = '../../murphy_lab/lab/pooling/distributions/'
 
 #with open('{}steps_both_groups_logs_dosage_estf_bbiit_swapped.pkl'.format(root),'rb') as f:
 #    dists = pickle.load(f)
@@ -108,7 +108,7 @@ def get_initial_context(num_people,first_index,group_ids=None):
         ##.95 is an approximation
         if group_ids==None:
             #print('hello')
-            group_id = int(random.random()>4.0/36)+1
+            group_id = int(random.random()>.5)+1
         else:
             group_id=group_ids[person]
         #group_id = 2

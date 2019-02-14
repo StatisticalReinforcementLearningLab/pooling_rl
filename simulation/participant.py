@@ -45,7 +45,9 @@ class participant:
         self.action_dur = None
         
         self.available = None
-        
+        self.steps_last_time_period = 0
+        self.steps = None
+    
     def set_current_day(self,time):
         if time.date()!=self.current_day.date():
             self.current_day=time
@@ -158,12 +160,14 @@ class participant:
     def find_last_time_period_steps(self,timestamp):
         ##looking at the last hour
         #pass
-        thirty_minutes_ago = timestamp-pd.Timedelta(minutes=30)
-        one_hour_ago = timestamp-pd.Timedelta(minutes=60)
+        #thirty_minutes_ago = timestamp-pd.Timedelta(minutes=30)
         
-        steps_thirty = self.history[thirty_minutes_ago]['steps']
-        steps_hour = self.history[one_hour_ago]['steps']
-        return self.get_pretreatment(steps_thirty+steps_hour)
+        #one_hour_ago = timestamp-pd.Timedelta(minutes=60)
+        
+        #steps_thirty = self.history[thirty_minutes_ago]['steps']
+        #steps_hour = self.history[one_hour_ago]['steps']
+        
+        return self.get_pretreatment(self.steps_last_time_period)
         
     def find_yesterday_steps(self,time):
         yesterday = time-pd.DateOffset(days=1)
