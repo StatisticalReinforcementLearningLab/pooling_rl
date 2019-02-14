@@ -14,7 +14,7 @@ class study:
     
     def __init__(self):
         #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
-        root = '../../murphy_lab/lab/pooling/distributions'
+        root = '../../murphy_lab/lab/pooling/distributions/'
         
         with open('{}u_to_time_indices.pkl'.format(root),'rb') as f:
             pse=pickle.load(f)
