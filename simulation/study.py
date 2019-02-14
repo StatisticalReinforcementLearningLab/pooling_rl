@@ -20,7 +20,7 @@ class study:
             pse=pickle.load(f)
         with open('{}u_to_decision_time_indices.pkl'.format(root),'rb') as f:
             dts=pickle.load(f)
-        with open('{}active_u.pkl'.format(root),'rb') as f:
+        with open('{}time_to_active_u.pkl'.format(root),'rb') as f:
             dates_to_people=pickle.load(f)
         with open('{}all_ordered_times.pkl'.format(root),'rb') as f:
             study_days=pickle.load(f)
