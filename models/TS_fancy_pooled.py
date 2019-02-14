@@ -395,5 +395,5 @@ def policy_update( init,batch,mu_0,sigma_0,mu_1,sigma_1,mu_2,sigma_2,proxy=False
     return txt_est
    
 
-def global_updates(X,y,train_type='Static'):
-    return pb.run(X,y,gp_train_type=train_type)
+def global_updates(X,y,global_params,train_type='Static'):
+    return pb.run(X,y,global_params,gp_train_type=train_type)

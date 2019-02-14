@@ -41,6 +41,11 @@ class TS_global_params:
         self.cov=None
         self.psi = psi.psi()
         self.decision_times = 0
+        self.kdim = None
+        self.baseline_indices = None
+        self.psi_indices = None
+        self.user_id_index=None
+        self.user_day_index = None
     
     def feat0_function(self,z,x):
         

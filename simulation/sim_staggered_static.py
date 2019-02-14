@@ -30,7 +30,13 @@ def initialize_policy_params_TS(experiment,context_dimension):
     
     global_p =gtp.TS_global_params(10,context_dimension)
     personal_p = pp.TS_personal_params()
+    global_p =gtp.TS_global_params(10,context_dimension)
     
+    global_p.kdim = 11
+    global_p.baseline_indices = [0,1,2,3,4,5,6,7,8]
+    global_p.psi_indices = [7,8]
+    global_p.user_id_index = 9
+    global_p.user_day_index =10
     #print(type(personal_p))
     
     for person in experiment.population.keys():
@@ -137,7 +143,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 ##these lines
                 history = make_history_new(write_directory,.6,global_policy_params)
-                temp_params = TS_fancy_pooled.global_updates(history[0],history[1],train_type = 'Static')
+                temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'Static')
                 #print(temp_params['cov'].shape)
                 #global_policy_params.update_params(temp_params)
                 #del temp_params
@@ -302,6 +308,6 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 if __name__=="__main__":
     experiment = study.study()
-    glob,personal = initialize_policy_params_TS(experiment,5)
+    glob,personal = initialize_policy_params_TS(experiment,11)
     new_kind_of_simulation(experiment,'TS_fancy',personal,glob)    
 

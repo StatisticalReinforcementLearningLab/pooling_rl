@@ -9,8 +9,8 @@ import random
 from datetime import datetime
 random.seed(datetime.now())
 
-root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
-
+#root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
+root = '../../murphy_lab/lab/pooling/distributions/'
 
 #with open('{}steps_both_groups_logs_dosage_estf_bbiit_swapped.pkl'.format(root),'rb') as f:
 #    dists = pickle.load(f)
@@ -19,30 +19,29 @@ root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions
 ####
 with open('{}label_to_temperature_value_stats.pkl'.format(root),'rb') as f:
     weather_label_to_val = pickle.load(f)
-    
+
 with open('{}loc_label_to_intervention_label_tref.pkl'.format(root),'rb') as f:
     loc_label_to_val = pickle.load(f)
 
-with open('{}yesterday_step_ids.pkl'.format(root),'rb') as f:
-         yesterday_chunks  = pickle.load(f)
+
 #with open('{}conversion_pretreatment.pkl'.format(root),'rb') as f:
 #    hour_pretreatment_label_to_val = pickle.load(f)
 
-    
-with open('{}trial_dists_rec.pkl'.format(root),'rb') as f:
+
+with open('{}trial_dists_rec_new_dosage.pkl'.format(root),'rb') as f:
     dists = pickle.load(f)
-    
-with open('{}key_matches_rec.pkl'.format(root),'rb') as f:
+
+with open('{}key_matches_rec_new_dosage.pkl'.format(root),'rb') as f:
     matched = pickle.load(f)
-    
-    
-with open('{}trial_dists_intervention.pkl'.format(root),'rb') as f:
+
+
+with open('{}trial_dists_new_dosage_intervention.pkl'.format(root),'rb') as f:
     dists_intervention = pickle.load(f)
-    
-with open('{}key_matches_intervention.pkl'.format(root),'rb') as f:
-    matched_intervention = pickle.load(f)    
-    
-    
+
+with open('{}key_matches_new_dosage_intervention.pkl'.format(root),'rb') as f:
+    matched_intervention = pickle.load(f)
+
+
 with open('{}interventions_both_groups_estf.pkl'.format(root),'rb') as f:
     intervention_dists = pickle.load(f)
 

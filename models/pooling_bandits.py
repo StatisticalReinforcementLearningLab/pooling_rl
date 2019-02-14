@@ -49,7 +49,7 @@ def rbf_custom_np( X, X2=None):
 
 
 
-def run(X,y,gp_train_type='Static'):
+def run(X,y,global_params,gp_train_type='Static'):
     #init_g = tf.global_variables_initializer()
     #init_l = tf.local_variables_initializer()
     #with tf.Session() as sess:
@@ -66,12 +66,12 @@ def run(X,y,gp_train_type='Static'):
     sess = tf.InteractiveSession()
     
     if gp_train_type=='empirical_bayes':
-        k = CustomKernel.CustomKernel(10,mysession=sess,rhos=rhos,select_users=users,baseline_indices=[0,1,2,3,4,5,6],psi_indices=[0,7],user_day_index=9,user_index=8,num_data_points=X.shape[0])
+        k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
     else:
-        k = CustomKernelStatic.CustomKernelStatic(10,mysession=sess,rhos=rhos,select_users=users,baseline_indices=[0,1,2,3,4,5,6],psi_indices=[0,7],user_day_index=9,user_index=8,num_data_points=X.shape[0])
+        k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
 
     m = gpflow.models.GPR(X,y, kern=k)
-    #m.initialize(session=sess)
+    m.initialize(session=sess)
     if gp_train_type=='empirical_bayes':
         gpflow.train.ScipyOptimizer().minimize(m,session=sess)
 
@@ -88,7 +88,7 @@ def run(X,y,gp_train_type='Static'):
 #np.array([[1.0,0.1],[0.1,1.0]])
     sigma_v =m.kern.sigma_v.value
     noise =m.kern.noise_term.value
-
+    sess.close()
     return {'sigma_u':sigma_u,'sigma_v':sigma_v,'cov':trm,'noise':noise}
         #else:
         

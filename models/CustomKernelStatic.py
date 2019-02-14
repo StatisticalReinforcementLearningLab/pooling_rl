@@ -53,8 +53,8 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
                                                                   dtype=gpflow.settings.float_type)
         self.sigma_rho =gpflow.Param(1.0, trainable=False,transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
                                      
-        self.sigma_theta = tf.constant(np.eye(4))
-        self.mu_theta = tf.constant(np.ones(4))
+        self.sigma_theta = tf.constant(np.eye(len(baseline_indices)))
+        self.mu_theta = tf.constant(np.ones(len(baseline_indices)))
             #tf.constant(theta)
                                      #gpflow.Param(theta, transform=gpflow.transforms.DiagMatrix(6)(gpflow.transforms.positive),
                                      #                           dtype=gpflow.settings.float_type,fix_shape=True)
@@ -138,7 +138,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         
         else:
             #print('called')
-            user_id_two = X[-2]
+            user_id_two = user_id_one
             day_two = day_one
             f_two = gather_cols(X, self.baseline_indices, name=None)
             g_two=gather_cols(X, self.psi_indices, name=None)
