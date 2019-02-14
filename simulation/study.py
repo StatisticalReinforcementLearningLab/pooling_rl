@@ -18,7 +18,7 @@ class study:
         
         with open('{}u_to_time_indices.pkl'.format(root),'rb') as f:
             pse=pickle.load(f)
-        with open('{}u_time_indices.pkl'.format(root),'rb') as f:
+        with open('{}u_to_decision_time_indices.pkl'.format(root),'rb') as f:
             dts=pickle.load(f)
         with open('{}active_u.pkl'.format(root),'rb') as f:
             dates_to_people=pickle.load(f)
