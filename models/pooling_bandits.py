@@ -159,58 +159,88 @@ def make_history_new(write_directory,pi,glob):
     X = new_x
     return [X,y]
 
-def create_phi(exp,pi):
-    indices = ['weather','location']
-    g0 = ['location']
-    f1=['ltps']
-    
-    ##returns phi and psi indices
-    ##this could be a bit faster not appending all the time
+def create_phi(exp,pi,baseline_features,responsivity_features):
     all_data = []
     steps=[]
-    for user_id,d in exp.population.items():
-        history = d.history
-        history_keys = sorted(history)
-        for hk in history_keys:
+    
+    
+    ##might add pi to the user's history
+    for user_id,user_data in exp.population.items():
+        history = user_data.history
+            history_keys = sorted({k:v for k,v in history.items() if v['decision_time']})
             
-            h = history[hk]
-            if h['decision_time']:
+            for hk in history_keys:
+                
+                h = history[hk]
+                
                 v = [1]
-                v.extend([h[i] for i in indices])
+                v.extend([h[i] for i in baseline_features])
                 v.append(pi*1)
-                v.extend([pi*h[i] for i in f1])
+                v.extend([pi*h[i] for i in responsivity_features])
                 action = h['action']
                 if action<0:
                     action=0
                 
                 v.append((action-pi)*1)
-                v.extend([(action-pi)*h[i] for i in f1])
+                v.extend([(action-pi)*h[i] for i in responsivity_features])
                 v.append(action)
                 v.append(float(user_id))
                 v.append(float(h['study_day']))
                 all_data.append(v)
                 steps.append(h['steps'])
+        
+        
     return all_data,steps
 
 
-def make_history(exp):
-    ad = create_phi(exp,.6)
+def make_history(exp,global_params):
+    ad = (exp,.6,global_params.baseline_features,global_params.psi_features)
     if len(ad[0])==0:
         return [[],[]]
-    
-    new_x = preprocessing.scale(np.array(ad[0]))
-    new_y = preprocessing.scale(np.array(ad[1]))
+    X,y = new_standardize(ad[0],ad[1])
+    #new_x = preprocessing.scale(np.array(ad[0]))
+    #new_y = preprocessing.scale(np.array(ad[1]))
     y = np.array([[float(r)] for r in new_y])
-    X = new_x
+    #X = new_x
     return [X,y]
 
 ##make function of pZ, not too hard
-def create_H(context_len):
-    return np.transpose(np.array([[1]+[0 for i in range(context_len)]+[0,0,0,0],[0]+[0 for i in range(context_len)]+[1,0,1,0]]))
+def create_H(num_baseline_features,num_responsivity_features):
+    ##for now have fixed random effects size one
+    
+    random_effect_one = [1]
+    random_effect_two = [1]
+    
+    column_one = [1]
+    column_one = column_one+[0]*num_baseline_features
+    column_one = column_one+[0]
+    column_one = column_one+[0]*num_responsivity_features
+    column_one = column_one+[0]
+    column_one = column_one+[0]*num_responsivity_features
+    
+    
+    column_two = [0]
+    column_two = column_two+[0]*num_baseline_features
+    column_two = column_two+[1]
+    column_two = column_two+[0]*num_responsivity_features
+    column_two = column_two+[1]
+    column_two = column_two+[0]*num_responsivity_features
+    
+    return np.transpose(np.array([column_one,column_two]))
 
 
     
-
+def new_standardize(X,y):
+    new_x = [x[:-2] for x in X]
+    new_x = preprocessing.scale(np.array(new_x))
+    to_return = np.zeros((len(X),len(X[0])))
+    for i in range(len(X)):
+        #temp=np.zeros(len(X[i]))
+        to_return[i][:-2]=new_x[i]
+        to_return[i][-2]=X[i][-2]
+        to_return[i][-1]=X[i][-1]
+    
+    return to_return,preprocessing.scale(np.array(y))
         
 
 def get_M(global_params,user_id,user_study_day,history):
@@ -218,17 +248,17 @@ def get_M(global_params,user_id,user_study_day,history):
   
     day_id =user_study_day
     
-    M = [[] for i in range(history.shape[0])]
+    M = [[] for i in range(history[0].shape[0])]
 
-    H = create_H(1)
-    for x_old_i in range(history.shape[0]):
+    H = create_H(len(global_params.baseline_indices),len(global_params.psi_indices))
+    for x_old_i in range(history[0].shape[0]):
         x_old = history[x_old_i]
         
         ##these indices all need to be parameters
-        phi = x_old[1:7]
+        phi = np.array(x_old[i] for i in global_params.baseline_indices)
         
-        old_user_id = x_old[8]
-        old_day_id = x_old[9]
+        old_user_id = x_old[global_params.user_id_index]
+        old_day_id = x_old[global_params.user_day_index]
         
         inner = float(old_user_id==user_id)*global_params.sigma_u.reshape(2,2)+\
 rbf_custom_np(day_id,old_day_id)*global_params.sigma_v.reshape(2,2)
@@ -250,17 +280,17 @@ rbf_custom_np(day_id,old_day_id)*global_params.sigma_v.reshape(2,2)
             #print(np.array(M).shape)
     return np.array(M)
 
-def get_RT(y,X,sigma_theta):
+def get_RT(y,X,sigma_theta,x_dim):
     
-    to_return = [y[i]-np.dot(X[i][0:6],np.ones(6)) for i in range(len(X))]
+    to_return = [y[i]-np.dot(X[i][0:x_dim],np.ones(x_dim)) for i in range(len(X))]
     return np.array([i[0] for i in to_return])
 
 def calculate_posterior(global_params,user_id,user_study_day,X,y):
-    H = create_H(1)
+    H = create_H(len(global_params.baseline_indices),len(global_params.psi_indices))
     M = get_M(global_params,user_id,user_study_day,X)
     ##change this to be mu_theta
     ##is it updated?  the current mu_theta?
-    adjusted_rewards =get_RT(y,X,global_params.mu_theta)
+    adjusted_rewards =get_RT(y,X,global_params.mu_theta,len(global_params.baseline_indices))
     
     mu = get_middle_term(X.shape[0],global_params.cov.reshape(X.shape[0],X.shape[0]),\
                 global_params.noise_term,M,adjusted_rewards,global_params.mu_theta)
