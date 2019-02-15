@@ -312,7 +312,7 @@ if __name__=="__main__":
             print(e)
 
 
-    experiment = study.study( '../../murphy_lab/lab/pooling/distributions')
+    experiment = study.study( '../../murphy_lab/lab/pooling/distributions/')
     glob,personal = initialize_policy_params_TS(experiment)
     new_kind_of_simulation(experiment,'TS_fancy',personal,glob)
     print('finished')    
