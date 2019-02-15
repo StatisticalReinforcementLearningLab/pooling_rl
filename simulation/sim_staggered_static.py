@@ -265,7 +265,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     ##no it isn't, i have to redo this
                     participant.update_dosage(action)
                     
-                    context = [action,participant.gid,tod,dow,location,weather,participant.get_prekey(participant.duration,steps_last_time_period),\
+                    context = [action,participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),\
                               steps_yesterday,variation,sf.dosage_to_dosage_key(participant.dosage)]
                     
                     participant.steps_last_time_period = participant.steps
