@@ -301,7 +301,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                              
 
 if __name__=="__main__":
-    folder = '../../muphy_lab/lab/pooling/temp'
+    folder = '../../murphy_lab/lab/pooling/temp'
     for the_file in os.listdir(folder):
         file_path = os.path.join(folder, the_file)
         try:
