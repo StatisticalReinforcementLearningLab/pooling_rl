@@ -143,6 +143,16 @@ def get_next_weather(tod,month,weather):
     
     return val
 
+def get_pretreatment(steps):
+    steps = math.log(steps+.5)
+    #chunks =  [[0, 117.],[ 117.,330.],[330.,759.8],[759.8,100000000]]
+    chunks =  [[-.7, 3.23867845],[ 3.23867845,4.95229972],[4.95229972,5.95713187],[5.95713187,100000000]]
+    
+    #for i in range(len(chunks)):
+    #    if steps>=chunks[i][0] and steps<chunks[i][1]:
+    #        return i
+    
+    return int(steps>math.log(.5))
 
 def get_next_location(gid,dow,tod,loc):
     
@@ -168,7 +178,7 @@ def get_next_location(gid,dow,tod,loc):
 
 def get_steps_no_action(gid,tod,dow,loc,wea,pre):
     
-    keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'loc',str(loc),'wea',str(wea),'pre',str(pre)]
+    keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'loc',str(loc),'wea',str(wea),'pre',str(get_pretreatment(pre))]
     
     new_key = '-'.join(keys)
     
