@@ -243,7 +243,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
-                            personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
+                    personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
                     
                     global_policy_params.decision_times =   global_policy_params.decision_times+1
                     
