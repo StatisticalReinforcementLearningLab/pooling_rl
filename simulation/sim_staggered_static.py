@@ -142,7 +142,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #print(history)
                 
                 ##these lines
-                history =pb.make_history_new(pi,glob)
+                history =pb.make_history_new(.6,glob)
                     #make_history_new(write_directory,.6,global_policy_params)
                 temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'Static')
                 #print(temp_params['cov'].shape)
@@ -236,7 +236,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     action=0
                     
                     
-                    history = pb.make_history_new(pi,glob)
+                    history = pb.make_history_new(.6,glob)
                     ##update my mu2 and sigma2
                     temp = pb.calculate_posterior(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
