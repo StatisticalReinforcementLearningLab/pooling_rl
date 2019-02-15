@@ -273,7 +273,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     participant.steps = steps
                 else:
                     participant.steps_last_time_period = participant.steps
-                    steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather)
+                    steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
                     participant.steps = steps
                 
                 

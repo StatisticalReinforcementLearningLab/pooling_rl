@@ -166,9 +166,9 @@ def get_next_location(gid,dow,tod,loc):
     return val
 
 
-def get_steps_no_action(gid,tod,dow,loc,wea):
+def get_steps_no_action(gid,tod,dow,loc,wea,pre):
     
-    keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'loc',str(loc),'wea',str(wea),'pre',context[2]]
+    keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'loc',str(loc),'wea',str(wea),'pre',str(pre)]
     
     new_key = '-'.join(keys)
     
