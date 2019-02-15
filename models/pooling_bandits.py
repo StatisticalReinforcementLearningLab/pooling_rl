@@ -113,63 +113,19 @@ def get_history(write_dir,dt):
             to_return[int(pid)]=participant
     return to_return
 
-def create_phi_new(history_dict,pi,global_params):
-    #these things will be accessed by the global params
-    indices = ['weather','location']
-    g0 = ['location']
-    f1=['ltps']
-    
-    ##returns phi and psi indices
-    ##this could be a bit faster not appending all the time
-    all_data = []
-    steps=[]
-    for user_id,history in history_dict.items():
-        #history = d.history
-        #history_keys = sorted(history)
-        for hk,h in history.items():
-            
-            h = history[hk]
-            if h['decision_time']:
-                v = [1]
-                v.extend([h[i] for i in indices])
-                v.append(pi*1)
-                v.extend([pi*h[i] for i in f1])
-                action = h['action']
-                if action<0:
-                    action=0
-                
-                v.append((action-pi)*1)
-                v.extend([(action-pi)*h[i] for i in f1])
-                v.append(action)
-                v.append(float(user_id))
-                v.append(float(h['study_day']))
-                all_data.append(v)
-                steps.append(h['steps'])
-    return all_data,steps
 
-def make_history_new(write_directory,pi,glob):
-    g = get_history(write_directory,glob.decision_times)
-    ad = create_phi_new(g,pi,glob)
-    if len(ad[0])==0:
-        return [[],[]]
-    
-    new_x = preprocessing.scale(np.array(ad[0]))
-    new_y = preprocessing.scale(np.array(ad[1]))
-    y = np.array([[float(r)] for r in new_y])
-    X = new_x
-    return [X,y]
 
-def create_phi(exp,pi,baseline_features,responsivity_features):
+
+
+def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
     all_data = []
     steps=[]
     
     
     ##might add pi to the user's history
-    for user_id,user_data in exp.population.items():
-        history = user_data.history
-            history_keys = sorted({k:v for k,v in history.items() if v['decision_time']})
-            
-            for hk in history_keys:
+    for user_id,history in history_dict.items():
+     
+            for hk,h in history.items():
                 
                 h = history[hk]
                 
@@ -193,16 +149,20 @@ def create_phi(exp,pi,baseline_features,responsivity_features):
     return all_data,steps
 
 
-def make_history(exp,global_params):
-    ad = (exp,.6,global_params.baseline_features,global_params.psi_features)
+
+def make_history_new(pi,glob):
+    g = get_history(glob.write_directory,glob.decision_times)
+    ad = create_phi_new(g,pi,glob.baseline_indices,glob.psi_indices)
     if len(ad[0])==0:
         return [[],[]]
+    
     X,y = new_standardize(ad[0],ad[1])
     #new_x = preprocessing.scale(np.array(ad[0]))
     #new_y = preprocessing.scale(np.array(ad[1]))
     y = np.array([[float(r)] for r in new_y])
-    #X = new_x
     return [X,y]
+
+
 
 ##make function of pZ, not too hard
 def create_H(num_baseline_features,num_responsivity_features):

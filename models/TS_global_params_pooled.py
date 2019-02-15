@@ -46,6 +46,7 @@ class TS_global_params:
         self.psi_indices = None
         self.user_id_index=None
         self.user_day_index = None
+        self.write_directory =  '../../murphy_lab/lab/pooling/temp'
     
     def feat0_function(self,z,x):
         
