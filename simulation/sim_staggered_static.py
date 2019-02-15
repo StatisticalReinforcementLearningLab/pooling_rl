@@ -234,6 +234,20 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     dt=True
                     action=0
                     global_policy_params.decision_times =   global_policy_params.decision_times+1
+                    
+                    
+                    ##update my mu2 and sigma2
+                    temp = pb.calculate_posterior(global_policy_params,\
+                                                  participant.pid,participant.current_day_counter,\
+                                                  history[0], history[1] )
+                    mu_beta = temp[0]
+                    Sigma_beta = temp[1]
+                    personal_policy_params.update_mus(participant.pid,mu_beta,2)
+                            personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
+                    
+                    
+                    
+                    
                     if policy==None:
                         action = sf.get_action(policy)
                         
