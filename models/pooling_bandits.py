@@ -11,6 +11,7 @@ from sklearn import preprocessing
 tf.logging.set_verbosity(tf.logging.ERROR)
 import warnings
 warnings.simplefilter('ignore')
+import os
 
 def gather_cols(params, indices, name=None):
     with tf.op_scope([params, indices], name, "gather_cols") as scope:
