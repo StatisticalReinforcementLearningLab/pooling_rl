@@ -44,7 +44,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         theta = get_theta(len(baseline_indices)).reshape(1,len(baseline_indices),len(baseline_indices))
         
         #sigmau = tf.reshape(np.array([[1.0,0.1],[0.1,1.0]]),(1,2,2))
-        sigmav = np.array([[10.0,0.0],[0.0,10.0]]).reshape(1,2,2)
+        sigmav = np.array([[1.0,0.0],[0.0,1.0]]).reshape(1,2,2)
         
         
         self.sigma_u1 = gpflow.Param(1.0,  trainable=False,transform=gpflow.transforms.positive,
@@ -66,7 +66,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
                                                                   dtype=gpflow.settings.float_type)
                                      
                                      
-        self.noise_term = gpflow.Param(10.0,  trainable=False,transform=gpflow.transforms.positive,
+        self.noise_term = gpflow.Param(1.0,  trainable=False,transform=gpflow.transforms.positive,
                                                                     dtype=gpflow.settings.float_type)
                                      
                                      
@@ -75,7 +75,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
                                     #dtype=gpflow.settings.float_type)
         
                                     
-        
+        self.mysession=mysession
         self.select_users = tf.constant(select_users)
                                     
         self.baseline_indices = baseline_indices
@@ -84,7 +84,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         self.num_data_points = num_data_points
         self.user_index = user_index
         self.user_day_index = user_day_index
-        self.mysession=mysession
+        
         self.rhos = tf.constant(rhos)
 ##will it freak out if there is no parameter?
 
@@ -117,7 +117,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         t_one = self.sigma_u1
         t_two = tf.multiply(tf.math.sqrt(self.sigma_u1),tf.math.sqrt(self.sigma_u2))
         rho_term = tf.subtract(self.sigma_rho,1)
-        t_two = tf.multiply(t_two,self.sigma_rho)
+        t_two = tf.multiply(t_two,rho_term)
         t_three = self.sigma_u2
         t_four = t_two
         row_one = tf.stack([t_one, t_two],axis=0)

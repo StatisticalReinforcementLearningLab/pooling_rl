@@ -12,9 +12,10 @@ class participant:
     Also which participants are involved at which times. 
     '''
     
-    def __init__(self,pid=None,times=None,decision_times=None,gid=None):
+    def __init__(self, pid=None,times=None,decision_times=None,gid=None):
+        self.root = None
         #self.root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
-        self.root = '../../murphy_lab/lab/pooling/distributions/'
+        #self.root = '../../murphy_lab/lab/pooling/distributions/'
         
         self.pid = pid
         

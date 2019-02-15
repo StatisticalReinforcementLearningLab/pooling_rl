@@ -46,9 +46,11 @@ def rbf_custom_np( X, X2=None):
     #print(X2)
     if X2 is None:
         X2=X
-    return math.exp(-((X-X2)**2)/1.0)
+    return math.exp(-((X-X2)**2)/100.0)
 
-
+def get_sigma_u(u1,u2,rho):
+    off_diagaonal_term = u1**.5*u2**.5*(rho-1)
+    return np.array([[u1,off_diagaonal_term],[off_diagaonal_term,u2]])
 
 def run(X,y,global_params,gp_train_type='Static'):
     #init_g = tf.global_variables_initializer()
@@ -72,6 +74,8 @@ def run(X,y,global_params,gp_train_type='Static'):
         k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
 
     m = gpflow.models.GPR(X,y, kern=k)
+    m.likelihood.variance=0
+    m.likelihood.variance.trainable =False
     m.initialize(session=sess)
     if gp_train_type=='empirical_bayes':
         gpflow.train.ScipyOptimizer().minimize(m,session=sess)
@@ -84,8 +88,8 @@ def run(X,y,global_params,gp_train_type='Static'):
         
         trm = term.eval(session=sess)
 #if gp_train_type=='empirical_bayes':
-    sigma_u = np.array([[m.kern.sigma_u1.value,m.kern.sigma_u1.value**.5*m.kern.sigma_u2.value**.5*m.kern.sigma_rho.value],\
-                            [m.kern.sigma_u1.value**.5*m.kern.sigma_u2.value**.5*m.kern.sigma_rho.value,m.kern.sigma_u2.value]])
+    sigma_u = get_sigma_u(m.kern.sigma_u1.value,m.kern.sigma_u2.value,m.kern.sigma_rho.value)
+
 #np.array([[1.0,0.1],[0.1,1.0]])
     sigma_v =m.kern.sigma_v.value
     noise =m.kern.noise_term.value
@@ -214,32 +218,36 @@ def get_M(global_params,user_id,user_study_day,history):
     H = create_H(len(global_params.baseline_features),len(global_params.psi_features))
     for x_old_i in range(history.shape[0]):
         x_old = history[x_old_i]
+        old_user_id = x_old[global_params.user_id_index]
+        old_day_id = x_old[global_params.user_day_index]
         
         ##these indices all need to be parameters
         phi = np.array([x_old[i] for i in global_params.baseline_indices])
         
-        old_user_id = x_old[global_params.user_id_index]
-        old_day_id = x_old[global_params.user_day_index]
+        t_one = np.dot(np.transpose(phi),global_params.sigma_theta)
+        #first_terms.append(t_one)
         
-        inner = float(old_user_id==user_id)*global_params.sigma_u.reshape(2,2)+\
-rbf_custom_np(day_id,old_day_id)*global_params.sigma_v.reshape(2,2)
-    #print(inner.shape)
-    #print(H.shape)
-        inner = np.dot(H,inner)
-        #print(inner.shape)
-        inner = np.dot(inner,np.transpose(H))
-        #print(inner.shape)
-        #print(global_params.sigma_theta.shape)
-        inner = np.add(global_params.sigma_theta,inner)
+        temp = np.dot(H,global_params.sigma_u)
+        temp = np.dot(temp,H.T)
+        temp = np.dot(np.transpose(phi),temp)
+        temp = float(old_user_id==user_id)*temp
+        t_two = temp
+        #middle_terms.append(t_two)
+        temp = np.dot(H,global_params.sigma_v.reshape(2,2))
+        temp = np.dot(temp,H.T)
+        temp = np.dot(np.transpose(phi),temp)
+        temp = rbf_custom_np(user_study_day,old_day_id)*temp
+        t_three = temp
+        #print(user_study_day)
         
+        #last_terms.append(t_three)
+        term = np.add(t_one,t_two)
         
-        
-        
-        term = np.dot(np.transpose(phi),inner)
-        M[x_old_i]=[i for i in term]
-            
-            #print(len(M))
-            #print(np.array(M).shape)
+        term = np.add(term,t_three)
+        #print(term.shape)
+        #print(term)
+        M[x_old_i]=term
+
     return np.array(M)
 
 def get_RT(y,X,sigma_theta,x_dim):
@@ -270,16 +278,27 @@ def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta):
     ##is it updated?  the current mu_theta?
     #adjusted_rewards =[history[1][i]-np.dot(history[0][i][0:6],np.ones(6)) for i in range(len(history[0]))]
     
+    ##noise = noise_term * np.eye(X_dim)
+    #print(noise.shape)
+    #print(cov.shape)
+    ##middle_term = np.add(cov,noise)
+    
+    ##middle_term = np.dot(M.T,np.linalg.inv(middle_term))
+
+    ##middle_term = np.dot(middle_term,adjusted_rewards)
+    ##return np.add(mu_theta,middle_term)
     noise = noise_term * np.eye(X_dim)
     #print(noise.shape)
     #print(cov.shape)
+    #print('in get middle')
     middle_term = np.add(cov,noise)
-    
-    middle_term = np.dot(M.T,np.linalg.inv(middle_term))
-
-    middle_term = np.dot(middle_term,adjusted_rewards)
+    #print(middle_term)
+    #print(M.shape)
+    middle_term = np.matmul(M.T,np.linalg.inv(middle_term))
+    #print(middle_term)
+    middle_term = np.matmul(middle_term,adjusted_rewards)
+    #print(middle_term)
     return np.add(mu_theta,middle_term)
-
 
 def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta):
     #M = get_M(global_params,user_id,user_study_day,history[0])
@@ -296,7 +315,7 @@ def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta):
     first_term = np.dot(H,first_term)
     #print(first_term.shape)
     first_term = np.dot(first_term,H.T)
-    #print(first_term.shape)
+    #print(first_term)
     
     noise = noise_term * np.eye(x_dim)
     #print(noise.shape)
