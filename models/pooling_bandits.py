@@ -208,7 +208,7 @@ def get_M(global_params,user_id,user_study_day,history):
   
   
     day_id =user_study_day
-    
+    print(history)
     M = [[] for i in range(history.shape[0])]
 
     H = create_H(len(global_params.baseline_indices),len(global_params.psi_indices))
