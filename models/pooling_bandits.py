@@ -157,11 +157,11 @@ def make_history_new(pi,glob):
     if len(ad[0])==0:
         return [[],[]]
     
-    X,y = new_standardize(ad[0],ad[1])
+    z = new_standardize(ad[0],ad[1])
     #new_x = preprocessing.scale(np.array(ad[0]))
     #new_y = preprocessing.scale(np.array(ad[1]))
-    y = np.array([[float(r)] for r in new_y])
-    return [X,y]
+    y = np.array([[float(r)] for r in z[1]])
+    return [z[0],y]
 
 
 
@@ -201,7 +201,7 @@ def new_standardize(X,y):
         to_return[i][-2]=X[i][-2]
         to_return[i][-1]=X[i][-1]
     
-    return to_return,preprocessing.scale(np.array(y))
+    return [to_return,preprocessing.scale(np.array(y))]
         
 
 def get_M(global_params,user_id,user_study_day,history):
