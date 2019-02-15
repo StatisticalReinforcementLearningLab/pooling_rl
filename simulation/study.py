@@ -12,9 +12,10 @@ class study:
     Also which participants are involved at which times. 
     '''
     
-    def __init__(self):
+    def __init__(self,root):
         #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
-        root = '../../murphy_lab/lab/pooling/distributions/'
+        self.root =root
+            #'../../murphy_lab/lab/pooling/distributions/'
         
         with open('{}u_to_time_indices.pkl'.format(root),'rb') as f:
             pse=pickle.load(f)

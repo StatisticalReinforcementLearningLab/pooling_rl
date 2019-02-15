@@ -26,21 +26,25 @@ import tensorflow as tf
 
 
 
-def initialize_policy_params_TS(experiment,context_dimension):
+def initialize_policy_params_TS(experiment):
     
-    global_p =gtp.TS_global_params(10,context_dimension)
+    global_p =gtp.TS_global_params(10)
     personal_p = pp.TS_personal_params()
-    global_p =gtp.TS_global_params(10,context_dimension)
+    #global_p =gtp.TS_global_params(10,context_dimension)
     
     global_p.kdim = 11
-    global_p.baseline_indices = [0,1,2,3,4,5,6,7,8]
-    global_p.psi_indices = [7,8]
-    global_p.user_id_index = 9
-    global_p.user_day_index =10
+    global_p.baseline_indices = [0,1,2,3,4,5,6]
+    global_p.psi_indices = [4,6]
+    global_p.user_id_index = 7
+    global_p.user_day_index =8
+    
+    global_p.baseline_features = ['location','weather']
+    global_p.psi_features = ['location']
+    
     #print(type(personal_p))
     
     for person in experiment.population.keys():
-        initial_context = [0 for i in range(context_dimension)]
+        initial_context = [0 for i in range(global_p.theta_dim)]
         personal_p.mus0[person]= global_p.get_mu0(initial_context)
         personal_p.mus1[person]= global_p.get_mu1(initial_context)
         personal_p.mus2[person]= global_p.get_mu2(initial_context)
@@ -58,74 +62,11 @@ def initialize_policy_params_TS(experiment,context_dimension):
         
         personal_p.last_update[person]=experiment.person_to_time[person][0]
     
-    
+    global_p.write_directory = '../../murphy_lab/pooling/temp'
     return global_p ,personal_p
 
-
-def get_history(write_dir,dt):
-    to_return = {}
-    for d in [f for f in os.listdir(write_dir) if f!='.DS_Store']:
-        participant = {}
-        for f in os.listdir('{}/{}'.format(write_dir,d)):
-            if f!='.DS_Store':
-                time = int(f.split('_')[1])
-                if time <=dt:
-                    with open('{}/{}/{}'.format(write_dir,d,f),'rb') as f:
-                        ld = pickle.load(f)
-                    participant[time]=ld
-                    
-        pid = d.split('_')[1]
-        if len(participant)>0:
-            to_return[int(pid)]=participant
-    return to_return
-def create_phi_new(history_dict,pi,global_params):
-    #these things will be accessed by the global params
-    indices = ['weather','location']
-    g0 = ['location']
-    f1=['ltps']
-    
-    ##returns phi and psi indices
-    ##this could be a bit faster not appending all the time
-    all_data = []
-    steps=[]
-    for user_id,history in history_dict.items():
-        #history = d.history
-        #history_keys = sorted(history)
-        for hk,h in history.items():
-            
-            h = history[hk]
-            if h['decision_time']:
-                v = [1]
-                v.extend([h[i] for i in indices])
-                v.append(pi*1)
-                v.extend([pi*h[i] for i in f1])
-                action = h['action']
-                if action<0:
-                    action=0
-                
-                v.append((action-pi)*1)
-                v.extend([(action-pi)*h[i] for i in f1])
-                v.append(action)
-                v.append(float(user_id))
-                v.append(float(h['study_day']))
-                all_data.append(v)
-                steps.append(h['steps'])
-    return all_data,steps
-def make_history_new(write_directory,pi,glob):
-    g = get_history(write_directory,glob.decision_times)
-    ad = create_phi_new(g,pi,glob)
-    if len(ad[0])==0:
-        return [[],[]]
-    
-    new_x = preprocessing.scale(np.array(ad[0]))
-    new_y = preprocessing.scale(np.array(ad[1]))
-    y = np.array([[float(r)] for r in new_y])
-    X = new_x
-    return [X,y]
-
-
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None):
-    write_directory = '../../murphy_lab/lab/pooling/temp'
+    #write_directory = '../../murphy_lab/lab/pooling/temp'
 
     for time in experiment.study_days:
            
@@ -142,11 +83,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #print(history)
                 
                 ##these lines
-                history =pb.make_history_new(.6,glob)
+
+                #print(history[0].shape)
                     #make_history_new(write_directory,.6,global_policy_params)
-                temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'Static')
+               #print(temp_params['cov'].shape)
+                #print(temp_params)
                 #print(temp_params['cov'].shape)
-                #global_policy_params.update_params(temp_params)
+                #print(type(temp_params['cov']))
+                
                 #del temp_params
                 ##update global params using these temp_params
                 
@@ -194,6 +138,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     ##set first pre-treatment, yesterday step count, variation and dosage
                 else:
+                    
+                    if time.hour==0 and time.minute==0:
+                        participant.current_day_counter=participant.current_day_counter+1
+                    
                     #print(time)
                     steps_last_time_period = participant.steps
                 
@@ -230,23 +178,40 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 ##for now:
                 ##eval with empty array 
-                if time in participant.decision_times and availability:
+                if time in participant.decision_times:
+                                        #print(personal_policy_params.batch_index[participant.pid])
+                    
+                    
+                    ##if we have made no global updates
+
+                            
+                    
+                        
+                    
+                    
+                   
+                    
+                    
                     
                     dt=True
                     action=0
                     
                     
-                    history = pb.make_history_new(.6,glob)
+                    if global_policy_params.decision_times>1:
+                            if   not global_policy_params.updated_cov:
+                                 global_policy_params.update_cov(global_policy_params.decision_times)   
+                            print( global_policy_params.decision_times)
+                            history = pb.make_history_new(.6,glob)
                     ##update my mu2 and sigma2
-                    temp = pb.calculate_posterior(global_policy_params,\
+                            temp = pb.calculate_posterior(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
+                    else:
+                        temp = [personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid]]
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
-                    personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
-                    
-                    global_policy_params.decision_times =   global_policy_params.decision_times+1
+                    personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)    
                     
                     
                     if policy==None:
@@ -278,21 +243,46 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     ##is this the same as in the TS?
                     ##don't think so, but for now keep like this
                     ##no it isn't, i have to redo this
-                    participant.update_dosage(action)
                     
-                    context = [action,participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),\
+
+                    
+                    if availability:
+                    
+
+                   
+                    
+                    
+                        participant.update_dosage(action)
+                    
+                        context = [action,participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),\
                               steps_yesterday,variation,sf.dosage_to_dosage_key(participant.dosage)]
                     
-                    participant.steps_last_time_period = participant.steps
-                    steps = sf.get_steps_action(context)
-                    participant.steps = steps
+                        participant.steps_last_time_period = participant.steps
+                        steps = sf.get_steps_action(context)
+                        participant.steps = steps
+                    else:
+                        participant.steps_last_time_period = participant.steps
+                        steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
+                        participant.steps = steps
+                        
+                
+                    my_directory = '{}/participant_{}'.format(global_policy_params.write_directory,participant.pid)
+                    if not os.path.exists(my_directory):
+                        os.makedirs(my_directory)
+                    with open('{}/day_{}'.format(my_directory,global_policy_params.decision_times),'wb') as f:
+                        pickle.dump(context_dict,f)
+                        
+                        
+                    global_policy_params.decision_times =   global_policy_params.decision_times+1
+                    history =pb.make_history_new(.6,glob)
+                    temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'Static')
+                    global_policy_params.update_params(temp_params)
+                    
+                    
                 else:
-                    participant.steps_last_time_period = participant.steps
-                    steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
-                    participant.steps = steps
-                
-                
-                
+                        participant.steps_last_time_period = participant.steps
+                        steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
+                        participant.steps = steps     
                 
                 ##history:
                 context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
@@ -308,21 +298,22 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
             ##update at midnight (here we have ensured that no one has a ) experiment.update_hour
             
-                if time in participant.decision_times and availability:
-                    ##global_dt_counter
-                    ##update the policy
-                    #print(personal_policy_params.batch_index[participant.pid])
-                   
-                    my_directory = '{}/participant_{}'.format(write_directory,participant.pid)
-                    if not os.path.exists(my_directory):
-                        os.makedirs(my_directory)
-                    with open('{}/day_{}'.format(my_directory,global_policy_params.decision_times),'wb') as f:
-                        pickle.dump(context_dict,f)
-                    participant.current_day_counter=participant.current_day_counter+1
-
+                             
 
 if __name__=="__main__":
-    experiment = study.study()
-    glob,personal = initialize_policy_params_TS(experiment,11)
-    new_kind_of_simulation(experiment,'TS_fancy',personal,glob)    
+    folder = '../../muphy_lab/lab/pooling/temp'
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception as e:
+            print(e)
+
+
+    experiment = study.study( '../../muphy_lab/lab/pooling/distributions')
+    glob,personal = initialize_policy_params_TS(experiment)
+    new_kind_of_simulation(experiment,'TS_fancy',personal,glob)
+    print('finished')    
 

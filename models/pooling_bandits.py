@@ -56,9 +56,9 @@ def run(X,y,global_params,gp_train_type='Static'):
     #with tf.Session() as sess:
     #sess.run(init_g)
     #sess.run(init_l)
-    users = np.array([[float(X[i][8]==X[j][8]) for j in range(len(X))] for i in range(len(X))])
+    users = np.array([[float(X[i][global_params.user_id_index]==X[j][global_params.user_id_index]) for j in range(len(X))] for i in range(len(X))])
 
-    rdayone = [x[9] for x in X]
+    rdayone = [x[global_params.user_day_index] for x in X]
     rdaytwo = rdayone
     rhos = np.array([[rbf_custom_np( rdayone[i], X2=rdaytwo[j]) for j in range(len(X))] for i in range(len(X))])
     #print(type(rhos))
@@ -140,7 +140,7 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
                 
                 v.append((action-pi)*1)
                 v.extend([(action-pi)*h[i] for i in responsivity_features])
-                v.append(action)
+                #v.append(action)
                 v.append(float(user_id))
                 v.append(float(h['study_day']))
                 all_data.append(v)
@@ -153,7 +153,7 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
 
 def make_history_new(pi,glob):
     g = get_history(glob.write_directory,glob.decision_times)
-    ad = create_phi_new(g,pi,glob.baseline_indices,glob.psi_indices)
+    ad = create_phi_new(g,pi,glob.baseline_features,glob.psi_features)
     if len(ad[0])==0:
         return [[],[]]
     
@@ -208,27 +208,28 @@ def get_M(global_params,user_id,user_study_day,history):
   
   
     day_id =user_study_day
-    print(history)
+    #print(history)
     M = [[] for i in range(history.shape[0])]
 
-    H = create_H(len(global_params.baseline_indices),len(global_params.psi_indices))
-    for x_old_i in range(history[0].shape[0]):
+    H = create_H(len(global_params.baseline_features),len(global_params.psi_features))
+    for x_old_i in range(history.shape[0]):
         x_old = history[x_old_i]
         
         ##these indices all need to be parameters
-        phi = np.array(x_old[i] for i in global_params.baseline_indices)
+        phi = np.array([x_old[i] for i in global_params.baseline_indices])
         
         old_user_id = x_old[global_params.user_id_index]
         old_day_id = x_old[global_params.user_day_index]
         
         inner = float(old_user_id==user_id)*global_params.sigma_u.reshape(2,2)+\
 rbf_custom_np(day_id,old_day_id)*global_params.sigma_v.reshape(2,2)
-        #print(inner.shape)
-        #print(H.shape)
+    #print(inner.shape)
+    #print(H.shape)
         inner = np.dot(H,inner)
         #print(inner.shape)
         inner = np.dot(inner,np.transpose(H))
         #print(inner.shape)
+        #print(global_params.sigma_theta.shape)
         inner = np.add(global_params.sigma_theta,inner)
         
         
@@ -247,16 +248,17 @@ def get_RT(y,X,sigma_theta,x_dim):
     return np.array([i[0] for i in to_return])
 
 def calculate_posterior(global_params,user_id,user_study_day,X,y):
-    H = create_H(len(global_params.baseline_indices),len(global_params.psi_indices))
+    H = create_H(len(global_params.baseline_features),len(global_params.psi_features))
     M = get_M(global_params,user_id,user_study_day,X)
     ##change this to be mu_theta
     ##is it updated?  the current mu_theta?
-    adjusted_rewards =get_RT(y,X,global_params.mu_theta,len(global_params.baseline_indices))
-    
-    mu = get_middle_term(X.shape[0],global_params.cov.reshape(X.shape[0],X.shape[0]),\
-                global_params.noise_term,M,adjusted_rewards,global_params.mu_theta)
-    sigma = get_post_sigma(H,global_params.cov.reshape(X.shape[0],X.shape[0]),global_params.sigma_u.reshape(2,2),\
-                           global_params.sigma_v.reshape(2,2),global_params.noise_term,M,X.shape[0],global_params.sigma_theta)
+    adjusted_rewards =get_RT(y,X,global_params.mu_theta,global_params.theta_dim)
+    #print('current global cov')
+    #print(global_params.cov)
+    #.reshape(X.shape[0],X.shape[0])
+    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta)
+    #.reshape(X.shape[0],X.shape[0])
+    sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v.reshape(2,2),global_params.noise_term,M,X.shape[0],global_params.sigma_theta)
 
     return mu[-3:],[j[-3:] for j in sigma[-3:]]
 
@@ -289,17 +291,21 @@ def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta):
     
     
     first_term = np.add(sigma_u,sigma_v)
+    #print(first_term.shape)
+    #print(H.shape)
     first_term = np.dot(H,first_term)
+    #print(first_term.shape)
     first_term = np.dot(first_term,H.T)
-    
+    #print(first_term.shape)
     
     noise = noise_term * np.eye(x_dim)
+    #print(noise.shape)
     middle_term = np.add(cov,noise)
-    
+    #print(middle_term.shape)
     middle_term = np.dot(M.T,np.linalg.inv(middle_term))
-    
+    #print(middle_term.shape)
     middle_term = np.dot(middle_term,M)
-    
+    #print(middle_term.shape)
     last = np.add(sigma_theta,first_term)
     last = np.subtract(last,middle_term)
     

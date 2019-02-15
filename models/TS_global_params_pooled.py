@@ -12,12 +12,15 @@ class TS_global_params:
     Keeps track of hyper-parameters for any TS procedure. 
     '''
     
-    def __init__(self,xi=10,context_dimension=2):
+    def __init__(self,xi=10,baseline_features=['location','weather'],psi_features=['location']):
         self.nums = set([np.float64,int,float])
         self.pi_max = .8
         self.pi_min = .1
         self.sigma = 1
-        
+        self.baseline_features = baseline_features
+        self.psi_features = psi_features
+        self.baseline_indices = None
+        self.psi_indices =None
         
         self.xi  = xi
         
@@ -26,28 +29,34 @@ class TS_global_params:
         self.lambda_knot = .9 
         self.prob_sedentary = .9 
         self.weight = .5 
-        
-        self.z_index = [i+1 for i in range(context_dimension)]
+        #print(self.baseline_features)
+        self.z_index = [i+1 for i in range(len(self.baseline_features))]
         self.x_index = len(self.z_index)+1
         self.avail_index = self.x_index+1
         self.action_index = self.avail_index+1
         self.prob_index = self.action_index+1
         self.reward_index = self.prob_index+1
-        self.mu_theta =np.ones(6)
-        self.sigma_theta =self.get_theta(6)
-        self.sigma_v = None
-        self.sigma_u = None
-        self.noise_term=None
-        self.cov=None
+        #2 has to do with random effects, not likely to change soon
+        self.theta_dim = 1+len(self.baseline_features) + 2*(1+len(self.psi_features))
+        self.mu_theta =np.ones(self.theta_dim)
+        self.sigma_theta =self.get_theta(self.theta_dim)
+        self.sigma_v = np.eye(2)
+        self.sigma_u = np.eye(2)
+        self.noise_term=1
+        self.cov=np.array([1])
         self.psi = psi.psi()
-        self.decision_times = 0
+        self.decision_times = 1
         self.kdim = None
-        self.baseline_indices = None
-        self.psi_indices = None
+
+
+        
+        
         self.user_id_index=None
         self.user_day_index = None
         self.write_directory =  '../../murphy_lab/lab/pooling/temp'
-    
+        self.updated_cov = False
+        
+        
     def feat0_function(self,z,x):
         
         
@@ -100,8 +109,14 @@ class TS_global_params:
         self.sigma_u = pdict['sigma_u']
         self.sigma_v = pdict['sigma_v']
         self.cov = pdict['cov']
+        self.updated_cov=True
 
     def get_theta(self,dim_baseline):
         m = np.eye(dim_baseline)
-        m = np.add(m,.1)
+        #m = np.add(m,.1)
         return m
+
+    def update_cov(self,current_dts):
+        cov = np.eye(current_dts)
+        cov = np.add(cov,.001)
+        self.cov=cov
