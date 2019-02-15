@@ -301,15 +301,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                              
 
 if __name__=="__main__":
-    folder = '../../murphy_lab/lab/pooling/temp'
-    for the_file in os.listdir(folder):
-        file_path = os.path.join(folder, the_file)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path): shutil.rmtree(file_path)
-        except Exception as e:
-            print(e)
+
 
 
     experiment = study.study( '../../murphy_lab/lab/pooling/distributions/')
