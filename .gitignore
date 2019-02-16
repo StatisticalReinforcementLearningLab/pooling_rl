@@ -1,6 +1,6 @@
 data/
-.pyc
-.ipynb_checkpoints
+*.pyc
+*.ipynb_checkpoints
 .pkl
 .p
 .R
