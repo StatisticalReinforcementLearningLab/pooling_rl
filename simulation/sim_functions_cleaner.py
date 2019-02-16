@@ -9,9 +9,14 @@ import random
 from datetime import datetime
 random.seed(datetime.now())
 
-#root ='../../Downloads/distributions/'
+
+
+if '/Users/sabina/pooling_rl/' in os.getcwd():
+    root ='../../Downloads/distributions/'
+else:
+    root = '../../murphy_lab/lab/pooling/distributions/'
 #'../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
-root = '../../murphy_lab/lab/pooling/distributions/'
+#root = '../../murphy_lab/lab/pooling/distributions/'
 
 #with open('{}steps_both_groups_logs_dosage_estf_bbiit_swapped.pkl'.format(root),'rb') as f:
 #    dists = pickle.load(f)

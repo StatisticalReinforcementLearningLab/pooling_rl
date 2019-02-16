@@ -202,12 +202,19 @@ def create_H(num_baseline_features,num_responsivity_features):
     
 def new_standardize(X,y):
     new_x = [x[:-2] for x in X]
+    new_x = np.array(new_x)
+    #ds = np.diag(np.random.rand(new_x.shape[0]))
+    ds = np.random.rand(new_x.shape[0],new_x.shape[1])
+    #print(ds)
+    #print(new_x)
+    new_x = np.add(ds,new_x)
     mm = preprocessing.MinMaxScaler(feature_range=(0, 1))
     new_x =mm.fit_transform(np.array(new_x))
     to_return = np.zeros((len(X),len(X[0])))
     for i in range(len(X)):
         #temp=np.zeros(len(X[i]))
         to_return[i][:-2]=new_x[i]
+        
         to_return[i][-2]=X[i][-2]
         to_return[i][-1]=X[i][-1]
     mm = preprocessing.MinMaxScaler(feature_range=(0, 1))
