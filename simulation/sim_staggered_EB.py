@@ -201,7 +201,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     if global_policy_params.decision_times>1:
                             if   not global_policy_params.updated_cov:
                                  global_policy_params.update_cov(global_policy_params.decision_times)   
-                            print( global_policy_params.decision_times)
+                            #print( global_policy_params.decision_times)
                             history = pb.make_history_new(.6,glob)
                     ##update my mu2 and sigma2
                             temp = pb.calculate_posterior(global_policy_params,\
