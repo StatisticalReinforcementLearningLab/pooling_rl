@@ -63,7 +63,7 @@ def initialize_policy_params_TS(experiment):
         
         personal_p.last_update[person]=experiment.person_to_time[person][0]
     
-    global_p.write_directory = '../../murphy_lab/lab/pooling/temp'
+    global_p.write_directory = '../../murphy_lab/lab/pooling/temp_EB'
     return global_p ,personal_p
 
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None):

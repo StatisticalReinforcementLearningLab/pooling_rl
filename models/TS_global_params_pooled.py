@@ -53,7 +53,7 @@ class TS_global_params:
         
         self.user_id_index=None
         self.user_day_index = None
-        self.write_directory =  '../../murphy_lab/lab/pooling/temp'
+        self.write_directory =  '../../murphy_lab/lab/pooling/temp_EB'
         self.updated_cov = False
         
         
