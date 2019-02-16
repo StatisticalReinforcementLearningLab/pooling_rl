@@ -36,7 +36,7 @@ def gather_cols(params, indices, name=None):
 
 def get_theta(dim_baseline):
     m = np.eye(dim_baseline)
-    m = np.add(m,.1)
+    #m = np.add(m,.1)
     return m
 
 
@@ -58,6 +58,8 @@ def run(X,y,global_params,gp_train_type='Static'):
     #with tf.Session() as sess:
     #sess.run(init_g)
     #sess.run(init_l)
+    #print(X)
+    #print(y)
     users = np.array([[float(X[i][global_params.user_id_index]==X[j][global_params.user_id_index]) for j in range(len(X))] for i in range(len(X))])
 
     rdayone = [x[global_params.user_day_index] for x in X]
@@ -65,9 +67,9 @@ def run(X,y,global_params,gp_train_type='Static'):
     rhos = np.array([[rbf_custom_np( rdayone[i], X2=rdaytwo[j]) for j in range(len(X))] for i in range(len(X))])
     #print(type(rhos))
     from tensorflow.python.framework import ops
-    ops.reset_default_graph()
-    sess = tf.InteractiveSession()
-    
+    #ops.reset_default_graph()
+    #sess = tf.InteractiveSession()
+    sess = tf.Session()
     if gp_train_type=='empirical_bayes':
         k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
     else:
@@ -76,7 +78,9 @@ def run(X,y,global_params,gp_train_type='Static'):
     m = gpflow.models.GPR(X,y, kern=k)
     m.likelihood.variance=0
     m.likelihood.variance.trainable =False
-    m.initialize(session=sess)
+    if gp_train_type=='Static':
+    
+        m.initialize(session=sess)
     if gp_train_type=='empirical_bayes':
         gpflow.train.ScipyOptimizer().minimize(m,session=sess)
 
@@ -94,6 +98,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     sigma_v =m.kern.sigma_v.value
     noise =m.kern.noise_term.value
     sess.close()
+    print(sess._closed)
     return {'sigma_u':sigma_u,'sigma_v':sigma_v,'cov':trm,'noise':noise}
         #else:
         
@@ -164,8 +169,8 @@ def make_history_new(pi,glob):
     z = new_standardize(ad[0],ad[1])
     #new_x = preprocessing.scale(np.array(ad[0]))
     #new_y = preprocessing.scale(np.array(ad[1]))
-    y = np.array([[float(r)] for r in z[1]])
-    return [z[0],y]
+#y = np.array([[float(r)] for r in z[1]])
+    return [z[0],z[1]]
 
 
 
@@ -197,15 +202,16 @@ def create_H(num_baseline_features,num_responsivity_features):
     
 def new_standardize(X,y):
     new_x = [x[:-2] for x in X]
-    new_x = preprocessing.scale(np.array(new_x))
+    mm = preprocessing.MinMaxScaler(feature_range=(0, 1))
+    new_x =mm.fit_transform(np.array(new_x))
     to_return = np.zeros((len(X),len(X[0])))
     for i in range(len(X)):
         #temp=np.zeros(len(X[i]))
         to_return[i][:-2]=new_x[i]
         to_return[i][-2]=X[i][-2]
         to_return[i][-1]=X[i][-1]
-    
-    return [to_return,preprocessing.scale(np.array(y))]
+    mm = preprocessing.MinMaxScaler(feature_range=(0, 1))
+    return [to_return,mm.fit_transform(np.array([[float(yi)] for yi in y]))]
         
 
 def get_M(global_params,user_id,user_study_day,history):

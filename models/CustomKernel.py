@@ -44,31 +44,48 @@ class CustomKernel(gpflow.kernels.Kernel):
         theta = get_theta(len(baseline_indices)).reshape(1,len(baseline_indices),len(baseline_indices))
         
         #sigmau = tf.reshape(np.array([[1.0,0.1],[0.1,1.0]]),(1,2,2))
-        sigmav = np.array([[10.0,0.0],[0.0,10.0]]).reshape(1,2,2)
+        sigmav = np.array([[1.0,0.0],[0.0,1.0]]).reshape(1,2,2)
         
+        #self.sigma_u = gpflow.Param(value = np.array([[1.0,0.1],[0.1,1.0]]).reshape(1,2,2),\transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive))
+        #self.sigma_u1 = gpflow.Param(1.0, transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
+        #self.sigma_u2 = gpflow.Param(1.0, transform=gpflow.transforms.positive, dtype=gpflow.settings.float_type)
+        #self.sigma_rho =gpflow.Param(1.0, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
         
-        self.sigma_u1 = gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                                                 dtype=gpflow.settings.float_type)
-        self.sigma_u2 = gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                                                 dtype=gpflow.settings.float_type)
-        self.sigma_rho =gpflow.Param(1.0, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
-                                    
+        #tf.constant(np.array([[1.0,0.1],[0.1,1.0]]))
+        
         self.sigma_theta = tf.constant(theta)
-                                    #gpflow.Param(theta, transform=gpflow.transforms.DiagMatrix(6)(gpflow.transforms.positive),
-                                    #                           dtype=gpflow.settings.float_type,fix_shape=True)
-                                    #print(self.sigma_theta)
-                                    #gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                    #dtype=gpflow.settings.float_type)
-                                    
-        self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),
-                                                                 dtype=gpflow.settings.float_type)
-                                    
-                                    
-        self.noise_term = gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                                                   dtype=gpflow.settings.float_type)
-                                    
-                                    #gpflow.Param(1.0, transform=gpflow.transforms.positive,
-                                    #dtype=gpflow.settings.float_type)
+        #gpflow.Param(theta, transform=gpflow.transforms.DiagMatrix(6)(gpflow.transforms.positive),
+        #                           dtype=gpflow.settings.float_type,fix_shape=True)
+        #print(self.sigma_theta)
+        #gpflow.Param(1.0, transform=gpflow.transforms.positive,
+        #dtype=gpflow.settings.float_type)
+        
+        self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
+        
+        
+        #self.noise_term = gpflow.Param(1.0, transform=gpflow.transforms.positive,  dtype=gpflow.settings.float_type)
+        
+        
+        
+        sigmav = np.array([[1.0,0.0],[0.0,1.0]]).reshape(1,2,2)
+        self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
+        
+        
+        self.sigma_u1 = gpflow.Param(1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_u2 = gpflow.Param(1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_rho =gpflow.Param(1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_theta = tf.constant(theta)
+        #gpflow.Param(theta, transform=gpflow.transforms.DiagMatrix(6)(gpflow.transforms.positive),
+        #                           dtype=gpflow.settings.float_type,fix_shape=True)
+        #print(self.sigma_theta)
+        #gpflow.Param(1.0, transform=gpflow.transforms.positive,
+        #dtype=gpflow.settings.float_type)
+        
+        #self.sigma_v =  tf.constant(sigmav)
+        
+        
+        self.noise_term = gpflow.Param(1000,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        
         
                                     
         
@@ -91,7 +108,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         #print(X2)
         if X2 is None:
             X2=X
-        return tf.exp(-tf.divide(tf.square(tf.subtract(X,X2)),tf.constant(1.0,dtype=tf.float64)))
+        return tf.exp(-tf.divide(tf.square(tf.subtract(X,X2)),tf.constant(100.0,dtype=tf.float64)))
         #return tf.constant(1.0,dtype=tf.float64)
     #tf.exp(-tf.subtract(X,X2) / float(2.2))
     
@@ -148,43 +165,10 @@ class CustomKernel(gpflow.kernels.Kernel):
         
         #baselines = tf.tensordot(tf.transpose(f_one),self.sigma_theta,axes=[[0],[1]])
         baselines = tf.reshape(tf.tensordot(f_one,self.sigma_theta,axes=[[2],[1]]),(self.num_data_points ,len(self.baseline_indices)))
-        #print('baselines')
-        #print(baselines.get_shape())
-        #print('sigma theta')
-        #print(self.sigma_theta)
+     
         baselines = tf.tensordot(baselines,tf.transpose(f_two),axes=[[1],[0]])
         
-        #print(baselines)
-        #rhos = tf.constant(np.array([[self.rbf_custom(day_one[i], X2=day_two[j])[0]] \
-        #for i, j in zip([i for i in range(100)], [j for j in range(100)])]))
-        
-        
-        #effects = self.get_all_sigmas(self.sigma_v,g_one,g_two,day_one,day_two)
-        #print('look at shape')t
-        #print(baselines)
-        #print('baselines')
-        #print(baselines.get_shape())
-        
-        #effect_term = tf.tensordot(rho_term,self.sigma_v,axes=[[0],[0]])
-        
-        #user_term = tf.constant(np.array([[0.0,0.0],[0.0,0.0]]))
-        #effect_term = tf.add(user_term,effect_term)
-        #print('eff')
-        #print(effect_term.shape)
-        
-        #print('eff')
-        #print(effects.shape)
-        #user_term = tf.constant(np.array([[0.0,0.0],[0.0,0.0]]))
-        
-        
-        
-        #print('eff')
-        #print(effects.shape)
-        
-        ##important
-        #print(self.sigma_u)
-        #effects = tf.tensordot(tf.transpose(g_one),self.sigma_u[0],axes=[[0],[1]])
-        #effects = tf.reshape(effects,(1,6,6))
+     
         effects = tf.reshape(tf.tensordot(g_one,temp_sigma,axes=[[2],[1]]),(self.num_data_points ,2))
         effects = tf.tensordot(effects,tf.transpose(g_two),axes = [[1],[0]])
         
@@ -219,5 +203,4 @@ class CustomKernel(gpflow.kernels.Kernel):
         return result
 
 
-#self.variance * tf.minimum(X, tf.transpose(X2))
 
