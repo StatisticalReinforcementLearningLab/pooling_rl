@@ -28,7 +28,7 @@ def gather_cols(params, indices, name=None):
         p_shape = tf.shape(params)
         p_flat = tf.reshape(params, [-1])
         i_flat = tf.reshape(tf.reshape(tf.range(0, p_shape[0]) * p_shape[1],[-1, 1]) + indices, [-1])
-        return tf.reshape(tf.gather(p_flat, i_flat),[p_shape[0], -1])
+        return tf.dtypes.cast(tf.reshape(tf.gather(p_flat, i_flat),[p_shape[0], -1]),dtype=tf.float64)
 
 def get_theta(dim_baseline):
     m = np.eye(dim_baseline)
@@ -44,7 +44,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         theta = get_theta(len(baseline_indices)).reshape(1,len(baseline_indices),len(baseline_indices))
         
         #sigmau = tf.reshape(np.array([[1.0,0.1],[0.1,1.0]]),(1,2,2))
-        sigmav = np.array([[1.0,0.0],[0.0,1.0]]).reshape(1,2,2)
+        sigmav = np.array([[1.0,0.0],[0.0,20.0]]).reshape(1,2,2)
         
         #self.sigma_u = gpflow.Param(value = np.array([[1.0,0.1],[0.1,1.0]]).reshape(1,2,2),\transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive))
         #self.sigma_u1 = gpflow.Param(1.0, transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
@@ -67,13 +67,15 @@ class CustomKernel(gpflow.kernels.Kernel):
         
         
         
-        sigmav = np.array([[1.0,0.0],[0.0,1.0]]).reshape(1,2,2)
-        self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
+        #sigmav = np.array([[10.0,0.0],[0.0,10.0]]).reshape(1,2,2)
+        #self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
         
         
-        self.sigma_u1 = gpflow.Param(1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
-        self.sigma_u2 = gpflow.Param(1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
-        self.sigma_rho =gpflow.Param(1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_u1 = gpflow.Param(0.01,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_u2 = gpflow.Param(0.01,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_rho =gpflow.Param(0.01, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
+
+
         self.sigma_theta = tf.constant(theta)
         #gpflow.Param(theta, transform=gpflow.transforms.DiagMatrix(6)(gpflow.transforms.positive),
         #                           dtype=gpflow.settings.float_type,fix_shape=True)
@@ -84,7 +86,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         #self.sigma_v =  tf.constant(sigmav)
         
         
-        self.noise_term = gpflow.Param(1000,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.noise_term = gpflow.Param(0.8330911135873104 ,dtype=gpflow.settings.float_type,transform=gpflow.transforms.Logistic(a=0.5,b=10))
         
         
                                     
@@ -151,7 +153,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         
         else:
             #print('called')
-            user_id_two = X[-2]
+            user_id_two = user_id_one
             day_two = day_one
             f_two = gather_cols(X, self.baseline_indices, name=None)
             g_two=gather_cols(X, self.psi_indices, name=None)

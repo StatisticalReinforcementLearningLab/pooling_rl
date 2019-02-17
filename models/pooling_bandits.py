@@ -12,6 +12,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 import warnings
 warnings.simplefilter('ignore')
 import os
+import random
 
 def gather_cols(params, indices, name=None):
     with tf.op_scope([params, indices], name, "gather_cols") as scope:
@@ -82,7 +83,16 @@ def run(X,y,global_params,gp_train_type='Static'):
     
         m.initialize(session=sess)
     if gp_train_type=='empirical_bayes':
-        gpflow.train.ScipyOptimizer().minimize(m,session=sess)
+        m.initialize(session=sess)
+        try:
+            
+            gpflow.train.ScipyOptimizer().minimize(m,session=sess)
+            #print(m.as_pandas_table())
+        except Exception as e:
+# shorten the giant stack trace
+            lines = str(e).split('\n')
+            print ('\n'.join(lines[:15]+['...']+lines[-30:]))
+    
 
 
     term = m.kern.K(X,X2=X)
@@ -204,10 +214,10 @@ def new_standardize(X,y):
     new_x = [x[:-2] for x in X]
     new_x = np.array(new_x)
     #ds = np.diag(np.random.rand(new_x.shape[0]))
-    ds = np.random.rand(new_x.shape[0],new_x.shape[1])
+    #ds = np.random.rand(new_x.shape[0],new_x.shape[1])
     #print(ds)
     #print(new_x)
-    new_x = np.add(ds,new_x)
+    #new_x = np.add(ds,new_x)
     mm = preprocessing.MinMaxScaler(feature_range=(0, 1))
     new_x =mm.fit_transform(np.array(new_x))
     to_return = np.zeros((len(X),len(X[0])))
@@ -217,8 +227,8 @@ def new_standardize(X,y):
         
         to_return[i][-2]=X[i][-2]
         to_return[i][-1]=X[i][-1]
-    mm = preprocessing.MinMaxScaler(feature_range=(0, 1))
-    return [to_return,mm.fit_transform(np.array([[float(yi)] for yi in y]))]
+            #mm = preprocessing.MinMaxScaler(feature_range=(.5, 1))
+    return [to_return,preprocessing.scale(np.array([[float(yi)] for yi in y]))]
         
 
 def get_M(global_params,user_id,user_study_day,history):

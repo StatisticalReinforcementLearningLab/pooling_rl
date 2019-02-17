@@ -12,7 +12,7 @@ class TS_global_params:
     Keeps track of hyper-parameters for any TS procedure. 
     '''
     
-    def __init__(self,xi=10,baseline_features=['location','weather'],psi_features=['location']):
+    def __init__(self,xi=10,baseline_features=['ltps','ltps'],psi_features=['ltps']):
         self.nums = set([np.float64,int,float])
         self.pi_max = .8
         self.pi_min = .1
