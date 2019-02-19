@@ -178,9 +178,9 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
 
 
 
-def make_history_new(pi,glob,exp):
-    g=get_history_norw(exp,glob)
-    #g = get_history(glob.write_directory,glob.decision_times)
+def make_history_new(pi,glob,exp=None):
+    #g=get_history_norw(exp,glob)
+    g = get_history(glob.write_directory,glob.decision_times)
     ad = create_phi_new(g,pi,glob.baseline_features,glob.psi_features)
     if len(ad[0])==0:
         return [[],[]]

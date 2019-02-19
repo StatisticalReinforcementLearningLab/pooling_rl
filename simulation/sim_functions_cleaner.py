@@ -14,7 +14,7 @@ random.seed(datetime.now())
 if '/Users/sabina/pooling_rl/' in os.getcwd():
     root ='../../Downloads/distributions/'
 else:
-    root = '../../murphy_lab/lab/pooling/distributions/'
+    root = '../../regal/murphy_lab/pooling/distributions/'
 #'../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
 #root = '../../murphy_lab/lab/pooling/distributions/'
 

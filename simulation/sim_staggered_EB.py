@@ -44,7 +44,7 @@ def initialize_policy_params_TS(experiment):
     #print(type(personal_p))
     
     for person in experiment.population.keys():
-        experiment.population[person].root = '../../regal/murphy_lab/lab/pooling/distributions/'
+        experiment.population[person].root = '../../regal/murphy_lab/pooling/distributions/'
         initial_context = [0 for i in range(global_p.theta_dim)]
         personal_p.mus0[person]= global_p.get_mu0(initial_context)
         personal_p.mus1[person]= global_p.get_mu1(initial_context)
@@ -63,39 +63,25 @@ def initialize_policy_params_TS(experiment):
         
         personal_p.last_update[person]=experiment.person_to_time[person][0]
     
-    global_p.write_directory = '../../murphy_lab/lab/pooling/temp_EB'
+    global_p.write_directory = '../../regal/murphy_lab/pooling/temp_EB'
     return global_p ,personal_p
 
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
-
+    experiment.last_update_day=experiment.study_days[0]
+ 
     for time in experiment.study_days:
-           
-            #if time> experiment.study_days[0]:
-                #history  = pb.make_history(experiment)
-            if time==experiment.last_update_day+pd.DateOffset(days=1):
-                experiment.last_update_day=time
-                ##global update
-                #print(time)
-                #print(experiment.last_update_day+pd.DateOffset(days=1))
-                ##am i checking the current time (need to check the 
-                #current time make sure i'm not using all of the history)
-               
-                #print(history)
-                
-                ##these lines
-
-                #print(history[0].shape)
-                    #make_history_new(write_directory,.6,global_policy_params)
-               #print(temp_params['cov'].shape)
-                #print(temp_params)
-                #print(temp_params['cov'].shape)
-                #print(type(temp_params['cov']))
-                
-                #del temp_params
-                ##update global params using these temp_params
-                
-                
+        
+        #if time> experiment.study_days[0]:
+        #history  = pb.make_history(experiment)
+        if time==experiment.last_update_day+pd.DateOffset(days=1):
+            experiment.last_update_day=time
+                if global_policy_params.decision_times>10:
+                    
+                    history =pb.make_history_new(uniform(),glob)
+                    temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
+                    global_policy_params.update_params(temp_params)
+                    global_policy_params.history = history
                 
             ##update global context
             ##global context shared across all participants
@@ -202,8 +188,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             if   not global_policy_params.updated_cov:
                                  global_policy_params.update_cov(global_policy_params.decision_times)   
                             #print( global_policy_params.decision_times)
-                            history = pb.make_history_new(.6,glob)
-                    ##update my mu2 and sigma2
+                            history = global_policy_params.history                    ##update my mu2 and sigma2
                             temp = pb.calculate_posterior(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
@@ -265,7 +250,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
                         participant.steps = steps
-                        
+                    context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
+                                'ltps':steps_last_time_period,'duration':participant.duration,\
+                                'study_day':participant.current_day_counter,'decision_time':dt,'time':time}
                 
                     my_directory = '{}/participant_{}'.format(global_policy_params.write_directory,participant.pid)
                     if not os.path.exists(my_directory):
@@ -275,9 +262,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                         
                     global_policy_params.decision_times =   global_policy_params.decision_times+1
-                    history =pb.make_history_new(.6,glob)
-                    temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
-                    global_policy_params.update_params(temp_params)
+                
                     
                     
                 else:
@@ -286,9 +271,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps = steps     
                 
                 ##history:
-                context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
-                                'ltps':steps_last_time_period,'duration':participant.duration,\
-                                'study_day':participant.current_day_counter,'decision_time':dt}
+               
                 #participant.history[time]=context_dict
                 
             #3
@@ -305,7 +288,7 @@ if __name__=="__main__":
 
 
 
-    experiment = study.study( '../../regal/murphy_lab/lab/pooling/distributions/')
+    experiment = study.study( '../../regal/murphy_lab/pooling/distributions/')
     glob,personal = initialize_policy_params_TS(experiment)
     new_kind_of_simulation(experiment,'TS_fancy',personal,glob)
     print('finished')    
