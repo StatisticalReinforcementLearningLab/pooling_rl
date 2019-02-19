@@ -76,7 +76,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=1):
             experiment.last_update_day=time
-                if global_policy_params.decision_times>10:
+            if global_policy_params.decision_times>10:
                     
                     history =pb.make_history_new(uniform(),glob)
                     temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
@@ -184,7 +184,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     action=0
                     
                     
-                    if global_policy_params.decision_times>1:
+                    if global_policy_params.decision_times>10 and global_policy_params.history!=None:
                             if   not global_policy_params.updated_cov:
                                  global_policy_params.update_cov(global_policy_params.decision_times)   
                             #print( global_policy_params.decision_times)
@@ -271,7 +271,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps = steps     
                 
                 ##history:
-               
+
                 #participant.history[time]=context_dict
                 
             #3
