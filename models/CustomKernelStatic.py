@@ -36,7 +36,7 @@ def get_theta(dim_baseline):
     return m
 
 class CustomKernelStatic(gpflow.kernels.Kernel):
-    def __init__(self,input_dim, mysession=None,rhos=None,select_users=None, active_dims=None, ARD=None, name=None,baseline_indices = None,psi_indices=None,user_index = None,user_day_index = None,num_data_points = None):
+    def __init__(self,input_dim, mysession=None,rhos=None,select_users=None, active_dims=None, ARD=None, name=None,baseline_indices = None,psi_indices=None,user_index = None,user_day_index = None,num_data_points = None,initial_u1=1.0,initial_u2=1.0,initial_s1=1,initial_s2=5,initial_rho=.9,initial_noise=1.0):
         super().__init__(input_dim)
         
         
@@ -44,14 +44,14 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         theta = get_theta(len(baseline_indices)).reshape(1,len(baseline_indices),len(baseline_indices))
         
         #sigmau = tf.reshape(np.array([[1.0,0.1],[0.1,1.0]]),(1,2,2))
-        sigmav = np.array([[1.0,0.0],[0.0,1.0]]).reshape(1,2,2)
+        sigmav = np.array([[initial_s1,0.0],[0.0,initial_s2]]).reshape(1,2,2)
         
         
-        self.sigma_u1 = gpflow.Param(1.0,  trainable=False,transform=gpflow.transforms.positive,
+        self.sigma_u1 = gpflow.Param(initial_u1,  trainable=False,transform=gpflow.transforms.positive,
                                      dtype=gpflow.settings.float_type)
-        self.sigma_u2 = gpflow.Param(1.0, trainable=False, transform=gpflow.transforms.positive,
+        self.sigma_u2 = gpflow.Param(initial_u2, trainable=False, transform=gpflow.transforms.positive,
                                                                   dtype=gpflow.settings.float_type)
-        self.sigma_rho =gpflow.Param(1.0, trainable=False,transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
+        self.sigma_rho =gpflow.Param(initial_rho, trainable=False,transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
                                      
         self.sigma_theta = tf.constant(np.eye(len(baseline_indices)))
         self.mu_theta = tf.constant(np.ones(len(baseline_indices)))
@@ -66,7 +66,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
                                                                   dtype=gpflow.settings.float_type)
                                      
                                      
-        self.noise_term = gpflow.Param(1.0,  trainable=False,transform=gpflow.transforms.positive,
+        self.noise_term = gpflow.Param(initial_noise,  trainable=False,transform=gpflow.transforms.positive,
                                                                     dtype=gpflow.settings.float_type)
                                      
                                      

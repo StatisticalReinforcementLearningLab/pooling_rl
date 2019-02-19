@@ -44,7 +44,7 @@ def initialize_policy_params_TS(experiment):
     #print(type(personal_p))
     
     for person in experiment.population.keys():
-        experiment.population[person].root = '../../regal/murphy_lab/lab/pooling/distributions/'
+        experiment.population[person].root = '../../murphy_lab/lab/pooling/distributions/'
         initial_context = [0 for i in range(global_p.theta_dim)]
         personal_p.mus0[person]= global_p.get_mu0(initial_context)
         personal_p.mus1[person]= global_p.get_mu1(initial_context)
@@ -305,7 +305,7 @@ if __name__=="__main__":
 
 
 
-    experiment = study.study( '../../regal/murphy_lab/lab/pooling/distributions/')
+    experiment = study.study( '../../murphy_lab/lab/pooling/distributions/')
     glob,personal = initialize_policy_params_TS(experiment)
     new_kind_of_simulation(experiment,'TS_fancy',personal,glob)
     print('finished')    

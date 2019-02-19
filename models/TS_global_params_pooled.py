@@ -48,7 +48,7 @@ class TS_global_params:
         self.decision_times = 1
         self.kdim = None
 
-
+        self.last_global_update_time = None
         
         
         self.user_id_index=None

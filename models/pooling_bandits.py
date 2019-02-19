@@ -13,6 +13,8 @@ import warnings
 warnings.simplefilter('ignore')
 import os
 import random
+import sys
+sys.stdout = open('logfile', 'w')
 
 def gather_cols(params, indices, name=None):
     with tf.op_scope([params, indices], name, "gather_cols") as scope:
@@ -133,7 +135,14 @@ def get_history(write_dir,dt):
             to_return[int(pid)]=participant
     return to_return
 
+def get_history_norw(exp,glob):
+    to_return = {}
 
+    for userid,data in exp.population.items():
+        to_return[userid]= {k:v for k,v in data.history.items() if k<glob.last_global_update_time}
+        
+
+    return to_return
 
 
 
@@ -170,8 +179,9 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
 
 
 
-def make_history_new(pi,glob):
-    g = get_history(glob.write_directory,glob.decision_times)
+def make_history_new(pi,glob,exp):
+    g=get_history_norw(exp,glob)
+    #g = get_history(glob.write_directory,glob.decision_times)
     ad = create_phi_new(g,pi,glob.baseline_features,glob.psi_features)
     if len(ad[0])==0:
         return [[],[]]
