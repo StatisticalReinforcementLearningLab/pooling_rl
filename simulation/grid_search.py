@@ -9,7 +9,7 @@ import math
 import tensorflow as tf
 import gpflow
 import CustomKernelStatic
-import random.random()
+import random
 
 def rbf_custom_np( X, X2=None):
     #print(X)
