@@ -76,6 +76,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         if time==experiment.last_update_day+pd.DateOffset(days=1):
             experiment.last_update_day=time
             if global_policy_params.decision_times>10:
+                glob.last_global_update_time=time
                 history =pb.make_history_new(uniform(),glob,experiment)
                 temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
                 global_policy_params.update_params(temp_params)
