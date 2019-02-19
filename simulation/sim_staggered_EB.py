@@ -248,9 +248,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
                         participant.steps = steps
-                    context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
-                                'ltps':steps_last_time_period,'duration':participant.duration,\
-                                'study_day':participant.current_day_counter,'decision_time':dt,'time':time}
+
                 
                 #my_directory = '{}/participant_{}'.format(global_policy_params.write_directory,participant.pid)
                 #if not os.path.exists(my_directory):
@@ -269,7 +267,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps = steps     
                 
                 ##history:
-
+                context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
+                    'ltps':steps_last_time_period,'duration':participant.duration,\
+                        'study_day':participant.current_day_counter,'decision_time':dt,'time':time}
                 participant.history[time]=context_dict
                 
             #3
