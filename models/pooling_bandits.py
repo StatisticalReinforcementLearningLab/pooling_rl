@@ -13,8 +13,7 @@ import warnings
 warnings.simplefilter('ignore')
 import os
 import random
-import sys
-sys.stdout = open('logfile', 'w')
+
 
 def gather_cols(params, indices, name=None):
     with tf.op_scope([params, indices], name, "gather_cols") as scope:
