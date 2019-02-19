@@ -76,7 +76,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         if time==experiment.last_update_day+pd.DateOffset(days=1):
             experiment.last_update_day=time
             if global_policy_params.decision_times>10:
-                history =pb.make_history_new(uniform(),glob)
+                history =pb.make_history_new(uniform(),glob,exp)
                 temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
                 global_policy_params.update_params(temp_params)
                 global_policy_params.history = history
@@ -252,11 +252,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                 'ltps':steps_last_time_period,'duration':participant.duration,\
                                 'study_day':participant.current_day_counter,'decision_time':dt,'time':time}
                 
-                    my_directory = '{}/participant_{}'.format(global_policy_params.write_directory,participant.pid)
-                    if not os.path.exists(my_directory):
-                        os.makedirs(my_directory)
-                    with open('{}/day_{}'.format(my_directory,global_policy_params.decision_times),'wb') as f:
-                        pickle.dump(context_dict,f)
+                #my_directory = '{}/participant_{}'.format(global_policy_params.write_directory,participant.pid)
+                #if not os.path.exists(my_directory):
+                #    os.makedirs(my_directory)
+                # with open('{}/day_{}'.format(my_directory,global_policy_params.decision_times),'wb') as f:
+                #    pickle.dump(context_dict,f)
                         
                         
                     global_policy_params.decision_times =   global_policy_params.decision_times+1
@@ -270,7 +270,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 ##history:
 
-                #participant.history[time]=context_dict
+                participant.history[time]=context_dict
                 
             #3
             ##for every active person generate a step count given current context
