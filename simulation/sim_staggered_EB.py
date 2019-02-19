@@ -69,7 +69,6 @@ def initialize_policy_params_TS(experiment):
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
- 
     for time in experiment.study_days:
         
         #if time> experiment.study_days[0]:
@@ -77,24 +76,23 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         if time==experiment.last_update_day+pd.DateOffset(days=1):
             experiment.last_update_day=time
             if global_policy_params.decision_times>10:
-                    
-                    history =pb.make_history_new(uniform(),glob)
-                    temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
-                    global_policy_params.update_params(temp_params)
-                    global_policy_params.history = history
+                history =pb.make_history_new(uniform(),glob)
+                temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
+                global_policy_params.update_params(temp_params)
+                global_policy_params.history = history
                 
             ##update global context
             ##global context shared across all participants
-            tod = sf.get_time_of_day(time)
-            dow = sf.get_day_of_week(time)
-            if time==experiment.study_days[0]:
-                
-                weather = sf.get_weather_prior(tod,time.month)
-            elif time.hour in experiment.weather_update_hours and time.minute==0:
-                weather = sf.get_next_weather(str(tod),str(time.month),weather)
+        tod = sf.get_time_of_day(time)
+        dow = sf.get_day_of_week(time)
+        if time==experiment.study_days[0]:
+            print('init weather')
+            weather = sf.get_weather_prior(tod,time.month)
+        elif time.hour in experiment.weather_update_hours and time.minute==0:
+            weather = sf.get_next_weather(str(tod),str(time.month),weather)
             ##location depends on person 
             
-            for person in experiment.dates_to_people[time]:
+        for person in experiment.dates_to_people[time]:
                 dt=False
                 action = 0 
                 prob=0
