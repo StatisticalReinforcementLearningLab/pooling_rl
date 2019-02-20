@@ -172,7 +172,7 @@ class TS_global_params:
         return [0 for i in range(num_baseline_features)]
     
     def get_mu2(self,num_responsivity_features):
-        return [0 for i in range()]
+        return [0 for i in range(num_responsivity_features)]
     
     def get_asigma(self,adim):
         return np.diag([10 for i in range(adim)])
