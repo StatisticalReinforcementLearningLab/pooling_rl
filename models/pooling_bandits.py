@@ -279,7 +279,7 @@ def get_one_hot_encodings(context_dict):
     
     dow =sf.get_day_of_week(context_dict['time'])
 
-    pre = get_pretreatment(context_dict['ltps'])
+    pre = sf.get_pretreatment(context_dict['ltps'])
     
     weather = context_dict['weather']
     
