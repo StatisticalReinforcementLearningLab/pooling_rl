@@ -32,12 +32,12 @@ class TS_global_params:
         self.prob_sedentary = .9 
         self.weight = .5 
         #print(self.baseline_features)
-        self.z_index = [i+1 for i in range(len(self.baseline_features))]
-        self.x_index = len(self.z_index)+1
-        self.avail_index = self.x_index+1
-        self.action_index = self.avail_index+1
-        self.prob_index = self.action_index+1
-        self.reward_index = self.prob_index+1
+        #self.z_index = [i+1 for i in range(len(self.baseline_features))]
+        #self.x_index = len(self.z_index)+1
+        #self.avail_index = self.x_index+1
+        #self.action_index = self.avail_index+1
+        #self.prob_index = self.action_index+1
+        #self.reward_index = self.prob_index+1
         
         #2 has to do with random effects, not likely to change soon
         self.theta_dim =1+len(self.num_baseline_features) + 2*(1+len(self.num_responsivity_features))
