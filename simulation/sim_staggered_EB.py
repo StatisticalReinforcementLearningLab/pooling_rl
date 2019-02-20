@@ -60,8 +60,8 @@ def initialize_policy_params_TS(experiment,update_period):
         personal_p.mus2[person]= global_p.get_mu2(global_p.num_responsivity_features)
         
         personal_p.sigmas0[person]= global_p.get_asigma(len( personal_p.mus0[person]))
-        personal_p.sigmas1[person]= global_p.get_asigma(global_p.num_baseline_features)
-        personal_p.sigmas2[person]= global_p.get_asigma( global_p.num_responsivity_features)
+        personal_p.sigmas1[person]= global_p.get_asigma(global_p.num_baseline_features+1)
+        personal_p.sigmas2[person]= global_p.get_asigma( global_p.num_responsivity_features+1)
         
         
         
