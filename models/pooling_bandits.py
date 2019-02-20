@@ -289,7 +289,7 @@ def get_one_hot_encodings(context_dict):
 
     skip ='tod-1-dow-0-wea-1-pre-0-loc-0'
     vector = np.zeros(63)
-    if myval!=skip:
+    if key!=skip:
         index = indices[myval]
         vector[index]=1
     return vector
