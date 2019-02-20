@@ -143,7 +143,7 @@ def get_history_norw(exp,glob):
     to_return = {}
 
     for userid,data in exp.population.items():
-        to_return[userid]= {k:v for k,v in data.history.items() if k<glob.last_global_update_time}
+        to_return[userid]= {k:v for k,v in data.history.items() if k<glob.last_global_update_time and v['avail']}
         
 
     return to_return
@@ -363,7 +363,7 @@ def calculate_posterior(global_params,user_id,user_study_day,X,y):
     #.reshape(X.shape[0],X.shape[0])
     sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v.reshape(2,2),global_params.noise_term,M,X.shape[0],global_params.sigma_theta)
 
-    return mu[-global_params.num_responsivity_features+1:],[j[-global_params.num_responsivity_features+1:] for j in sigma[-global_params.num_responsivity_features+1:]]
+    return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
 
 
 def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta):

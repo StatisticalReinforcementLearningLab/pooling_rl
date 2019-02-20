@@ -85,7 +85,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
             print('Global update', time,global_policy_params.decision_times, file=open('updates.txt', 'a'))
-            if global_policy_params.decision_times>10:
+            if global_policy_params.decision_times>100:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
@@ -187,7 +187,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     action=0
                     
                     
-                    if global_policy_params.decision_times>10 and global_policy_params.history!=None:
+                    if global_policy_params.decision_times>100 and global_policy_params.history!=None:
                         ##do i need this?
                         # if   not global_policy_params.updated_cov:
                         #     global_policy_params.update_cov(global_policy_params.decision_times)
@@ -198,9 +198,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
                     
-                            print(temp[0].shape)
+                    #print(temp[0].shape)
                     else:
-                        print('here')
+                        #print('here')
                         temp = [personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid]]
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
@@ -217,7 +217,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         #some context slice
                         
                         ##both f_one and g_one
-                        one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,'ltps':participant.steps,'study_day':participant.current_day_counter,'decision_time':dt,'time':time})
+                        one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,'ltps':participant.steps,'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability})
                         z = np.zeros(global_policy_params.num_responsivity_features+1)
                         z[0]=1
                         z[1:]=one_hot_vector
