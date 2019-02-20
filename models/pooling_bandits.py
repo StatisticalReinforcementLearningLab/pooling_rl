@@ -113,9 +113,14 @@ def run(X,y,global_params,gp_train_type='Static'):
 #np.array([[1.0,0.1],[0.1,1.0]])
     sigma_v =m.kern.sigma_v.value
     noise =m.kern.noise_term.value
+    print('lll')
+    print(sigma_v.shape())
+    
+    print(noise.shape())
+    
     sess.close()
     print(sess._closed)
-    return {'sigma_u':sigma_u,'sigma_v':sigma_v[0],'cov':trm,'noise':noise[0]}
+    return {'sigma_u':sigma_u,'sigma_v':sigma_v,'cov':trm,'noise':noise}
         #else:
         
         #sigma_u = np.array([[m.kern.sigma_u1.eval(session=sess),m.kern.sigma_u1.eval(session=sess)**5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess)],[m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess),m.kern.sigma_u2.eval(session=sess)]])
