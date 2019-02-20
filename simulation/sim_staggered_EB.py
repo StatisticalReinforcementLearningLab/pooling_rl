@@ -214,8 +214,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         #some context slice
                         
                         ##both f_one and g_one
-                        one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,\
-                                                                  'ltps':participant.steps,\'study_day':participant.current_day_counter,'decision_time':dt,'time':time})
+                        one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,'ltps':participant.steps,'study_day':participant.current_day_counter,'decision_time':dt,'time':time})
                         
                         prob = TS.prob_cal_ts(one_hot_vector,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
                         action = int(uniform() < prob)
