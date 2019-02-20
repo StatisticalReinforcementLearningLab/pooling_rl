@@ -43,7 +43,7 @@ class TS_global_params:
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
         self.mu_theta =np.ones(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
-        self.sigma_v=np.eye(2)
+        self.sigma_v=.5*np.eye(2)
         #self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
         #u1
         #22886.50901787
@@ -51,8 +51,8 @@ class TS_global_params:
         #9821.60955232
         ##off diagonal
         ##14992.74343105
-        self.sigma_u = np.array([[20, 15],
-                              [15, 10 ]])
+        self.sigma_u = np.array([[200, 150],
+                              [150, 100 ]])
         self.rho_term = 1.9999
         self.u1 = 22886.50901787
         self.u2 = 9821.60955232
