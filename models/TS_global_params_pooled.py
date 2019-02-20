@@ -179,7 +179,7 @@ class TS_global_params:
     
     
     def comput_rho(self,sigma_u):
-        return sigma_u[0][1]/( sigma_u[0][0]**.5*sigma_u[1][1]**.5)
+        return sigma_u[0][1]/( sigma_u[0][0]**.5*sigma_u[1][1]**.5)+1
     
     
     def update_params(self,pdict):
