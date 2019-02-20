@@ -308,7 +308,7 @@ if __name__=="__main__":
     experiment = study.study('../../regal/murphy_lab/pooling/distributions/' ,population)
    
     glob,personal = initialize_policy_params_TS(experiment,update_time)
-    sys.exit(0)
+  
     to_save = new_kind_of_simulation(experiment,'TS',personal,glob)
     filename = 'population_size_{}_update_days_{}_EB.pkl'.format(population,update_time)
     with open(filename,'wb') as f:
