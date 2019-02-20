@@ -88,7 +88,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             if global_policy_params.decision_times>500:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
-                print(history[1])
+                    #print(history[1])
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
           
                 global_policy_params.update_params(temp_params)
