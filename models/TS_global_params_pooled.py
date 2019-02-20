@@ -173,12 +173,18 @@ class TS_global_params:
     
     def get_asigma(self,adim):
         return np.diag([10 for i in range(adim)])
-
+    
+    
+    def comput_rho(self,sigma_u):
+        return sigma_u[0][1]/( sigma_u[0][0]**.5*sigma_u[1][1]**.5)
+    
     
     def update_params(self,pdict):
         self.noise_term=pdict['noise']
         self.sigma_u = pdict['sigma_u']
         self.sigma_v = pdict['sigma_v']
+        #save rho term too
+        self.rho_term = self.comput_rho(pdict['sigma_u'])
         self.cov = pdict['cov']
         self.updated_cov=True
 

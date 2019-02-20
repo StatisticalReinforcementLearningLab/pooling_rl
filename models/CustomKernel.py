@@ -36,7 +36,7 @@ def get_theta(dim_baseline):
     return m
 
 class CustomKernel(gpflow.kernels.Kernel):
-    def __init__(self,input_dim, mysession=None,rhos=None,select_users=None, active_dims=None, ARD=None, name=None,baseline_indices = None,psi_indices=None,user_index = None,user_day_index = None,num_data_points = None):
+    def __init__(self,input_dim, mysession=None,rhos=None,select_users=None, active_dims=None, ARD=None, name=None,baseline_indices = None,psi_indices=None,user_index = None,user_day_index = None,num_data_points = None,initial_u1=1.0,initial_u2=1.0,initial_s1=1,initial_s2=5,initial_rho=.9,initial_noise=1.0):
         super().__init__(input_dim)
         
         
@@ -44,7 +44,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         theta = get_theta(len(baseline_indices)).reshape(1,len(baseline_indices),len(baseline_indices))
         
         #sigmau = tf.reshape(np.array([[1.0,0.1],[0.1,1.0]]),(1,2,2))
-        sigmav = np.array([[1.0,0.0],[0.0,20.0]]).reshape(1,2,2)
+        sigmav = np.array([[initial_s1,0.0],[0.0,initial_s2]]).reshape(1,2,2)
         
         #self.sigma_u = gpflow.Param(value = np.array([[1.0,0.1],[0.1,1.0]]).reshape(1,2,2),\transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive))
         #self.sigma_u1 = gpflow.Param(1.0, transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
@@ -71,9 +71,9 @@ class CustomKernel(gpflow.kernels.Kernel):
         #self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
         
         
-        self.sigma_u1 = gpflow.Param(0.01,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
-        self.sigma_u2 = gpflow.Param(0.01,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
-        self.sigma_rho =gpflow.Param(0.01, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
+        self.sigma_u1 = gpflow.Param(initial_u1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_u2 = gpflow.Param(initial_u2,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
+        self.sigma_rho =gpflow.Param(initial_rho, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
 
 
         self.sigma_theta = tf.constant(theta)
@@ -86,7 +86,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         #self.sigma_v =  tf.constant(sigmav)
         
         
-        self.noise_term = gpflow.Param(0.8330911135873104 ,dtype=gpflow.settings.float_type,transform=gpflow.transforms.Logistic(a=0.5,b=10))
+        self.noise_term = gpflow.Param(initial_noise ,dtype=gpflow.settings.float_type)
         
         
                                     

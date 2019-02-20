@@ -33,14 +33,15 @@ def initialize_policy_params_TS(experiment,update_period):
     personal_p = pp.TS_personal_params()
     #global_p =gtp.TS_global_params(10,context_dimension)
     
-    global_p.kdim = 11
-    global_p.baseline_indices = [0,1,2,3,4,5,6]
-    global_p.psi_indices = [4,6]
-    global_p.user_id_index = 7
-    global_p.user_day_index =8
+    global_p.kdim = 194
+    global_p.baseline_indices = [i for i in range(192)]
+    #[0,1,2,3,4,5,6]
+    global_p.psi_indices = [0,64]
+    global_p.user_id_index = 192
+    global_p.user_day_index = 193
     
-    global_p.baseline_features = ['location','weather']
-    global_p.psi_features = ['location']
+    global_p.baseline_features = [i for i in range(192)]
+    global_p.psi_features = [0,64]
     
     global_p.update_period = update_period
     
