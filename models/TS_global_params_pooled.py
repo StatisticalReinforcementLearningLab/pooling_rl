@@ -51,8 +51,8 @@ class TS_global_params:
         #9821.60955232
         ##off diagonal
         ##14992.74343105
-        self.sigma_u = np.array([[200, 150],
-                              [150, 100 ]])
+        self.sigma_u = np.array([[2000, 1500],
+                              [1500, 1000 ]])
         self.rho_term = 1.9999
         self.u1 = 22886.50901787
         self.u2 = 9821.60955232
