@@ -113,13 +113,13 @@ def run(X,y,global_params,gp_train_type='Static'):
 #np.array([[1.0,0.1],[0.1,1.0]])
     sigma_v =m.kern.sigma_v.value
     noise =m.kern.noise_term.value
-    print('lll')
-    print(sigma_v.shape)
+    #print('lll')
+    #print(sigma_v.shape)
     
-    print(noise.shape)
+    #print(noise.shape)
     
-    sess.close()
-    print(sess._closed)
+    #sess.close()
+    #print(sess._closed)
     return {'sigma_u':sigma_u,'sigma_v':sigma_v.reshape(2,2),'cov':trm,'noise':noise}
         #else:
         
