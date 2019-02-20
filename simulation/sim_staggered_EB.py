@@ -85,7 +85,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
             print('Global update', time,global_policy_params.decision_times, file=open('updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
-            if global_policy_params.decision_times>500:
+            if global_policy_params.decision_times>5:00:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
                     #print(history[1])
@@ -176,7 +176,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 
                 ##for now:
-                ##eval with empty array 
+                ##eval with empty array
+                prob = -1
                 if time in participant.decision_times:
                                         #print(personal_policy_params.batch_index[participant.pid])
                     
@@ -277,7 +278,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##history:
                 context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
                     'ltps':steps_last_time_period,'duration':participant.duration,\
-                        'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability}
+                        'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability,'prob':prob}
                 participant.history[time]=context_dict
                 
             #3

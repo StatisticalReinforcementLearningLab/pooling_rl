@@ -212,12 +212,15 @@ def create_phi_one_hot(glob,history_dict):
         ##change to find pi in h
         for hk,h in history.items():
             one_hot = get_one_hot_encodings(glob,h)
+            pi = h['prob']
+            if pi==-1:
+                print('yikes')
             v = [1]
             v.extend(list(one_hot))
-            v.append(0.6)
-            v.extend(list(0.6*one_hot))
-            v.append(h['action']-.6)
-            v.extend(list((h['action']-.6)*one_hot))
+            v.append(pi)
+            v.extend(list(pi*one_hot))
+            v.append(h['action']-pi)
+            v.extend(list((h['action']-pi)*one_hot))
             v.append(float(user_id))
             v.append(h['study_day'])
             v = [float(i) for i in v]
