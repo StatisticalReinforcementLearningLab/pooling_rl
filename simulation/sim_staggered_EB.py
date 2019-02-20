@@ -17,6 +17,7 @@ from numpy.random import uniform
 
 ##sys.path.append('../simulation')
 import TS_fancy_pooled
+import TS
 ##import TS_fancy_pooled
 
 import pooling_bandits as pb
@@ -241,7 +242,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                    
                     
                     
-                    #participant.update_dosage(action)
+                        participant.update_dosage(action)
                     
                         context = [action,participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),\
                               steps_yesterday,variation,sf.dosage_to_dosage_key(participant.dosage)]
@@ -308,7 +309,7 @@ if __name__=="__main__":
    
     glob,personal = initialize_policy_params_TS(experiment,update_time)
     sys.exit(0)
-    to_save = new_kind_of_simulation(experiment,'TS_fancy',personal,glob)
+    to_save = new_kind_of_simulation(experiment,'TS',personal,glob)
     filename = 'population_size_{}_update_days_{}_EB.pkl'.format(population,update_time)
     with open(filename,'wb') as f:
         pickle.dump(to_save,f)
