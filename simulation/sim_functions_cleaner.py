@@ -44,7 +44,7 @@ with open('{}key_matches_non_intervention.pkl'.format(root),'rb') as f:
 with open('{}dists_intervention.pkl'.format(root),'rb') as f:
     dists_intervention = pickle.load(f)
 
-with open('{}key_matches_non_intervention.pkl'.format(root),'rb') as f:
+with open('{}key_matches_intervention.pkl'.format(root),'rb') as f:
     matched_intervention = pickle.load(f)
 
 
