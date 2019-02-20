@@ -85,7 +85,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
             print('Global update', time,global_policy_params.decision_times, file=open('updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
-            if global_policy_params.decision_times>5:00:
+            if global_policy_params.decision_times>500:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
                     #print(history[1])
