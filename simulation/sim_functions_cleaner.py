@@ -8,7 +8,7 @@ import math
 import random
 from datetime import datetime
 random.seed(datetime.now())
-
+from scipy.stats import halfnorm
 
 
 if '/Users/sabina/pooling_rl/' in os.getcwd():
@@ -184,7 +184,7 @@ def get_next_location(gid,dow,tod,loc):
 
 def get_steps_no_action(gid,tod,dow,loc,wea,pre):
     
-    keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'loc',str(loc),'wea',str(wea),'pre',str(get_pretreatment(pre))]
+    keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'wea',str(wea),'pre',str(get_pretreatment(pre),'loc',str(loc)]
     
     new_key = '-'.join(keys)
     
@@ -193,13 +193,15 @@ def get_steps_no_action(gid,tod,dow,loc,wea,pre):
 
     dist = dists[dist_key]
        
-    x = np.random.normal(loc=dist[0],scale=dist[1])
-    while(x<0):
-         x = np.random.normal(loc=dist[0],scale=dist[1])
+    ##CHANGE TO TRUNCATED
+    x = halfnorm.rvs(loc=dist[0],scale=dist[1])
+    #np.random.normal(loc=dist[0],scale=dist[1])
+    #while(x<0):
+    #x = np.random.normal(loc=dist[0],scale=dist[1])
     return x
 
 def get_steps_action(context):
-    ids = ['aint','gid','tod','dow','loc','wea','pre','yst','var','dos']
+    ids = ['aint','gid','tod','dow','wea','pre','loc']
     context = [str(c) for c in context]
     new_key = []
     for i in range(len(ids)):
@@ -210,10 +212,10 @@ def get_steps_action(context):
     dist_key = matched_intervention[new_key]
 
     dist = dists_intervention[dist_key]
-
-    x = np.random.normal(loc=dist[0],scale=dist[1])
-    while(x<0):
-         x = np.random.normal(loc=dist[0],scale=dist[1])
+    x = halfnorm.rvs(loc=dist[0],scale=dist[1])
+    #x = np.random.normal(loc=dist[0],scale=dist[1])
+    # while(x<0):
+    #      x = np.random.normal(loc=dist[0],scale=dist[1])
     return x
     
 

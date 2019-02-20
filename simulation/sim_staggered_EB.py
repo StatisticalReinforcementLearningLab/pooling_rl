@@ -79,6 +79,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
+            print('Global update', time,global_policy_params.decision_times, file=open('updates.txt', 'w'))
             if global_policy_params.decision_times>10:
                 glob.last_global_update_time=time
                 history =pb.make_history_new(uniform(),glob,experiment)
