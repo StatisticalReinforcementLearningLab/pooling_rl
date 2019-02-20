@@ -114,9 +114,9 @@ def run(X,y,global_params,gp_train_type='Static'):
     sigma_v =m.kern.sigma_v.value
     noise =m.kern.noise_term.value
     print('lll')
-    print(sigma_v.shape())
+    print(sigma_v.shape)
     
-    print(noise.shape())
+    print(noise.shape)
     
     sess.close()
     print(sess._closed)
