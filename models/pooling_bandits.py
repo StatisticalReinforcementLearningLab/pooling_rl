@@ -120,7 +120,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     
     sess.close()
     print(sess._closed)
-    return {'sigma_u':sigma_u,'sigma_v':sigma_v,'cov':trm,'noise':noise}
+    return {'sigma_u':sigma_u,'sigma_v':sigma_v.reshape(2,2),'cov':trm,'noise':noise}
         #else:
         
         #sigma_u = np.array([[m.kern.sigma_u1.eval(session=sess),m.kern.sigma_u1.eval(session=sess)**5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess)],[m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess),m.kern.sigma_u2.eval(session=sess)]])
