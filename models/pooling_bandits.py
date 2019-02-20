@@ -204,7 +204,7 @@ def create_phi_one_hot(glob,history_dict):
     for user_id,history in history_dict.items():
         ##change to find pi in h
         for hk,h in history.items():
-            one_hot = get_one_hot_encodings(h)
+            one_hot = get_one_hot_encodings(glob,h)
             v = [1]
             v.extend(list(one_hot))
             v.append(0.6)
@@ -274,7 +274,7 @@ def new_standardize(X,y):
             #mm = preprocessing.MinMaxScaler(feature_range=(.5, 1))
     return [to_return,preprocessing.scale(np.array([[float(yi)] for yi in y]))]
         
-def get_one_hot_encodings(context_dict):
+def get_one_hot_encodings(glob,context_dict):
     tod =sf.get_time_of_day(context_dict['time'])
     
     dow =sf.get_day_of_week(context_dict['time'])
@@ -290,7 +290,7 @@ def get_one_hot_encodings(context_dict):
     skip ='tod-1-dow-0-wea-1-pre-0-loc-0'
     vector = np.zeros(63)
     if key!=skip:
-        index = indices[myval]
+        index = glob.one_hot_indices[key]
         vector[index]=1
     return vector
 
