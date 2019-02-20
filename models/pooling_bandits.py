@@ -230,7 +230,7 @@ def make_history_one_hot(pi,glob,exp=None):
     #new_x = preprocessing.scale(np.array(ad[0]))
     #new_y = preprocessing.scale(np.array(ad[1]))
     #y = np.array([[float(r)] for r in z[1]])
-return [z[0],z[1]]
+    return [z[0],z[1]]
 
 
 
