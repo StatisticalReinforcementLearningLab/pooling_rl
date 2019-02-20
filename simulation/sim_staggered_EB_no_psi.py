@@ -79,7 +79,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 glob.last_global_update_time=time
                 history =pb.make_history_new(uniform(),glob,experiment)
                 temp_params = pb.run(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
-                global_policy_params.update_params(temp_params)
+            global_policy_params.update_params(temp_params)
                 global_policy_params.history = history
                 
             ##update global context

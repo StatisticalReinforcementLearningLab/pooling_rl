@@ -47,12 +47,12 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         sigmav = np.array([[initial_s1,0.0],[0.0,initial_s2]]).reshape(1,2,2)
         
         
-        self.sigma_u1 =tf.constant(initial_u1)
-        #gpflow.Param(initial_u1,  trainable=False,transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
-        self.sigma_u2 =tf.constant(initial_u1)
-        #gpflow.Param(initial_u2, trainable=False, transform=gpflow.transforms.positive, dtype=gpflow.settings.float_type)
-        self.sigma_rho =tf.constant(initial_rho)
-        #gpflow.Param(initial_rho, trainable=False,transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
+        #self.sigma_u1 =tf.constant(initial_u1)
+        self.sigma_u1 = gpflow.Param(initial_u1,  transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
+        #self.sigma_u2 =tf.constant(initial_u1)
+        self.sigma_u2 = gpflow.Param(initial_u2,  transform=gpflow.transforms.positive, dtype=gpflow.settings.float_type)
+        #self.sigma_rho =tf.constant(initial_rho)
+        self.sigma_rho = gpflow.Param(initial_rho, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
                                      
         self.sigma_theta = tf.constant(np.eye(len(baseline_indices)))
         self.mu_theta = tf.constant(np.ones(len(baseline_indices)))
@@ -63,13 +63,13 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
                                      #gpflow.Param(1.0, transform=gpflow.transforms.positive,
                                      #dtype=gpflow.settings.float_type)
                                      
-       # self.sigma_v =  gpflow.Param(sigmav, trainable=False, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
+        self.sigma_v =  gpflow.Param(sigmav,  transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
                                      
-        self.sigma_v=sigmav
-       #self.noise_term = gpflow.Param(initial_noise,  trainable=False,transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
+                                     #self.sigma_v=sigmav
+        self.noise_term = gpflow.Param(initial_noise,  transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
                                      
                                      
-        self.noise_term=tf.constant(initial_noise)
+                                     #self.noise_term=tf.constant(initial_noise)
                                     #gpflow.Param(1.0, transform=gpflow.transforms.positive,
                                     #dtype=gpflow.settings.float_type)
         

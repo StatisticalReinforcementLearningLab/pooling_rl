@@ -24,7 +24,7 @@ class TS_global_params:
         
         self.xi  = xi
         
- 
+        self.update_period=7
         self.gamma_mdp = .9
         self.lambda_knot = .9 
         self.prob_sedentary = .9 
@@ -40,9 +40,13 @@ class TS_global_params:
         self.theta_dim = 1+len(self.baseline_features) + 2*(1+len(self.psi_features))
         self.mu_theta =np.ones(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
-        self.sigma_v = np.eye(2)
-        self.sigma_u = np.eye(2)
-        self.noise_term=1
+        self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
+        self.sigma_u = np.array([[22886.50901787, 14992.74343105],
+                              [14992.74343105,  9821.60955232]])
+        self.rho_term = 1.9999
+        self.u1 = 22886.50901787
+        self.u2 = 9821.60955232
+        self.noise_term= 90800.30211642
         self.cov=np.array([1])
         self.psi = psi.psi()
         self.decision_times = 1
@@ -104,7 +108,7 @@ class TS_global_params:
     def get_asigma(self,adim):
         return np.diag([10 for i in range(adim)])
 
-
+    
     def update_params(self,pdict):
         self.noise_term=pdict['noise']
         self.sigma_u = pdict['sigma_u']

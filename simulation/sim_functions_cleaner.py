@@ -34,22 +34,22 @@ with open('{}loc_label_to_intervention_label_tref.pkl'.format(root),'rb') as f:
 #    hour_pretreatment_label_to_val = pickle.load(f)
 
 
-with open('{}trial_dists_rec_new_dosage.pkl'.format(root),'rb') as f:
+with open('{}dists_non_intervention.pkl'.format(root),'rb') as f:
     dists = pickle.load(f)
 
-with open('{}key_matches_rec_new_dosage.pkl'.format(root),'rb') as f:
+with open('{}key_matches_non_intervention.pkl'.format(root),'rb') as f:
     matched = pickle.load(f)
 
 
-with open('{}trial_dists_new_dosage_intervention.pkl'.format(root),'rb') as f:
+with open('{}dists_intervention.pkl'.format(root),'rb') as f:
     dists_intervention = pickle.load(f)
 
-with open('{}key_matches_new_dosage_intervention.pkl'.format(root),'rb') as f:
+with open('{}key_matches_non_intervention.pkl'.format(root),'rb') as f:
     matched_intervention = pickle.load(f)
 
 
-with open('{}interventions_both_groups_estf.pkl'.format(root),'rb') as f:
-    intervention_dists = pickle.load(f)
+#with open('{}interventions_both_groups_estf.pkl'.format(root),'rb') as f:
+#intervention_dists = pickle.load(f)
 
 def get_location_prior(group_id,day_of_week,time_of_day):
     with open('{}initial_location_distributions_est_tref.pkl'.format(root),'rb') as f:

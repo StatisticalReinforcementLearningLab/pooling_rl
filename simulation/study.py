@@ -12,18 +12,18 @@ class study:
     Also which participants are involved at which times. 
     '''
     
-    def __init__(self,root):
+    def __init__(self,root,population_size):
         #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
         self.root =root
             #'../../murphy_lab/lab/pooling/distributions/'
         
-        with open('{}u_to_time_indices.pkl'.format(root),'rb') as f:
+        with open('{}person_to_time_indices_pop_{}.pkl'.format(root,population_size),'rb') as f:
             pse=pickle.load(f)
-        with open('{}u_to_decision_time_indices.pkl'.format(root),'rb') as f:
+        with open('{}person_to_decision_times_pop_{}.pkl'.format(root,population_size),'rb') as f:
             dts=pickle.load(f)
-        with open('{}time_to_active_u.pkl'.format(root),'rb') as f:
+        with open('{}time_to_active_participants_pop_{}.pkl'.format(root,population_size),'rb') as f:
             dates_to_people=pickle.load(f)
-        with open('{}all_ordered_times.pkl'.format(root),'rb') as f:
+        with open('{}all_ordered_times_mondays.pkl'.format(root),'rb') as f:
             study_days=pickle.load(f)
         
         self.person_to_time = pse 
@@ -50,7 +50,8 @@ class study:
         self.last_update_day = study_days[0]
         
     def get_gid(self):
-         return int(random.random()>4.0/36)+1
+        #4.0/36
+         return int(random.random()>.5)+1
     
     def init_population(self):
          

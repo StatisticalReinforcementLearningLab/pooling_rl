@@ -7,7 +7,7 @@ import pickle
 import random
 import os
 import math
-import sim_functions_cleaner  as sf
+#import sim_functions_cleaner  as sf
 import operator
 import study
 import time
@@ -15,10 +15,10 @@ import TS_personal_params_pooled as pp
 import TS_global_params_pooled as gtp
 from numpy.random import uniform
 
-#sys.path.append('../simulation')
+##sys.path.append('../simulation')
 import TS_fancy_pooled
-#import TS_fancy_pooled
-import eta
+##import TS_fancy_pooled
+
 import pooling_bandits as pb
 from sklearn import preprocessing
 import tensorflow as tf
@@ -26,7 +26,7 @@ import tensorflow as tf
 
 
 
-def initialize_policy_params_TS(experiment):
+def initialize_policy_params_TS(experiment,update_period):
     
     global_p =gtp.TS_global_params(10)
     personal_p = pp.TS_personal_params()
@@ -40,6 +40,9 @@ def initialize_policy_params_TS(experiment):
     
     global_p.baseline_features = ['location','weather']
     global_p.psi_features = ['location']
+    
+    global_p.update_period = update_period
+    
     
     #print(type(personal_p))
     
@@ -73,12 +76,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         
         #if time> experiment.study_days[0]:
         #history  = pb.make_history(experiment)
-        if time==experiment.last_update_day+pd.DateOffset(days=1):
+        if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
             if global_policy_params.decision_times>10:
                 glob.last_global_update_time=time
                 history =pb.make_history_new(uniform(),glob,experiment)
-                temp_params = TS_fancy_pooled.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
+                temp_params = pb.global_updates(history[0],history[1],global_policy_params,train_type = 'empirical_bayes')
                 global_policy_params.update_params(temp_params)
                 global_policy_params.history = history
                 
@@ -184,6 +187,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     
                     if global_policy_params.decision_times>10 and global_policy_params.history!=None:
+                        ##do i need this?
                             if   not global_policy_params.updated_cov:
                                  global_policy_params.update_cov(global_policy_params.decision_times)   
                             #print( global_policy_params.decision_times)
@@ -237,7 +241,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                    
                     
                     
-                        participant.update_dosage(action)
+                    #participant.update_dosage(action)
                     
                         context = [action,participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),\
                               steps_yesterday,variation,sf.dosage_to_dosage_key(participant.dosage)]
@@ -285,10 +289,29 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 if __name__=="__main__":
 
-
-
-    experiment = study.study( '../../regal/murphy_lab/pooling/distributions/')
-    glob,personal = initialize_policy_params_TS(experiment)
-    new_kind_of_simulation(experiment,'TS_fancy',personal,glob)
+    ##parse command line arguments
+    
+    population = sys.argv[1]
+    update_time = sys.argv[2]
+    
+    #print(str(sys.argv))
+    #print(type(population))
+    update_time = int(update_time)
+    #print(update_time)
+    #print(type(update_time))
+    #print(population)
+  
+    #'../../regal/murphy_lab/pooling/distributions/'
+    #
+    #print()
+    experiment = study.study('../../regal/murphy_lab/pooling/distributions/' ,population)
+   
+    glob,personal = initialize_policy_params_TS(experiment,update_time)
+    sys.exit(0)
+    to_save = new_kind_of_simulation(experiment,'TS_fancy',personal,glob)
+    filename = 'population_size_{}_update_days_{}_EB.pkl'.format(population,update_time)
+    with open(filename,'wb') as f:
+        pickle.dump(to_save,f)
+    
     print('finished')    
 
