@@ -217,7 +217,7 @@ def create_phi_one_hot(glob,history_dict):
             v = np.array(v)
             all_data.append(v)
             all_steps.append([float(h['steps'])])
-        return [all_data,all_steps]
+    return [all_data,all_steps]
 
 def make_history_one_hot(pi,glob,exp=None):
     g=get_history_norw(exp,glob)
