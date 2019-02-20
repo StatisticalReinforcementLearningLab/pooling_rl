@@ -29,7 +29,7 @@ import tensorflow as tf
 
 def initialize_policy_params_TS(experiment,update_period):
     
-    global_p =gtp.TS_global_params(10)
+    global_p =gtp.TS_global_params(10,baseline_features=[i for i in range(192)],psi_features=[0,64])
     personal_p = pp.TS_personal_params()
     #global_p =gtp.TS_global_params(10,context_dimension)
     
