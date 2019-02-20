@@ -7,7 +7,7 @@ import pickle
 import random
 import os
 import math
-#import sim_functions_cleaner  as sf
+import sim_functions_cleaner  as sf
 import operator
 import study
 import time
