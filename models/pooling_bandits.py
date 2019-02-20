@@ -351,7 +351,7 @@ def get_f_one(context_dict):
     pass
 
 def calculate_posterior(global_params,user_id,user_study_day,X,y):
-    H = create_H(len(global_params.baseline_features),len(global_params.psi_features))
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
     M = get_M(global_params,user_id,user_study_day,X)
     ##change this to be mu_theta
     ##is it updated?  the current mu_theta?
