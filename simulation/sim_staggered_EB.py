@@ -56,12 +56,12 @@ def initialize_policy_params_TS(experiment,update_period):
         experiment.population[person].root = '../../regal/murphy_lab/pooling/distributions/'
         initial_context = [0 for i in range(global_p.theta_dim)]
         personal_p.mus0[person]= global_p.get_mu0(initial_context)
-        personal_p.mus1[person]= global_p.get_mu1(initial_context)
-        personal_p.mus2[person]= global_p.get_mu2(initial_context)
+        personal_p.mus1[person]= global_p.get_mu1(global_p.num_baseline_features)
+        personal_p.mus2[person]= global_p.get_mu2(global_p.num_responsivity_features)
         
         personal_p.sigmas0[person]= global_p.get_asigma(len( personal_p.mus0[person]))
-        personal_p.sigmas1[person]= global_p.get_asigma(len( personal_p.mus1[person]))
-        personal_p.sigmas2[person]= global_p.get_asigma(len( personal_p.mus2[person]))
+        personal_p.sigmas1[person]= global_p.get_asigma(global_p.num_baseline_features)
+        personal_p.sigmas2[person]= global_p.get_asigma( global_p.num_responsivity_features)
         
         
         

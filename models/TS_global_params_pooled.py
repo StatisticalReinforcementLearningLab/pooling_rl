@@ -168,11 +168,11 @@ class TS_global_params:
     def get_mu0(self,z_init):
         return [0 for i in range(len(self.feat0_function(z_init,0)))]
     
-    def get_mu1(self,z_init):
-        return [0 for i in range(len(self.feat1_function(z_init,0)))]
+    def get_mu1(self,num_baseline_features):
+        return [0 for i in range(num_baseline_features)]
     
-    def get_mu2(self,z_init):
-        return [0 for i in range(len(self.feat2_function(z_init,0)))]
+    def get_mu2(self,num_responsivity_features):
+        return [0 for i in range()]
     
     def get_asigma(self,adim):
         return np.diag([10 for i in range(adim)])
