@@ -215,6 +215,7 @@ def create_phi_one_hot(glob,history_dict):
             pi = h['prob']
             if pi==-1:
                 print('yikes')
+            print(pi)
             v = [1]
             v.extend(list(one_hot))
             v.append(pi)
