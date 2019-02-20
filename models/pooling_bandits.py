@@ -196,12 +196,28 @@ def make_history_new(pi,glob,exp=None):
 #y = np.array([[float(r)] for r in z[1]])
     return [z[0],z[1]]
 
-def create_phi_one_hot():
+def create_phi_one_hot(glob,history_dict):
+    all_data = []
+    all_steps = []
+    
+    
     for user_id,history in history_dict.items():
-        
+        ##change to find pi in h
         for hk,h in history.items():
             one_hot = get_one_hot_encodings(h)
-
+            v = [1]
+            v.extend(list(one_hot))
+            v.append(0.6)
+            v.extend(list(0.6*one_hot))
+            v.append(h['action']-.6)
+            v.extend(list((h['action']-.6)*one_hot))
+            v.append(float(user_id))
+            v.append(h['study_day'])
+            v = [float(i) for i in v]
+            v = np.array(v)
+            all_data.append(v)
+            all_steps.append([float(h['steps'])])
+        return [all_data,all_steps]
 
 def make_history_one_hot(pi,glob,exp=None):
     g=get_history_norw(exp,glob)

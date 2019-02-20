@@ -48,7 +48,7 @@ class TS_global_params:
         self.u2 = 9821.60955232
         self.noise_term= 90800.30211642
         self.cov=np.array([1])
-        self.psi = psi.psi()
+        #self.psi = psi.psi()
         self.decision_times = 1
         self.kdim = None
 
