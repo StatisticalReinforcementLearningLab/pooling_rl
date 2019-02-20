@@ -39,11 +39,11 @@ class CustomKernel(gpflow.kernels.Kernel):
     def __init__(self,input_dim, mysession=None,rhos=None,select_users=None, active_dims=None, ARD=None, name=None,baseline_indices = None,psi_indices=None,user_index = None,user_day_index = None,num_data_points = None,initial_u1=1.0,initial_u2=1.0,initial_s1=1,initial_s2=5,initial_rho=.9,initial_noise=1.0):
         super().__init__(input_dim)
         
-        print('IN KERNEL')
-        print(initial_u1)
-        print(initial_u2)
-        print(initial_s1)
-        print(initial_rho)
+        #print('IN KERNEL')
+        #print(initial_u1)
+        #print(initial_u2)
+        #print(initial_s1)
+        #print(initial_rho)
         ##make this a function
         theta = get_theta(len(baseline_indices)).reshape(1,len(baseline_indices),len(baseline_indices))
         
