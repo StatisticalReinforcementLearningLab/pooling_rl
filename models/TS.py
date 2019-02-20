@@ -20,7 +20,7 @@ def get_probs(batch,init):
 
 def prob_cal_ts(z,x,mu,Sigma,global_params):
     pos_mean = np.dot(bandit.feat2_function(z),mu)
-    pos_var = np.dot(np.dot(np.transpose(bandit.feat2_function(z)),Sigma),bandit.feat2_function(z,x))
+    pos_var = np.dot(np.dot(np.transpose(z),Sigma),z)
     pos_var = max(0,pos_var)
 
   
