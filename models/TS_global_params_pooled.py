@@ -40,7 +40,7 @@ class TS_global_params:
         #self.reward_index = self.prob_index+1
         
         #2 has to do with random effects, not likely to change soon
-        self.theta_dim =1+len(self.num_baseline_features) + 2*(1+len(self.num_responsivity_features))
+        self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
         self.mu_theta =np.ones(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
         self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
