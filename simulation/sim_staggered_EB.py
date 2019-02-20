@@ -90,6 +90,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
                 global_policy_params.update_params(temp_params)
+                print(temp_params)
                 global_policy_params.history = history
                 
             ##update global context
