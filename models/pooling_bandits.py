@@ -143,7 +143,7 @@ def get_history_norw(exp,glob):
     to_return = {}
 
     for userid,data in exp.population.items():
-        to_return[userid]= {k:v for k,v in data.history.items() if k<glob.last_global_update_time and v['avail'] and v['dt']}
+        to_return[userid]= {k:v for k,v in data.history.items() if k<glob.last_global_update_time and v['avail'] and v['decision_time']}
         
 
     return to_return
