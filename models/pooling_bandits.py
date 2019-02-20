@@ -303,7 +303,7 @@ def get_M(global_params,user_id,user_study_day,history):
     #print(history)
     M = [[] for i in range(history.shape[0])]
 
-    H = create_H(len(global_params.baseline_features),len(global_params.psi_features))
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
     for x_old_i in range(history.shape[0]):
         x_old = history[x_old_i]
         old_user_id = x_old[global_params.user_id_index]
