@@ -94,8 +94,10 @@ def run(X,y,global_params,gp_train_type='Static'):
             
             gpflow.train.ScipyOptimizer().minimize(m,session=sess)
             #print(m.as_pandas_table())
+            print('did work')
         except Exception as e:
 # shorten the giant stack trace
+
             lines = str(e).split('\n')
             print ('\n'.join(lines[:15]+['...']+lines[-30:]))
     

@@ -88,7 +88,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             if global_policy_params.decision_times>500:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
+                print(h[1])
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
+          
                 global_policy_params.update_params(temp_params)
                 #print(temp_params)
                 global_policy_params.history = history
@@ -286,7 +288,15 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
             ##update at midnight (here we have ensured that no one has a ) experiment.update_hour
             
-                             
+
+def make_to_save(exp):
+    to_save  = {}
+    for pid,pdata in exp.population.items():
+        for time,context in pdata.history.items():
+            key = '{}-{}'.format(pid,time)
+            to_save[key]=context
+    return to_save
+
 
 if __name__=="__main__":
 
@@ -309,7 +319,10 @@ if __name__=="__main__":
    
     glob,personal = initialize_policy_params_TS(experiment,update_time)
   
-    to_save = new_kind_of_simulation(experiment,'TS',personal,glob)
+    new_kind_of_simulation(experiment,'TS',personal,glob)
+    
+    to_save = make_to_save(experiment)
+    
     filename = 'population_size_{}_update_days_{}_EB.pkl'.format(population,update_time)
     with open(filename,'wb') as f:
         pickle.dump(to_save,f)
