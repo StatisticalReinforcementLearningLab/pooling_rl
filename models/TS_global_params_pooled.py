@@ -51,12 +51,12 @@ class TS_global_params:
         #9821.60955232
         ##off diagonal
         ##14992.74343105
-        self.sigma_u = np.array([[20, 15],
-                              [15, 10 ]])
+        self.sigma_u = np.array([[200, 150],
+                              [150, 100 ]])
         self.rho_term = 1.9999
         self.u1 = 22886.50901787
         self.u2 = 9821.60955232
-        self.noise_term= 90800.30211642
+        self.noise_term= 9080.30211642
         self.cov=np.array([1])
         #self.psi = psi.psi()
         self.decision_times = 1
