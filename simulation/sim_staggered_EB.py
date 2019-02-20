@@ -40,7 +40,7 @@ def initialize_policy_params_TS(experiment,update_period):
     global_p.user_id_index = 192
     global_p.user_day_index = 193
     
-    global_p.baseline_features = [i for i in range(192)]
+    #global_p.baseline_features = [i for i in range(192)]
     global_p.psi_features = [0,64]
     
     global_p.update_period = update_period
