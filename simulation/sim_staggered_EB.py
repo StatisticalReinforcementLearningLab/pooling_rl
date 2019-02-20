@@ -274,7 +274,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##history:
                 context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
                     'ltps':steps_last_time_period,'duration':participant.duration,\
-                        'study_day':participant.current_day_counter,'decision_time':dt,'time':time}
+                        'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail'=availability}
                 participant.history[time]=context_dict
                 
             #3
