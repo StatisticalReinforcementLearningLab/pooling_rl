@@ -78,7 +78,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     #sess = tf.InteractiveSession()
     sess = tf.Session()
     if gp_train_type=='empirical_bayes':
-        k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0],initial_u1=global_policy_params.sigma_u[0][0],initial_u2=global_policy_params.sigma_u[1][1],initial_s1=global_policy_params.sigma_v[0][0],initial_s2=global_policy_params.sigma_v[1][1],initial_rho=global_policy_params.rho_term,initial_noise=global_policy_params.noise_term)
+        k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0],initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_s1=global_params.sigma_v[0][0],initial_s2=global_params.sigma_v[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term)
     else:
         k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
 
