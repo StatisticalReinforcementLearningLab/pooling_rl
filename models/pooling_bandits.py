@@ -93,8 +93,8 @@ def run(X,y,global_params,gp_train_type='Static'):
         try:
             
             gpflow.train.ScipyOptimizer().minimize(m,session=sess)
-            #print(m.as_pandas_table())
-            #print('did work')
+            print(m.as_pandas_table())
+            print('did work')
         except Exception as e:
 # shorten the giant stack trace
 
@@ -215,7 +215,7 @@ def create_phi_one_hot(glob,history_dict):
             pi = h['prob']
             if pi==-1:
                 print('yikes')
-            print(pi)
+            #print(pi)
             v = [1]
             v.extend(list(one_hot))
             v.append(pi)
