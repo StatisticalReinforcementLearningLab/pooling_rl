@@ -63,7 +63,7 @@ def initialize_policy_params_TS(experiment,update_period):
         personal_p.batch[person]=[[] for i in range(len(experiment.person_to_time[person]))]
         personal_p.batch_index[person]=0
         
-        personal_p.etas[person]=eta.eta()
+        #personal_p.etas[person]=eta.eta()
         
         personal_p.last_update[person]=experiment.person_to_time[person][0]
     
