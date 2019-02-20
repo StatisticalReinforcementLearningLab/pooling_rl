@@ -43,7 +43,8 @@ class TS_global_params:
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
         self.mu_theta =np.ones(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
-        self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
+        self.sigma_v=np.eye(2)
+        #self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
         #u1
         #22886.50901787
         ##u2
