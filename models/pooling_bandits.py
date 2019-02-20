@@ -13,8 +13,10 @@ import warnings
 warnings.simplefilter('ignore')
 import os
 import random
-
-
+import sys
+sys.path
+sys.path.append('pooling_rl/simulation')
+import sim_functions_cleaner as sf
 
 
 
@@ -264,7 +266,24 @@ def new_standardize(X,y):
     return [to_return,preprocessing.scale(np.array([[float(yi)] for yi in y]))]
         
 def get_one_hot_encodings(context_dict):
-    key = 'tod-{}-dow-{}-wea-{}-pre-{}-loc-{}'.format(context_dict[])
+    tod =sf.get_time_of_day(context_dict['time'])
+    
+    dow =sf.get_day_of_week(context_dict['time'])
+
+    pre = get_pretreatment(context_dict['ltps'])
+    
+    weather = context_dict['weather']
+    
+    location = context_dict['location']
+    
+    key = 'tod-{}-dow-{}-wea-{}-pre-{}-loc-{}'.format(tod,dow,weather,pre,location)
+
+    skip ='tod-1-dow-0-wea-1-pre-0-loc-0'
+    vector = np.zeros(63)
+    if myval!=skip:
+        index = indices[myval]
+        vector[index]=1
+    return vector
 
 
 
