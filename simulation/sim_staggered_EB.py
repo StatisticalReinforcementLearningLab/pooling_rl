@@ -29,10 +29,14 @@ import tensorflow as tf
 
 def initialize_policy_params_TS(experiment,update_period):
     
-    global_p =gtp.TS_global_params(10,baseline_features=[i for i in range(192)],psi_features=[0,64])
+    global_p =gtp.TS_global_params(10,baseline_features=63,psi_features=[0,64], resp_features= 63)
     personal_p = pp.TS_personal_params()
     #global_p =gtp.TS_global_params(10,context_dimension)
     
+    
+    
+    #global_p.mu_dimension = 64
+
     global_p.kdim = 194
     global_p.baseline_indices = [i for i in range(192)]
     #[0,1,2,3,4,5,6]
@@ -176,12 +180,6 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     ##if we have made no global updates
 
-                            
-                    
-                        
-                    
-                    
-                   
                     
                     
                     
@@ -191,10 +189,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     if global_policy_params.decision_times>10 and global_policy_params.history!=None:
                         ##do i need this?
-                            if   not global_policy_params.updated_cov:
-                                 global_policy_params.update_cov(global_policy_params.decision_times)   
+                        # if   not global_policy_params.updated_cov:
+                        #     global_policy_params.update_cov(global_policy_params.decision_times)
                             #print( global_policy_params.decision_times)
                             history = global_policy_params.history                    ##update my mu2 and sigma2
+                            ##change dimension of mu
                             temp = pb.calculate_posterior(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
@@ -213,22 +212,16 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                     elif policy=='TS':
                         #some context slice
-                            prob = TS.prob_cal_ts([int(tod),int(dow)],participant.dosage,\
-                                              personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],\
-                                                 global_policy_params)
-                            action = int(uniform() < prob)
-                            
                         
-                            
-                    elif policy=='TS_fancy':
-                        #previous
-                        #Z, X, mu_beta, Sigma_beta, init,current_eta
+                        ##both f_one and g_one
+                        one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,\
+                                                                  'ltps':participant.steps,\'study_day':participant.current_day_counter,'decision_time':dt,'time':time})
                         
-                        ##need to make eta part of the global policy params
-                        prob = TS_fancy_pooled.prob_cal([location,weather,steps_last_time_period,variation,steps_yesterday],participant.dosage,\
-                                              personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],\
-                                                 global_policy_params,personal_policy_params.etas[participant.pid])
+                        prob = TS.prob_cal_ts(one_hot_vector,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
                         action = int(uniform() < prob)
+                            
+                        
+
                         
                         
                         

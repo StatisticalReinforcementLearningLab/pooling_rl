@@ -12,15 +12,17 @@ class TS_global_params:
     Keeps track of hyper-parameters for any TS procedure. 
     '''
     
-    def __init__(self,xi=10,baseline_features=['ltps','ltps'],psi_features=['ltps']):
+    def __init__(self,xi=10,baseline_features=None,psi_features=None,resp_features=None):
         self.nums = set([np.float64,int,float])
         self.pi_max = .8
         self.pi_min = .1
         self.sigma = 1
-        self.baseline_features = baseline_features
+        self.num_baseline_features = baseline_features
         self.psi_features = psi_features
+        self.num_responsivity_features = resp_features
         self.baseline_indices = None
         self.psi_indices =None
+        self.responsivity_indices = None
         
         self.xi  = xi
         
@@ -36,9 +38,9 @@ class TS_global_params:
         self.action_index = self.avail_index+1
         self.prob_index = self.action_index+1
         self.reward_index = self.prob_index+1
+        
         #2 has to do with random effects, not likely to change soon
-        self.theta_dim = len(self.baseline_features)
-            #1+len(self.baseline_features) + 2*(1+len(self.psi_features))
+        self.theta_dim =1+len(self.num_baseline_features) + 2*(1+len(self.num_responsivity_features))
         self.mu_theta =np.ones(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
         self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])

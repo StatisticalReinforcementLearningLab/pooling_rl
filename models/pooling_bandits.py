@@ -343,6 +343,13 @@ def get_RT(y,X,sigma_theta,x_dim):
     to_return = [y[i]-np.dot(X[i][0:x_dim],np.ones(x_dim)) for i in range(len(X))]
     return np.array([i[0] for i in to_return])
 
+
+def get_g_one(context_dict):
+    pass
+
+def get_f_one(context_dict):
+    pass
+
 def calculate_posterior(global_params,user_id,user_study_day,X,y):
     H = create_H(len(global_params.baseline_features),len(global_params.psi_features))
     M = get_M(global_params,user_id,user_study_day,X)
@@ -356,7 +363,7 @@ def calculate_posterior(global_params,user_id,user_study_day,X,y):
     #.reshape(X.shape[0],X.shape[0])
     sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v.reshape(2,2),global_params.noise_term,M,X.shape[0],global_params.sigma_theta)
 
-    return mu[-3:],[j[-3:] for j in sigma[-3:]]
+    return mu[-global_params.num_responsivity_features+1:],[j[-global_params.num_responsivity_features+1:] for j in sigma[-global_params.num_responsivity_features+1:]]
 
 
 def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta):
