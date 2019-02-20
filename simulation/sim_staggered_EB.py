@@ -197,7 +197,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             temp = pb.calculate_posterior(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
+                    
+                            print(temp[0].shape)
                     else:
+                        print('here')
                         temp = [personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid]]
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
