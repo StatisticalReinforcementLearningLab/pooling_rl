@@ -15,6 +15,9 @@ import os
 import random
 
 
+
+
+
 def gather_cols(params, indices, name=None):
     with tf.op_scope([params, indices], name, "gather_cols") as scope:
         # Check input
@@ -191,6 +194,23 @@ def make_history_new(pi,glob,exp=None):
 #y = np.array([[float(r)] for r in z[1]])
     return [z[0],z[1]]
 
+def create_phi_one_hot():
+
+
+def make_history_one_hot(pi,glob,exp=None):
+    g=get_history_norw(exp,glob)
+    #g = get_history(glob.write_directory,glob.decision_times)
+    ad = create_phi_new(g,pi,glob.baseline_features,glob.psi_features)
+    if len(ad[0])==0:
+        return [[],[]]
+    
+    z = new_standardize(ad[0],ad[1])
+    #new_x = preprocessing.scale(np.array(ad[0]))
+    #new_y = preprocessing.scale(np.array(ad[1]))
+    #y = np.array([[float(r)] for r in z[1]])
+return [z[0],z[1]]
+
+
 
 
 ##make function of pZ, not too hard
@@ -239,6 +259,10 @@ def new_standardize(X,y):
             #mm = preprocessing.MinMaxScaler(feature_range=(.5, 1))
     return [to_return,preprocessing.scale(np.array([[float(yi)] for yi in y]))]
         
+def get_one_hot_encodings():
+    pass
+
+
 
 def get_M(global_params,user_id,user_study_day,history):
   
