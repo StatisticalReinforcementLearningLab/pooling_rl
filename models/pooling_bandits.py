@@ -380,12 +380,14 @@ def get_M_faster(global_params,user_id,user_study_day,history):
     
     
     
-    
+    print(history)
+  
     user_ids = history[:,global_params.user_id_index]
     days_ids = history[:,global_params.user_day_index]
-    
+  
     my_days = np.ma.masked_where(user_ids==user_id, user_ids).mask.astype(float)
-    print(my_days)
+    if type(my_days)!=np.ndarray:
+        my_days = np.zeros(len(history.shape[0]))
     user_matrix = np.diag(my_days)
     
     rho_diag = np.diag([rbf_custom_np(d,user_study_day) for d in days_ids])
