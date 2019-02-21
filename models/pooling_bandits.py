@@ -380,7 +380,7 @@ def get_M_faster(global_params,user_id,user_study_day,history):
     
     
     
-    print(history)
+    #print(history)
   
     user_ids = history[:,global_params.user_id_index]
     days_ids = history[:,global_params.user_day_index]
