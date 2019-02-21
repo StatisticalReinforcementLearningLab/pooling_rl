@@ -87,7 +87,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
     for time in experiment.study_days:
         if global_policy_params.decision_times>8000:
             
-            return 
+            return
         #if time> experiment.study_days[0]:
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
@@ -102,7 +102,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #print(temp_params)
                 global_policy_params.update_params(temp_params)
                 se = time_module.time()
-                time,global_policy_params.decision_times,'time for run',se,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster_bin.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+                time,global_policy_params.decision_times,'time for run ',se,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster_bin.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
                 #print(temp_params)
                 global_policy_params.history = history
                 
