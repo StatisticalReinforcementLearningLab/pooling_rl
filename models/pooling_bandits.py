@@ -361,6 +361,73 @@ def get_g_one(context_dict):
 def get_f_one(context_dict):
     pass
 
+
+def get_M_faster(global_params,user_id,user_study_day,history):
+    
+    
+    day_id =user_study_day
+    #print(history)
+    M = [[] for i in range(history.shape[0])]
+    
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
+    
+    phi = history[:,global_params.baseline_indices]
+    ##should be fine
+    t_one = np.dot(phi,global_params.sigma_theta)
+    temp = np.dot(H,global_params.sigma_u)
+    temp = np.dot(temp,H.T)
+    temp = np.dot(phi,temp)
+    
+    
+    
+    
+    user_ids = history[:,global_params.user_id_index]
+    days_ids = history[:,global_params.user_day_index]
+    
+    my_days = np.ma.masked_where(user_ids==user_id, user_ids).mask.astype(float)
+    user_matrix = np.diag(my_days)
+    
+    rho_diag = np.diag([rbf_custom_np(d,user_study_day) for d in days_ids])
+    
+    t_two = np.matmul(user_matrix,temp)
+    
+    temp = np.dot(H,global_params.sigma_v.reshape(2,2))
+    temp = np.dot(temp,H.T)
+    temp = np.dot(phi,temp)
+    #temp = rbf_custom_np(user_study_day,old_day_id)*temp
+    t_three = np.matmul(rho_diag,temp)
+    term = np.add(t_one,t_two)
+    
+    term = np.add(term,t_three)
+    
+    
+    
+    return term
+
+#rdayone = [x[global_params.user_day_index] for x in X]
+#rdaytwo = rdayone
+#rhos = np.array([[rbf_custom_np( rdayone[i], X2=rdaytwo[j]) for j in range(len(X))] for i in range(len(X))])
+
+
+
+
+
+def calculate_posterior_faster(global_params,user_id,user_study_day,X,y):
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
+    M = get_M_faster(global_params,user_id,user_study_day,X)
+    ##change this to be mu_theta
+    ##is it updated?  the current mu_theta?
+    adjusted_rewards =get_RT(y,X,global_params.mu_theta,global_params.theta_dim)
+    #print('current global cov')
+    #print(global_params.cov)
+    #.reshape(X.shape[0],X.shape[0])
+    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta)
+    #.reshape(X.shape[0],X.shape[0])
+    sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v.reshape(2,2),global_params.noise_term,M,X.shape[0],global_params.sigma_theta)
+    
+    return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
+
+
 def calculate_posterior(global_params,user_id,user_study_day,X,y):
     H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
     M = get_M(global_params,user_id,user_study_day,X)
