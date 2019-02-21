@@ -61,7 +61,7 @@ class TS_global_params:
         self.u1 = 22886.50901787
         self.u2 = 9821.60955232
         #90800.30211642
-        self.noise_term=55224.65812823
+        self.noise_term=95224.65812823
             #50800.30211642
         self.cov=np.array([1])
         #self.psi = psi.psi()
