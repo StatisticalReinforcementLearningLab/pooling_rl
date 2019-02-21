@@ -205,7 +205,7 @@ class TS_global_params:
         self.updated_cov=True
 
     def get_theta(self,dim_baseline):
-        m = 100*np.eye(dim_baseline)
+        m = 1000*np.eye(dim_baseline)
         #m = np.add(m,.1)
         return m
 
