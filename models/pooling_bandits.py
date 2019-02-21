@@ -234,7 +234,8 @@ def make_history_one_hot(pi,glob,exp=None):
     g=get_history_norw(exp,glob)
     #g = get_history(glob.write_directory,glob.decision_times)
     ad = create_phi_one_hot(glob,g)
-    return ad
+    z = new_standardize(ad[0],ad[1])
+    return [z[0],z[1]]
 
 
 
@@ -283,7 +284,8 @@ def new_standardize(X,y):
         to_return[i][-2]=X[i][-2]
         to_return[i][-1]=X[i][-1]
             #mm = preprocessing.MinMaxScaler(feature_range=(.5, 1))
-    return [to_return,preprocessing.scale(np.array([[float(yi)] for yi in y]))]
+#reprocessing.scale(np.array([[float(yi)] for yi in y]))
+    return [to_return,y]
         
 def get_one_hot_encodings(glob,context_dict):
     tod =sf.get_time_of_day(context_dict['time'])
@@ -387,7 +389,7 @@ def get_M_faster(global_params,user_id,user_study_day,history):
   
     my_days = np.ma.masked_where(user_ids==user_id, user_ids).mask.astype(float)
     if type(my_days)!=np.ndarray:
-        my_days = np.zeros(len(history.shape[0]))
+        my_days = np.zeros(history.shape[0])
     user_matrix = np.diag(my_days)
     
     rho_diag = np.diag([rbf_custom_np(d,user_study_day) for d in days_ids])
