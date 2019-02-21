@@ -234,8 +234,8 @@ def make_history_one_hot(pi,glob,exp=None):
     g=get_history_norw(exp,glob)
     #g = get_history(glob.write_directory,glob.decision_times)
     ad = create_phi_one_hot(glob,g)
-    z = new_standardize(ad[0],ad[1])
-    return [z[0],z[1]]
+    #ad = new_standardize(ad[0],ad[1])
+    return [ad[0],ad[1]]
 
 
 
