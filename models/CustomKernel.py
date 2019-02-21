@@ -32,7 +32,7 @@ def gather_cols(params, indices, name=None):
 
 def get_theta(dim_baseline):
     m = np.eye(dim_baseline)
-    #m = np.add(m,.1)
+    m = np.add(m,.1)
     return m
 
 class CustomKernel(gpflow.kernels.Kernel):
