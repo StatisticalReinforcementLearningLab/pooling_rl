@@ -28,6 +28,7 @@ import tensorflow as tf
 
 
 
+
 def initialize_policy_params_TS(experiment,update_period):
     
     global_p =gtp.TS_global_params(10,baseline_features=63,psi_features=[0,64], resp_features= 63)
@@ -79,20 +80,29 @@ def initialize_policy_params_TS(experiment,update_period):
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
+     
+
+    
+    
     for time in experiment.study_days:
-        
+        if global_policy_params.decision_times>8000:
+            
+            return 
         #if time> experiment.study_days[0]:
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,tf.__version__,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,tf.__version__,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster_bin.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>7000:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
                     #print(history[1])
+                stt = time_module.time()
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
                 #print(temp_params)
                 global_policy_params.update_params(temp_params)
+                se = time_module.time()
+                time,global_policy_params.decision_times,'time for run',se,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster_bin.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
                 #print(temp_params)
                 global_policy_params.history = history
                 
