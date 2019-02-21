@@ -31,7 +31,7 @@ def gather_cols(params, indices, name=None):
         return tf.dtypes.cast(tf.reshape(tf.gather(p_flat, i_flat),[p_shape[0], -1]),dtype=tf.float64)
 
 def get_theta(dim_baseline):
-    m = 2*np.eye(dim_baseline)
+    m = np.eye(dim_baseline)
     #m = np.add(m,.1)
     return m
 
