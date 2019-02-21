@@ -210,6 +210,6 @@ class TS_global_params:
         return m
 
     def update_cov(self,current_dts):
-        cov = np.eye(current_dts)
-        cov = np.add(cov,.001)
+        cov = 10*np.eye(current_dts)
+        #cov = np.add(cov,.001)
         self.cov=cov
