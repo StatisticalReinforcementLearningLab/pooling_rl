@@ -43,8 +43,8 @@ class TS_global_params:
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
         self.mu_theta =np.ones(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
-        #self.sigma_v=.5*np.eye(2)
-        self.sigma_v = np.array([[5.21906177e-00, 0.00000000e+00],
+        self.sigma_v=.5*np.eye(2)
+        #self.sigma_v = np.array([[5.21906177e-00, 0.00000000e+00],
                                [0.00000000e+00, 1.00000000e-2]])
         #self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
         #u1
@@ -53,15 +53,15 @@ class TS_global_params:
         #9821.60955232
         ##off diagonal
         ##14992.74343105
-        self.sigma_u =np.array([[2449.49426332e+01,  739.56533143e+01],
-                             [ 739.56533143e+01,  223.29672266e+01]])
-            #np.array([[200, 150],
-            #[150, 100 ]])
+        #self.sigma_u =np.array([[2449.49426332e+01,  739.56533143e+01],[ 739.56533143e+01,  223.29672266e+01]])
+        self.sigma_u =np.array([[200, 150],[150, 100 ]])
         self.rho_term = 1.9999
         self.u1 = 22886.50901787
         self.u2 = 9821.60955232
         #90800.30211642
-        self.noise_term=95224.65812823
+        self.noise_term=50800.30211642
+        #tried random
+        #95224.65812823
             #50800.30211642
         self.cov=np.array([1])
         #self.psi = psi.psi()
