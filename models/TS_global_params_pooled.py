@@ -45,7 +45,7 @@ class TS_global_params:
         self.sigma_theta =self.get_theta(self.theta_dim)
         self.sigma_v=.5*np.eye(2)
         #self.sigma_v = np.array([[5.21906177e-00, 0.00000000e+00],
-                               [0.00000000e+00, 1.00000000e-2]])
+        # [0.00000000e+00, 1.00000000e-2]])
         #self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
         #u1
         #22886.50901787
