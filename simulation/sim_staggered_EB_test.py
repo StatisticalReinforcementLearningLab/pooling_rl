@@ -84,13 +84,13 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>500:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
                     #print(history[1])
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
-                print(temp_params)
+                #print(temp_params)
                 global_policy_params.update_params(temp_params)
                 #print(temp_params)
                 global_policy_params.history = history
