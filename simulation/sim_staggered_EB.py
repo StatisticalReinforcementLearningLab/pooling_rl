@@ -213,7 +213,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         #some context slice
                         
                         ##both f_one and g_one
-                        one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,'ltps':participant.steps,'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability})
+                        #one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,'ltps':participant.steps,'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability})
                         #z = np.zeros(global_policy_params.num_responsivity_features+1)
                         #old
                         #z[0]=1
