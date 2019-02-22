@@ -186,7 +186,7 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
                 steps.append(h['steps'])
         
         
-    return all_data,steps
+    return np.array(all_data),np.array(steps)
 
 
 
