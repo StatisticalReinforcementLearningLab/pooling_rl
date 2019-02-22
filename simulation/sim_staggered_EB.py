@@ -266,7 +266,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     my_directory = '{}/participant_{}_study_length_{}_pop_size_{}_update_{}'.format(global_policy_params.write_directory,participant.pid,experiment.study_length,len(experiment.population),global_policy_params.update_period)
                     if not os.path.exists(my_directory):
                         os.makedirs(my_directory)
-                with open('{}/history_{}.pkl'.format(my_directory,global_policy_params.decision_times),'wb') as f:
+                    with open('{}/history_{}.pkl'.format(my_directory,global_policy_params.decision_times),'wb') as f:
                         pickle.dump(participant.history,f)
 
 
