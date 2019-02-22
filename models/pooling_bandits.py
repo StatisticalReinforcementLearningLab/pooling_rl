@@ -124,11 +124,11 @@ def run(X,y,global_params,gp_train_type='Static'):
 
 
 #if gp_train_type=='empirical_bayes':
-        sigma_u = get_sigma_u(m.kern.sigma_u1.value,m.kern.sigma_u2.value,m.kern.sigma_rho.value)
+            sigma_u = get_sigma_u(m.kern.sigma_u1.value,m.kern.sigma_u2.value,m.kern.sigma_rho.value)
 
 #np.array([[1.0,0.1],[0.1,1.0]])
-        sigma_v =m.kern.sigma_v.value
-        noise =m.kern.noise_term.value
+            sigma_v =m.kern.sigma_v.value
+            noise =m.kern.noise_term.value
     #print('lll')
     #print(sigma_v.shape)
     
