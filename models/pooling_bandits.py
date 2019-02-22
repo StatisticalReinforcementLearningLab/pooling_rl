@@ -116,7 +116,8 @@ def run(X,y,global_params,gp_train_type='Static'):
         else:
         
             trm = term.eval(session=sess)
-        sess.close()
+
+
 #if gp_train_type=='empirical_bayes':
     sigma_u = get_sigma_u(m.kern.sigma_u1.value,m.kern.sigma_u2.value,m.kern.sigma_rho.value)
 
@@ -129,6 +130,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     #print(noise.shape)
     
     sess.close()
+    tf.reset_default_graph()
     #print(sess._closed)
     return {'sigma_u':sigma_u,'sigma_v':sigma_v.reshape(2,2),'cov':trm,'noise':noise}
         #else:
