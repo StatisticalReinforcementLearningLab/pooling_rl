@@ -32,7 +32,7 @@ def gather_cols(params, indices, name=None):
 
 def get_theta(dim_baseline):
     m = np.eye(dim_baseline)
-    m = np.add(m,.1)
+    #m = np.add(m,.1)
     return m
 
 class CustomKernelStatic(gpflow.kernels.Kernel):
@@ -94,7 +94,7 @@ class CustomKernelStatic(gpflow.kernels.Kernel):
         #print(X2)
         if X2 is None:
             X2=X
-        return tf.exp(-tf.divide(tf.square(tf.subtract(X,X2)),tf.constant(tf.square(10),dtype=tf.float64)))
+        return tf.exp(-tf.divide(tf.square(tf.subtract(X,X2)),tf.constant(tf.square(1),dtype=tf.float64)))
         #return tf.constant(1.0,dtype=tf.float64)
     #tf.exp(-tf.subtract(X,X2) / float(2.2))
     

@@ -234,7 +234,7 @@ def make_history_one_hot(pi,glob,exp=None):
     g=get_history_norw(exp,glob)
     #g = get_history(glob.write_directory,glob.decision_times)
     ad = create_phi_one_hot(glob,g)
-    #ad = new_standardize(ad[0],ad[1])
+    ad = new_standardize(ad[0],ad[1])
     return [ad[0],ad[1]]
 
 
@@ -274,7 +274,7 @@ def new_standardize(X,y):
     #print(ds)
     #print(new_x)
     #new_x = np.add(ds,new_x)
-    mm = preprocessing.MinMaxScaler(feature_range=(0, 1))
+    mm = preprocessing.MinMaxScaler(feature_range=(.1, 1))
     new_x =mm.fit_transform(np.array(new_x))
     to_return = np.zeros((len(X),len(X[0])))
     for i in range(len(X)):
