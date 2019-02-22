@@ -48,7 +48,9 @@ class study:
         self.update_hour = 0
         self.update_minute = 30
         self.last_update_day = study_days[0]
-        
+        self.study_length=study_length
+    
+    
     def get_gid(self):
         #4.0/36
          return int(random.random()>.5)+1
