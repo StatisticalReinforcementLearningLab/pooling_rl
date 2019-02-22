@@ -89,7 +89,7 @@ def run(X,y,global_params,gp_train_type='Static'):
         m = gpflow.models.GPR(X,y, kern=k)
         m.initialize(session=sess)
         m.likelihood.variance=0
-            m.likelihood.variance.trainable =False
+        m.likelihood.variance.trainable =False
 #if gp_train_type=='Static':
     
 #m.initialize(session=sess)
