@@ -78,7 +78,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     #sess = tf.InteractiveSession()
     
     #sess = tf.Session()
-    
+    graph = tf.Graph()
     with tf.Graph().as_default():
         
         gpflow.reset_default_session(graph=graph)
