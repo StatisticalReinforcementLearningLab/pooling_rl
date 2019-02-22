@@ -6,7 +6,7 @@ import state_params
 import random
 from scipy.stats import norm
 from scipy.linalg import block_diag
-
+import standard_bandits as do_work
 
 def gen_nextdosage(x,a):
     anti_sed = int(uniform() < 0.3)
@@ -44,6 +44,70 @@ def policy_update_ts(global_params,batch,  mu_1,Sigma_1,mu_2,Sigma_2):
     return txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2)
 
 
+def policy_update_ts_new(global_params,history,  mu_1,Sigma_1,mu_2,Sigma_2):
+    return txt_effect_update_new(history, global_params, mu_1,Sigma_1,mu_2,Sigma_2)
+
+
+def txt_effect_update_new(history, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
+    #print(init.avail_index)
+    #print(len(batch))
+ 
+    #avail <- batch[, input$avail.index]
+    
+    ##how can this ever equal 1?
+    context,steps,probs,actions = do_work.get_data_for_txt_effect_update(history,global_params)
+    
+    if sum(context)==0:
+        
+        return [mu_2,Sigma_2]
+    else:
+        #what is this line doing?
+        #check get xz matrix, why does it need global params?
+        #I think just for indexing?
+        #xz = get_xz_matrix(batch,global_params)
+        #print(batch)
+        #print(len(xz))
+        
+        #action <- batch[index, input$action.index]
+        
+        mu_tmp =[m for m in mu_1]
+        mu_tmp.extend([m for m in mu_2])
+        mu_tmp.extend([m for m in mu_2])
+        Sigma_tmp = block_diag(Sigma_1,Sigma_2,Sigma_2)
+        
+        #actions = get_actions(batch,global_params)
+        #probs = get_probs(batch,global_params)
+        
+        f_one = transform_f1_new(context)
+        f_two = transform_f2_new(context)
+        
+        X_trn = get_X_trn_new(f_one,actions,f_two,probs)
+        Y_trn = steps
+    #get_Y_trn(batch,global_params)
+        
+        
+        
+        
+        temp = post_cal_ts(X_trn, Y_trn, global_params.sigma, mu_tmp, Sigma_tmp)
+        
+        #print(len(temp))
+        #print(len(f_two))
+        #print(len(temp))
+        #print(len(f_two))
+        nm,nS = clip_mean_sigma(temp[0],temp[1],len(f_two[0]))
+        
+        return [nm,nS]
+
+def get_X_trn_new(F1,actions,F2,probs):
+    #cbind(F1, prob * F2, (action-prob) * F2)
+    to_return = []
+    for i in range(len(F2)):
+        term_two = np.multiply(probs[i],F2[i])
+        term_three = np.multiply(actions[i]-probs[i],F2[i])
+        row = np.concatenate((np.array(F1[i]),term_two,term_three))
+        to_return.append(row)
+    return to_return
+
 #what does this stand for? change the name
 def txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
     #print(init.avail_index)
@@ -67,8 +131,10 @@ def txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
         
         #action <- batch[index, input$action.index]
         
-        mu_tmp = mu_1+ mu_2
-        Sigma_tmp = block_diag(Sigma_1,Sigma_2)
+        mu_tmp =[m for m in mu_1]
+        mu_tmp.extend([m for m in mu_2])
+        mu_tmp.extend([m for m in mu_2])
+        Sigma_tmp = block_diag(Sigma_1,Sigma_2,Sigma_2)
         
         actions = get_actions(batch,global_params)
         probs = get_probs(batch,global_params)
@@ -136,6 +202,13 @@ def transform_f2(xz):
 
 def transform_f1(xz):
     return [[1,row[2],row[0],row[1]] for row in xz]
+
+def transform_f2_new(xz):
+    return [[1,row] for row in xz]
+
+def transform_f1_new(xz):
+    return [[1,row] for row in xz]
+
 
 def get_xz_matrix(batch,init):
     
