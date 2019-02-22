@@ -192,7 +192,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             #print( global_policy_params.decision_times)
                             history = global_policy_params.history                    ##update my mu2 and sigma2
                             ##change dimension of mu
-                            temp = pb.calculate_posterior(global_policy_params,\
+                            temp = pb.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
                     

@@ -97,6 +97,7 @@ def run(X,y,global_params,gp_train_type='Static'):
             m.initialize(session=sess)
             m.likelihood.variance=0
             m.likelihood.variance.trainable =False
+            
 #if gp_train_type=='Static':
     
 #m.initialize(session=sess)
@@ -137,6 +138,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     #sess.close()
     #tf.reset_default_graph()
     #print(sess._closed)
+    tf.keras.backend.clear_session()
     return {'sigma_u':sigma_u,'sigma_v':sigma_v.reshape(2,2),'cov':trm,'noise':noise}
         #else:
         
