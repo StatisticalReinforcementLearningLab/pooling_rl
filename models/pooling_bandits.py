@@ -83,11 +83,12 @@ def run(X,y,global_params,gp_train_type='Static'):
         k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
 
     m = gpflow.models.GPR(X,y, kern=k)
+    m.initialize(session=sess)
     m.likelihood.variance=0
     m.likelihood.variance.trainable =False
-    if gp_train_type=='Static':
+#if gp_train_type=='Static':
     
-        m.initialize(session=sess)
+#m.initialize(session=sess)
     if gp_train_type=='empirical_bayes':
         m.initialize(session=sess)
         try:
