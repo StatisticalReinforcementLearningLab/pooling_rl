@@ -22,8 +22,8 @@ class TS_global_params:
         self.num_baseline_features = len(baseline_features)
         self.psi_features = psi_features
         self.num_responsivity_features = len(resp_features)
-        self.baseline_indices = None
-        self.psi_indices =None
+        self.baseline_indices = [i for i in range(num_baseline_features)]
+        self.psi_indices = psi_features
         self.responsivity_indices = None
         
         self.xi  = xi

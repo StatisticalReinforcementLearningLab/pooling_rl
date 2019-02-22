@@ -95,13 +95,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 glob.last_global_update_time=time
                 history =pb.make_history_new(.1,glob,experiment)
                     #print(history[1])
-                print(history)
+                print(history[0].shape)
+                print(history[1].shape)
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
           
                 global_policy_params.update_params(temp_params)
                 #print(temp_params)
                 global_policy_params.history = history
-                del history
+                #del history
             ##update global context
             ##global context shared across all participants
         tod = sf.get_time_of_day(time)
