@@ -18,7 +18,7 @@ class TS_global_params:
         self.pi_min = .1
         self.sigma = 1
         self.baseline_features=baseline_features
-        self.responsivity_features = responsivity_features
+        self.responsivity_features = resp_features
         self.num_baseline_features = len(baseline_features)
         self.psi_features = psi_features
         self.num_responsivity_features = len(resp_features)
