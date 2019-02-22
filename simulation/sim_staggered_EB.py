@@ -29,7 +29,7 @@ import tensorflow as tf
 
 def initialize_policy_params_TS(experiment,update_period):
     
-    global_p =gtp.TS_global_params(20,baseline_features=5,psi_features=[0,6], resp_features= 5)
+    global_p =gtp.TS_global_params(20,baseline_features=['tod','dow','weather','pretreatment','location'],psi_features=[0,6], resp_features= ['tod','dow','weather','pretreatment','location'])
     personal_p = pp.TS_personal_params()
     #global_p =gtp.TS_global_params(10,context_dimension)
     
@@ -93,7 +93,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             print('Global update', time,global_policy_params.decision_times, file=open('updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>200:
                 glob.last_global_update_time=time
-                history =pb.make_history_one_hot(uniform(),glob,experiment)
+                history =pb.make_history_new(.1,glob,experiment)
                     #print(history[1])
                 temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
           
@@ -214,9 +214,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                         ##both f_one and g_one
                         one_hot_vector = pb.get_one_hot_encodings(global_policy_params,{'steps':steps,'weather':weather,'location':location,'ltps':participant.steps,'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability})
-                        z = np.zeros(global_policy_params.num_responsivity_features+1)
-                        z[0]=1
-                        z[1:]=one_hot_vector
+                        #z = np.zeros(global_policy_params.num_responsivity_features+1)
+                        #old
+                        #z[0]=1
+                        #z[1:]=one_hot_vector
+                        z=np.array([1,tod,dow,weather,sf.get_pretreatment(participant.steps),location])
+                        
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
                         action = int(uniform() < prob)
                             
@@ -264,7 +267,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##history:
                 context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
                     'ltps':steps_last_time_period,\
-                        'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability,'prob':prob}
+                        'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability,'prob':prob,'dow':dow,'tod':tod,'pretreatment':sf.get_pretreatment(steps_last_time_period)}
                 participant.history[time]=context_dict
 
 

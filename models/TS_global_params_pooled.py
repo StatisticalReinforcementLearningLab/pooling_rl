@@ -17,9 +17,9 @@ class TS_global_params:
         self.pi_max = .8
         self.pi_min = .1
         self.sigma = 1
-        self.num_baseline_features = baseline_features
+        self.num_baseline_features = len(baseline_features)
         self.psi_features = psi_features
-        self.num_responsivity_features = resp_features
+        self.num_responsivity_features = len(resp_features)
         self.baseline_indices = None
         self.psi_indices =None
         self.responsivity_indices = None
@@ -45,7 +45,8 @@ class TS_global_params:
         self.sigma_theta =self.get_theta(self.theta_dim)
         #self.sigma_v=.5*np.eye(2)
         
-        self.sigma_v = np.array([[84268.04299068,     0.0        ],[    0.0,         13464.64044625]])
+        self.sigma_v =
+            #np.array([[84268.04299068,     0.0        ],[    0.0,         13464.64044625]])
         #self.sigma_v = np.array([[5.21906177e-00, 0.00000000e+00],
         # [0.00000000e+00, 1.00000000e-2]])
         #self.sigma_v = np.array([[1.0e-6,0.0],[0.0,1.0e-6]])
