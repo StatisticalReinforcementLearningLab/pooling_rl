@@ -78,20 +78,22 @@ def run(X,y,global_params,gp_train_type='Static'):
     #sess = tf.InteractiveSession()
     
     #sess = tf.Session()
-    graph = tf.Graph()
-    with tf.Graph().as_default():
+    #graph = tf.Graph()
+    #with tf.Graph().as_default():
         
-        gpflow.reset_default_session(graph=graph)
-        sess = gpflow.get_default_session()
-        print(global_params.kdim)
-        with gpflow.defer_build():
+        #gpflow.reset_default_session(graph=graph)
+        #sess = gpflow.get_default_session()
+        #print(global_params.kdim)
+        tf.keras.backend.clear_session()
+        with tf.Session() as sess:
+            
             if gp_train_type=='empirical_bayes':
                 k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0],initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_s1=global_params.sigma_v[0][0],initial_s2=global_params.sigma_v[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term)
             else:
                 k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
 
             m = gpflow.models.GPR(X,y, kern=k)
-            m.compile(session=sess)
+            #m.compile(session=sess)
             m.initialize(session=sess)
             m.likelihood.variance=0
             m.likelihood.variance.trainable =False
@@ -132,8 +134,8 @@ def run(X,y,global_params,gp_train_type='Static'):
     
     #print(noise.shape)
     
-    sess.close()
-    tf.reset_default_graph()
+    #sess.close()
+    #tf.reset_default_graph()
     #print(sess._closed)
     return {'sigma_u':sigma_u,'sigma_v':sigma_v.reshape(2,2),'cov':trm,'noise':noise}
         #else:
