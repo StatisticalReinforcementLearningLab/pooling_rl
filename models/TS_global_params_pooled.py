@@ -43,7 +43,7 @@ class TS_global_params:
         
         #2 has to do with random effects, not likely to change soon
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
-        print(theta_dim)
+        print(self.theta_dim)
         self.mu_theta =np.ones(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
         #self.sigma_v=.5*np.eye(2)
@@ -75,7 +75,7 @@ class TS_global_params:
         self.cov=np.array([1])
         #self.psi = psi.psi()
         self.decision_times = 1
-        self.kdim = None
+        self.kdim = self.theta_dim+2
 
         self.last_global_update_time = None
         
