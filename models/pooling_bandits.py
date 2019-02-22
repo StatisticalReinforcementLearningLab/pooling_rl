@@ -84,38 +84,39 @@ def run(X,y,global_params,gp_train_type='Static'):
         gpflow.reset_default_session(graph=graph)
         sess = gpflow.get_default_session()
         print(global_params.kdim)
-        
-        if gp_train_type=='empirical_bayes':
-            k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0],initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_s1=global_params.sigma_v[0][0],initial_s2=global_params.sigma_v[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term)
-        else:
-            k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
+        with gp.defer_build():
+            if gp_train_type=='empirical_bayes':
+                k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0],initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_s1=global_params.sigma_v[0][0],initial_s2=global_params.sigma_v[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term)
+            else:
+                k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
 
-        m = gpflow.models.GPR(X,y, kern=k)
-        m.initialize(session=sess)
-        m.likelihood.variance=0
-        m.likelihood.variance.trainable =False
+            m = gpflow.models.GPR(X,y, kern=k)
+            m.compile(session=sess)
+            m.initialize(session=sess)
+            m.likelihood.variance=0
+            m.likelihood.variance.trainable =False
 #if gp_train_type=='Static':
     
 #m.initialize(session=sess)
-        if gp_train_type=='empirical_bayes':
+            if gp_train_type=='empirical_bayes':
 #           m.initialize(session=sess)
-            try:
+                try:
             
-                gpflow.train.ScipyOptimizer().minimize(m,session=sess)
+                    gpflow.train.ScipyOptimizer().minimize(m,session=sess)
         #print(m.as_pandas_table())
         #print('did work')
-            except Exception as e:
+                except Exception as e:
 # shorten the giant stack trace
 
-                lines = str(e).split('\n')
-                print ('\n'.join(lines[:15]+['...']+lines[-30:]))
+                    lines = str(e).split('\n')
+                    print ('\n'.join(lines[:15]+['...']+lines[-30:]))
     
 
 
-        term = m.kern.K(X,X2=X)
-        if gp_train_type=='empirical_bayes':
-            trm = term.eval(session=sess)
-        else:
+            term = m.kern.K(X,X2=X)
+            if gp_train_type=='empirical_bayes':
+                trm = term.eval(session=sess)
+            else:
         
             trm = term.eval(session=sess)
 
