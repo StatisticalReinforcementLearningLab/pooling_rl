@@ -77,42 +77,43 @@ def run(X,y,global_params,gp_train_type='Static'):
     #ops.reset_default_graph()
     #sess = tf.InteractiveSession()
     
-    sess = tf.Session()
-    print(tf.__version__)
-    print(gp_train_type)
-    if gp_train_type=='empirical_bayes':
-        k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0],initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_s1=global_params.sigma_v[0][0],initial_s2=global_params.sigma_v[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term)
-    else:
-        k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
+    #sess = tf.Session()
+    
+    with tf.Session() as sess:
+   
+        if gp_train_type=='empirical_bayes':
+            k = CustomKernel.CustomKernel(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0],initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_s1=global_params.sigma_v[0][0],initial_s2=global_params.sigma_v[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term)
+        else:
+            k = CustomKernelStatic.CustomKernelStatic(global_params.kdim,mysession=sess,rhos=rhos,select_users=users,baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_day_index=global_params.user_day_index,user_index=global_params.user_id_index,num_data_points=X.shape[0])
 
-    m = gpflow.models.GPR(X,y, kern=k)
-    m.initialize(session=sess)
-    m.likelihood.variance=0
-    m.likelihood.variance.trainable =False
+        m = gpflow.models.GPR(X,y, kern=k)
+        m.initialize(session=sess)
+        m.likelihood.variance=0
+            m.likelihood.variance.trainable =False
 #if gp_train_type=='Static':
     
 #m.initialize(session=sess)
-    if gp_train_type=='empirical_bayes':
-        m.initialize(session=sess)
-        try:
+        if gp_train_type=='empirical_bayes':
+#           m.initialize(session=sess)
+            try:
             
-            gpflow.train.ScipyOptimizer().minimize(m,session=sess)
+                gpflow.train.ScipyOptimizer().minimize(m,session=sess)
         #print(m.as_pandas_table())
         #print('did work')
-        except Exception as e:
+            except Exception as e:
 # shorten the giant stack trace
 
-            lines = str(e).split('\n')
-            print ('\n'.join(lines[:15]+['...']+lines[-30:]))
+                lines = str(e).split('\n')
+                print ('\n'.join(lines[:15]+['...']+lines[-30:]))
     
 
 
-    term = m.kern.K(X,X2=X)
-    if gp_train_type=='empirical_bayes':
-        trm = term.eval(session=sess)
-    else:
+        term = m.kern.K(X,X2=X)
+        if gp_train_type=='empirical_bayes':
+            trm = term.eval(session=sess)
+        else:
         
-        trm = term.eval(session=sess)
+            trm = term.eval(session=sess)
 #if gp_train_type=='empirical_bayes':
     sigma_u = get_sigma_u(m.kern.sigma_u1.value,m.kern.sigma_u2.value,m.kern.sigma_rho.value)
 
@@ -292,11 +293,19 @@ def new_standardize(X,y):
     return [to_return,y]
         
 def get_one_hot_encodings(glob,context_dict):
-    tod =sf.get_time_of_day(context_dict['time'])
+    #tod =sf.get_time_of_day(context_dict['time'])
     
-    dow =sf.get_day_of_week(context_dict['time'])
+    #dow =sf.get_day_of_week(context_dict['time'])
 
-    pre = sf.get_pretreatment(context_dict['ltps'])
+    #pre = sf.get_pretreatment(context_dict['ltps'])
+    
+    
+    tod = context_dict['tod']
+    
+    dow = context_dict['dow']
+    
+    
+    pre=context_dict['pretreatment']
     
     weather = context_dict['weather']
     
