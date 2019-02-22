@@ -12,18 +12,18 @@ class study:
     Also which participants are involved at which times. 
     '''
     
-    def __init__(self,root,population_size):
+    def __init__(self,root,population_size,study_length):
         #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
         self.root =root
             #'../../murphy_lab/lab/pooling/distributions/'
         
-        with open('{}person_to_time_indices_pop_{}.pkl'.format(root,population_size),'rb') as f:
+        with open('{}person_to_time_indices_pop_{}_{}.pkl'.format(root,population_size,study_length),'rb') as f:
             pse=pickle.load(f)
-        with open('{}person_to_decision_times_pop_{}.pkl'.format(root,population_size),'rb') as f:
+        with open('{}person_to_decision_times_pop_{}_{}.pkl'.format(root,population_size,study_length),'rb') as f:
             dts=pickle.load(f)
-        with open('{}time_to_active_participants_pop_{}.pkl'.format(root,population_size),'rb') as f:
+        with open('{}time_to_active_participants_pop_{}_{}.pkl'.format(root,population_size,study_length),'rb') as f:
             dates_to_people=pickle.load(f)
-        with open('{}all_ordered_times_mondays.pkl'.format(root),'rb') as f:
+        with open('{}all_ordered_times_{}.pkl'.format(root,study_length),'rb') as f:
             study_days=pickle.load(f)
         
         self.person_to_time = pse 

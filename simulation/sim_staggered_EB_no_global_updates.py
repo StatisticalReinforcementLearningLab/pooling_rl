@@ -10,7 +10,7 @@ import math
 import sim_functions_cleaner  as sf
 import operator
 import study
-import time
+import time as time_module
 import TS_personal_params_pooled as pp
 import TS_global_params_pooled as gtp
 from numpy.random import uniform
@@ -23,6 +23,8 @@ import TS
 import pooling_bandits as pb
 from sklearn import preprocessing
 import tensorflow as tf
+
+
 
 
 
@@ -72,29 +74,38 @@ def initialize_policy_params_TS(experiment,update_period):
         
         personal_p.last_update[person]=experiment.person_to_time[person][0]
     
-    global_p.write_directory = '../../murphy_lab/lab/pooling/EB'
+    global_p.write_directory = '../../regal/murphy_lab/pooling/temp_EB'
     return global_p ,personal_p
 
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
+     
+
+    
+    
     for time in experiment.study_days:
-        
+        if global_policy_params.decision_times>8000:
+            
+            return
         #if time> experiment.study_days[0]:
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times, file=open('updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
-            if global_policy_params.decision_times>200:
+            print('Global update', time,global_policy_params.decision_times,tf.__version__,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster_bin.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+            if global_policy_params.decision_times>7000:
                 glob.last_global_update_time=time
                 history =pb.make_history_one_hot(uniform(),glob,experiment)
                     #print(history[1])
-                temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
-          
+                stt = time_module.time()
+                temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'Static')
+                #print(temp_params)
                 global_policy_params.update_params(temp_params)
+                se = time_module.time()
+                print('Global update',time,global_policy_params.decision_times,'time for run ',se,time_module.strftime('%l:%M%p %Z on %b %d, %Y') ,file=open('updates_{}_{}_test_only_faster_bin.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
                 #print(temp_params)
                 global_policy_params.history = history
-                del history
+                
             ##update global context
             ##global context shared across all participants
         tod = sf.get_time_of_day(time)
@@ -127,12 +138,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     location = sf.get_location_prior(str(participant.gid),str(dow),str(tod))
                     participant.set_inaction_duration(0)
                     participant.set_action_duration(0)
-                    #participant.set_duration(0)
-                    #participant.set_dosage(0)
+                    participant.set_duration(0)
+                    participant.set_dosage(0)
                     #personal_policy_params.etas[participant.pid]
                     
                     
-                if time <= participant.times[0]:
+                if time <= participant.times[1]:
                     steps_last_time_period = 0  
                     
                     ##set first pre-treatment, yesterday step count, variation and dosage
@@ -145,11 +156,24 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     steps_last_time_period = participant.steps
                 
                  
-
+                    #get var id
+                    
+                #if time.date() <= participant.times[0].date():
+                    #steps_yesterday = 0    
+                #else:
+                    #steps_yesterday =  participant.find_yesterday_steps(time)
+                    #steps_yesterday = sf.to_yid(steps_yesterday)
+                steps_yesterday=0    
                 if time.hour in experiment.location_update_hours:
                     location = sf.get_next_location(participant.gid,dow,tod,participant.get_loc())
                 
-    
+                if time.date()>(participant.times[0]+pd.DateOffset(days=1)).date():
+                  
+                    if time.hour==0 and time.minute==0:
+                        variation = 0
+                        #participant.find_variation(time)
+                else:
+                    variation = 1 
                 
                 participant.set_loc(location)
                 ##maybe faster to update instead of query?
@@ -162,7 +186,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##for every active person take an action according to current context, policy, and parameters
                 
                 
-
+                ##for now:
+                ##eval with empty array
                 prob = -1
                 if time in participant.decision_times:
                                         #print(personal_policy_params.batch_index[participant.pid])
@@ -177,14 +202,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     action=0
                     
                     
-                    if global_policy_params.decision_times>200 and global_policy_params.history!=None:
+                    if global_policy_params.decision_times>7000 and global_policy_params.history!=None:
                         ##do i need this?
                         # if   not global_policy_params.updated_cov:
                         #     global_policy_params.update_cov(global_policy_params.decision_times)
                             #print( global_policy_params.decision_times)
                             history = global_policy_params.history                    ##update my mu2 and sigma2
                             ##change dimension of mu
-                            temp = pb.calculate_posterior(global_policy_params,\
+                            temp = pb.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
                     
@@ -231,46 +256,42 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                    
                     
                     
-                   
+                        participant.update_dosage(action)
                     
                         context = [action,participant.gid,tod,dow,weather,sf.get_pretreatment(participant.steps),location,\
-                              steps_yesterday,variation,0]
+                              steps_yesterday,variation,sf.dosage_to_dosage_key(participant.dosage)]
                     
-                        #participant.steps_last_time_period = participant.steps
+                        participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_action(context)
                         participant.steps = steps
                     else:
-                        #participant.steps_last_time_period = participant.steps
+                        participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
                         participant.steps = steps
 
                 
-
+                #my_directory = '{}/participant_{}'.format(global_policy_params.write_directory,participant.pid)
+                #if not os.path.exists(my_directory):
+                #    os.makedirs(my_directory)
+                # with open('{}/day_{}'.format(my_directory,global_policy_params.decision_times),'wb') as f:
+                #    pickle.dump(context_dict,f)
+                        
+                        
                     global_policy_params.decision_times =   global_policy_params.decision_times+1
                 
                     
                     
                 else:
-                    #participant.steps_last_time_period = participant.steps
+                        participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
                         participant.steps = steps     
                 
                 ##history:
                 context_dict =  {'steps':steps,'action':action,'weather':weather,'location':location,\
-                    'ltps':steps_last_time_period,\
+                    'ltps':steps_last_time_period,'duration':participant.duration,\
                         'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability,'prob':prob}
                 participant.history[time]=context_dict
-
-
-                if global_policy_params.decision_times%100==0:
-                    my_directory = '{}/participant_{}_study_length_{}_pop_size_{}_update_{}'.format(global_policy_params.write_directory,participant.pid,experiment.study_length,len(experiment.population),global_policy_params.update_period)
-                    if not os.path.exists(my_directory):
-                        os.makedirs(my_directory)
-                    with open('{}/history.pkl'.format(my_directory,global_policy_params.decision_times),'wb') as f:
-                        pickle.dump(participant.history,f)
-
-
-
+                
             #3
             ##for every active person generate a step count given current context
             
@@ -295,8 +316,7 @@ if __name__=="__main__":
     
     population = sys.argv[1]
     update_time = sys.argv[2]
-    study_length = sys.argv[3]
-    
+    study_length = sys.argv[2]
     #print(str(sys.argv))
     #print(type(population))
     update_time = int(update_time)
@@ -315,7 +335,7 @@ if __name__=="__main__":
     
     to_save = make_to_save(experiment)
     
-    filename = '{}/population_size_{}_update_days_{}_{}_EB.pkl'.format(glob.write_directory,population,update_time,study_length)
+    filename = 'population_size_{}_update_days_{}_{}_Static.pkl'.format(population,update_time,study_length)
     with open(filename,'wb') as f:
         pickle.dump(to_save,f)
     

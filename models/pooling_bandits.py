@@ -120,7 +120,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     
     #print(noise.shape)
     
-    #sess.close()
+    sess.close()
     #print(sess._closed)
     return {'sigma_u':sigma_u,'sigma_v':sigma_v.reshape(2,2),'cov':trm,'noise':noise}
         #else:
