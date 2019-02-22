@@ -327,7 +327,7 @@ if __name__=="__main__":
     
     to_save = make_to_save(experiment)
     
-    filename = '../../murphy_lab/lab/pooling/population_size_{}_update_days_{}_{}_static.pkl'.format(glob.write_directory,population,update_time,study_length)
+    filename = '{}/results/population_size_{}_update_days_{}_{}_static.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length)
     with open(filename,'wb') as f:
         pickle.dump(to_save,f)
     
