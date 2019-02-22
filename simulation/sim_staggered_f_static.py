@@ -86,7 +86,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
     experiment.last_update_day=experiment.study_days[0]
     for time in experiment.study_days:
         
-        #if time> experiment.study_days[0]:
+        if time> experiment.study_days[0]:
+            break
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
