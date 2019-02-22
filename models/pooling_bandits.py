@@ -118,7 +118,7 @@ def run(X,y,global_params,gp_train_type='Static'):
                 trm = term.eval(session=sess)
             else:
         
-            trm = term.eval(session=sess)
+                trm = term.eval(session=sess)
 
 
 #if gp_train_type=='empirical_bayes':
