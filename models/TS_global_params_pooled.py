@@ -59,14 +59,14 @@ class TS_global_params:
         ##off diagonal
         ##14992.74343105
         #self.sigma_u =np.array([[2449.49426332e+01,  739.56533143e+01],[ 739.56533143e+01,  223.29672266e+01]])
-        self.sigma_u =np.array([[1.00000000e-06, 1.00112291e+00],
-                           [1.00112291e+00, 1.00224708e+06]])
+        self.sigma_u =np.array([[ 3.57943015e+03, -5.98283390e-02],
+                             [-5.98283390e-02,  1.00000000e-06]])
         #self.sigma_u =np.array([[200, 150],[150, 100 ]])
-        self.rho_term = 2
+        self.rho_term = 0
         self.u1 = 22886.50901787
         self.u2 = 9821.60955232
         #90800.30211642
-        self.noise_term=91101.7343503565
+        self.noise_term=72107.18149736902
             #90800.30211642
         #tried random
         #95224.65812823
