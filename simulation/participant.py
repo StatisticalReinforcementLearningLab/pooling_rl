@@ -49,6 +49,7 @@ class participant:
         self.available = None
         self.steps_last_time_period = 0
         self.steps = 0
+        self.last_update_day = times[0]
     
     def set_current_day(self,time):
         if time.date()!=self.current_day.date():

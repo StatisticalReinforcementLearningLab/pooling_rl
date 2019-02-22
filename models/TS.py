@@ -57,7 +57,7 @@ def txt_effect_update_new(history, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
     ##how can this ever equal 1?
     context,steps,probs,actions = do_work.get_data_for_txt_effect_update(history,global_params)
     
-    if sum(context)==0:
+    if len(context)==0:
         
         return [mu_2,Sigma_2]
     else:
@@ -102,8 +102,9 @@ def get_X_trn_new(F1,actions,F2,probs):
     #cbind(F1, prob * F2, (action-prob) * F2)
     to_return = []
     for i in range(len(F2)):
-        term_two = np.multiply(probs[i],F2[i])
-        term_three = np.multiply(actions[i]-probs[i],F2[i])
+        #print(F2[i])
+        term_two = probs[i]*F2[i]
+        term_three = (actions[i]-probs[i])*F2[i]
         row = np.concatenate((np.array(F1[i]),term_two,term_three))
         to_return.append(row)
     return to_return
@@ -204,10 +205,10 @@ def transform_f1(xz):
     return [[1,row[2],row[0],row[1]] for row in xz]
 
 def transform_f2_new(xz):
-    return [[1,row] for row in xz]
+    return [np.array([1]+[i for i in row]) for row in xz]
 
 def transform_f1_new(xz):
-    return [[1,row] for row in xz]
+    return [np.array([1]+[i for i in row]) for row in xz]
 
 
 def get_xz_matrix(batch,init):

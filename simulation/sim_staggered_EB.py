@@ -10,7 +10,7 @@ import math
 import sim_functions_cleaner  as sf
 import operator
 import study
-import time
+import time as time_module
 import TS_personal_params_pooled as pp
 import TS_global_params_pooled as gtp
 from numpy.random import uniform
@@ -90,7 +90,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times, file=open('updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'), file=open('updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>200:
                 glob.last_global_update_time=time
                 history =pb.make_history_new(.1,glob,experiment)
