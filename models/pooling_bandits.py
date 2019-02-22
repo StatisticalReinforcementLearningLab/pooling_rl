@@ -79,7 +79,8 @@ def run(X,y,global_params,gp_train_type='Static'):
     
     #sess = tf.Session()
     
-    with tf.Session() as sess:
+    with tf.Graph().as_default():
+        sess = tf.Session()
         print(global_params.kdim)
         
         if gp_train_type=='empirical_bayes':
@@ -115,6 +116,7 @@ def run(X,y,global_params,gp_train_type='Static'):
         else:
         
             trm = term.eval(session=sess)
+        sess.close()
 #if gp_train_type=='empirical_bayes':
     sigma_u = get_sigma_u(m.kern.sigma_u1.value,m.kern.sigma_u2.value,m.kern.sigma_rho.value)
 

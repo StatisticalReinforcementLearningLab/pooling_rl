@@ -67,7 +67,7 @@ class TS_global_params:
         self.u1 = 22886.50901787
         self.u2 = 9821.60955232
         #90800.30211642
-        self.noise_term=72107.18149736902
+        self.noise_term=14367.371087724912
             #90800.30211642
         #tried random
         #95224.65812823
