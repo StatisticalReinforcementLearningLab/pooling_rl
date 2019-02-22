@@ -189,7 +189,7 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
                 v.append(float(user_id))
                 v.append(float(h['study_day']))
                 all_data.append(v)
-                steps.append(h['steps'])
+                steps.append([h['steps']])
         
         
     return np.array(all_data),np.array(steps)
