@@ -274,7 +274,7 @@ def new_standardize(X,y):
     #print(ds)
     #print(new_x)
     #new_x = np.add(ds,new_x)
-    mm = preprocessing.MinMaxScaler(feature_range=(.1, 1))
+    mm = preprocessing.MinMaxScaler(feature_range=(.01, 1))
     new_x =mm.fit_transform(np.array(new_x))
     to_return = np.zeros((len(X),len(X[0])))
     for i in range(len(X)):
