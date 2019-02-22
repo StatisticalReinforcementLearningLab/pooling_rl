@@ -80,7 +80,9 @@ def run(X,y,global_params,gp_train_type='Static'):
     #sess = tf.Session()
     
     with tf.Graph().as_default():
-        sess = tf.Session()
+        
+        gp.reset_default_session(graph=graph)
+        sess = gp.get_default_session()
         print(global_params.kdim)
         
         if gp_train_type=='empirical_bayes':
