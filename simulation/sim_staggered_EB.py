@@ -29,7 +29,7 @@ import tensorflow as tf
 
 def initialize_policy_params_TS(experiment,update_period):
     
-    global_p =gtp.TS_global_params(10,baseline_features=63,psi_features=[0,64], resp_features= 63)
+    global_p =gtp.TS_global_params(20,baseline_features=5,psi_features=[0,6], resp_features= 5)
     personal_p = pp.TS_personal_params()
     #global_p =gtp.TS_global_params(10,context_dimension)
     
@@ -37,15 +37,21 @@ def initialize_policy_params_TS(experiment,update_period):
     
     #global_p.mu_dimension = 64
 
-    global_p.kdim = 194
-    global_p.baseline_indices = [i for i in range(192)]
+    global_p.kdim =20
+    #194
+    global_p.baseline_indices = [i for i in range(18)]
+    #[i for i in range(192)]
     #[0,1,2,3,4,5,6]
-    global_p.psi_indices = [0,64]
-    global_p.user_id_index = 192
-    global_p.user_day_index = 193
+    global_p.psi_indices =[0,6]
+    #[0,64]
+    global_p.user_id_index =18
+    #192
+    global_p.user_day_index =19
+    #193
     
     #global_p.baseline_features = [i for i in range(192)]
-    global_p.psi_features = [0,64]
+    global_p.psi_features =[0,6]
+    #[0,64]
     
     global_p.update_period = update_period
     

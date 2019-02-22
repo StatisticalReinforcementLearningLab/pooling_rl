@@ -166,8 +166,8 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
     for user_id,history in history_dict.items():
      
             for hk,h in history.items():
+                pi = h['prob']
                 
-                h = history[hk]
                 
                 v = [1]
                 v.extend([h[i] for i in baseline_features])
@@ -197,11 +197,11 @@ def make_history_new(pi,glob,exp=None):
     if len(ad[0])==0:
         return [[],[]]
     
-    z = new_standardize(ad[0],ad[1])
+    #z = new_standardize(ad[0],ad[1])
     #new_x = preprocessing.scale(np.array(ad[0]))
     #new_y = preprocessing.scale(np.array(ad[1]))
 #y = np.array([[float(r)] for r in z[1]])
-    return [z[0],z[1]]
+    return [ad[0],ad[1]]
 
 def create_phi_one_hot(glob,history_dict):
     all_data = []
