@@ -234,7 +234,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                    
                     
                         context = [action,participant.gid,tod,dow,weather,sf.get_pretreatment(participant.steps),location,\
-                              steps_yesterday,variation,0]
+                              0,0,0]
                     
                         #participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_action(context)

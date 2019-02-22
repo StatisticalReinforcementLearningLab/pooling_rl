@@ -233,7 +233,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         #Z, X, mu_beta, Sigma_beta, init,current_eta
                         
                         ##need to make eta part of the global policy params
-                        prob = TS_fancy_pooled.prob_cal([location,weather,steps_last_time_period,variation,steps_yesterday],participant.dosage,\
+                        prob = TS_fancy_pooled.prob_cal([location,weather,steps_last_time_period,variation,steps_yesterday],0,\
                                               personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],\
                                                  global_policy_params,personal_policy_params.etas[participant.pid])
                         action = int(uniform() < prob)
