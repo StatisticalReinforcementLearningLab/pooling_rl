@@ -246,7 +246,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_{}.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim_num,global_policy_params.decision_times)
                     with open(filename,'wb') as f:
-                    pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
+                        pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
 
 def make_to_save(exp):
     to_save  = {}
