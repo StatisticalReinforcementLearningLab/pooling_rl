@@ -207,7 +207,7 @@ class TS_global_params:
     def update_params(self,pdict):
         self.noise_term=pdict['noise']
         self.sigma_u = pdict['sigma_u']
-        self.sigma_v = pdict['sigma_v']
+        #self.sigma_v = pdict['sigma_v']
         #save rho term too
         self.rho_term = self.comput_rho(pdict['sigma_u'])
         self.cov = pdict['cov']

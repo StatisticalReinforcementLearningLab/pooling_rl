@@ -19,7 +19,7 @@ def get_probs(batch,init):
     return [b[init.prob_index] for b in batch if b[init.avail_index]==1]
 
 def prob_cal_ts(z,x,mu,Sigma,global_params):
-    pos_mean = np.dot(bandit.feat2_function(z),mu)
+    pos_mean = np.dot(z,mu)
     pos_var = np.dot(np.dot(np.transpose(z),Sigma),z)
     pos_var = max(0,pos_var)
 
@@ -44,18 +44,17 @@ def policy_update_ts(global_params,batch,  mu_1,Sigma_1,mu_2,Sigma_2):
     return txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2)
 
 
-def policy_update_ts_new(global_params,history,  mu_1,Sigma_1,mu_2,Sigma_2):
-    return txt_effect_update_new(history, global_params, mu_1,Sigma_1,mu_2,Sigma_2)
+def policy_update_ts_new(context,steps,probs,actions,o_sigma,  mu_1,Sigma_1,mu_2,Sigma_2):
+    return txt_effect_update_new(context,steps,probs,actions,o_sigma, mu_1,Sigma_1,mu_2,Sigma_2)
 
 
-def txt_effect_update_new(history, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
+def txt_effect_update_new(context,steps,probs,actions,o_sigma, mu_1,Sigma_1,mu_2,Sigma_2):
     #print(init.avail_index)
     #print(len(batch))
  
     #avail <- batch[, input$avail.index]
     
-    ##how can this ever equal 1?
-    context,steps,probs,actions = do_work.get_data_for_txt_effect_update(history,global_params)
+
     
     if len(context)==0:
         
@@ -88,7 +87,7 @@ def txt_effect_update_new(history, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
         
         
         
-        temp = post_cal_ts(X_trn, Y_trn, global_params.sigma, mu_tmp, Sigma_tmp)
+        temp = post_cal_ts(X_trn, Y_trn, o_sigma, mu_tmp, Sigma_tmp)
         
         #print(len(temp))
         #print(len(f_two))
@@ -166,6 +165,12 @@ def post_cal_ts(X, Y, sigma, mu, Sigma):
     
     inv_Sigma = solve(Sigma,np.eye(len(Sigma[0])))
     #print(inv_Sigma)
+    #print(sigma)
+    #print(X)
+    #print(inv_Sigma)
+    #print(np.dot(np.transpose(X),X))
+    #print(type(sigma))
+    #print((sigma**2)*inv_Sigma)
     term_one = np.dot(np.transpose(X),X)+sigma**2*inv_Sigma
     term_two = np.dot(np.transpose(X),Y)+np.dot(sigma**2*inv_Sigma,mu)
     pos_mean = solve(term_one,term_two)

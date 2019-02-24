@@ -274,7 +274,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 
                 if global_policy_params.decision_times%100==0:
-                    my_directory = '{}/pop_size_{}_update_{}_study_length_{}/participant_{}'.format(global_policy_params.write_directory,participant.pid,experiment.study_length,len(experiment.population),global_policy_params.update_period)
+                    my_directory = '{}/pop_size_{}_update_{}_study_length_{}_tryagain/participant_{}'.format(global_policy_params.write_directory,len(experiment.population),global_policy_params.update_period,experiment.study_length,participant.pid)
                     if not os.path.exists(my_directory):
                         os.makedirs(my_directory)
                     with open('{}/history_{}.pkl'.format(my_directory,global_policy_params.decision_times),'wb') as f:
@@ -297,6 +297,15 @@ def make_to_save(exp):
         for time,context in pdata.history.items():
             key = '{}-{}'.format(pid,time)
             to_save[key]=context
+    return to_save
+
+
+def make_to_groupids(exp):
+    to_save  = {}
+    for pid,pdata in exp.population.items():
+        gid  = pdata.gid
+        key = 'participant-{}'.format(pid)
+        to_save[key]=gid
     return to_save
 
 
@@ -325,10 +334,14 @@ if __name__=="__main__":
     new_kind_of_simulation(experiment,'TS',personal,glob)
     
     to_save = make_to_save(experiment)
+    gids = make_to_groupids(exp)
     
     filename = '{}/results/population_size_{}_update_days_{}_{}_EB.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length)
     with open(filename,'wb') as f:
         pickle.dump(to_save,f)
+    filename = '{}/results/population_size_{}_update_days_{}_{}_EB_groupids.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length)
+    with open(filename,'wb') as f:
+        pickle.dump(gids,f)
     
     print('finished')    
 

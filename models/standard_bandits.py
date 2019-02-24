@@ -18,6 +18,27 @@ sys.path
 sys.path.append('pooling_rl/simulation')
 import sim_functions_cleaner as sf
 
+def get_data_for_txt_effect_update_batch(exp,glob):
+    all_data = []
+    steps=[]
+    probs = []
+    actions = []
+    
+    ##might add pi to the user's history
+    for user_id,data in exp.population.items():
+        history_dict=data.history
+        if len(history_dict)>0:
+            for hk,h in history_dict.items():
+                if h['avail'] and h['decision_time']:
+                    pi = h['prob']
+            
+                    v=[h[i] for i in glob.responsivity_features]
+                    steps.append(h['steps'])
+                    probs.append(pi)
+                    actions.append(h['action'])
+                    all_data.append(v)
+
+    return np.array(all_data),np.array(steps),np.array(probs),np.array(actions)
 
 
 def get_data_for_txt_effect_update(history_dict,glob):

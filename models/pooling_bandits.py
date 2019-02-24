@@ -128,7 +128,7 @@ def run(X,y,global_params,gp_train_type='Static'):
             sigma_u = get_sigma_u(m.kern.sigma_u1.value,m.kern.sigma_u2.value,m.kern.sigma_rho.value)
 
 #np.array([[1.0,0.1],[0.1,1.0]])
-            sigma_v =m.kern.sigma_v.value
+#sigma_v =m.kern.sigma_v.value
             noise =m.kern.noise_term.value
     #print('lll')
     #print(sigma_v.shape)
@@ -139,7 +139,7 @@ def run(X,y,global_params,gp_train_type='Static'):
     #tf.reset_default_graph()
     #print(sess._closed)
     tf.keras.backend.clear_session()
-    return {'sigma_u':sigma_u,'sigma_v':sigma_v.reshape(2,2),'cov':trm,'noise':noise}
+    return {'sigma_u':sigma_u,'cov':trm,'noise':noise}
         #else:
         
         #sigma_u = np.array([[m.kern.sigma_u1.eval(session=sess),m.kern.sigma_u1.eval(session=sess)**5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess)],[m.kern.sigma_u1.eval(session=sess)**.5*m.kern.sigma_u2.eval(session=sess)**.5*m.kern.sigma_rho.eval(session=sess),m.kern.sigma_u2.eval(session=sess)]])

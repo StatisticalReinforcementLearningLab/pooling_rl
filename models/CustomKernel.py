@@ -48,7 +48,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         theta = get_theta(len(baseline_indices)).reshape(1,len(baseline_indices),len(baseline_indices))
         
         #sigmau = tf.reshape(np.array([[1.0,0.1],[0.1,1.0]]),(1,2,2))
-        sigmav = np.array([[initial_s1,0.0],[0.0,initial_s2]]).reshape(1,2,2)
+        #sigmav = np.array([[initial_s1,0.0],[0.0,initial_s2]]).reshape(1,2,2)
         
         #self.sigma_u = gpflow.Param(value = np.array([[1.0,0.1],[0.1,1.0]]).reshape(1,2,2),\transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive))
         #self.sigma_u1 = gpflow.Param(1.0, transform=gpflow.transforms.positive,dtype=gpflow.settings.float_type)
@@ -64,7 +64,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         #gpflow.Param(1.0, transform=gpflow.transforms.positive,
         #dtype=gpflow.settings.float_type)
         
-        self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
+        #self.sigma_v =  gpflow.Param(sigmav, transform=gpflow.transforms.DiagMatrix(2)(gpflow.transforms.positive),dtype=gpflow.settings.float_type)
         
         
         #self.noise_term = gpflow.Param(1.0, transform=gpflow.transforms.positive,  dtype=gpflow.settings.float_type)
@@ -77,7 +77,8 @@ class CustomKernel(gpflow.kernels.Kernel):
         
         self.sigma_u1 = gpflow.Param(initial_u1,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
         self.sigma_u2 = gpflow.Param(initial_u2,dtype=gpflow.settings.float_type,transform=gpflow.transforms.positive)
-        self.sigma_rho =gpflow.Param(initial_rho, transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
+        
+        self.sigma_rho = gpflow.Param(initial_rho,transform=gpflow.transforms.Logistic(a=0,b=2), dtype=gpflow.settings.float_type)
 
 
         self.sigma_theta = tf.constant(theta)
@@ -104,7 +105,7 @@ class CustomKernel(gpflow.kernels.Kernel):
         self.user_index = user_index
         self.user_day_index = user_day_index
         self.mysession=mysession
-        self.rhos = tf.constant(rhos)
+         #self.rhos = tf.constant(rhos)
 ##will it freak out if there is no parameter?
 
 
@@ -118,7 +119,10 @@ class CustomKernel(gpflow.kernels.Kernel):
         #return tf.constant(1.0,dtype=tf.float64)
     #tf.exp(-tf.subtract(X,X2) / float(2.2))
     
-    
+    def get_users(self,users,userstwo):
+        
+        xx,yy = np.meshgrid(users,userstwo,sparse=True)
+        return (xx==yy).astype('float')
     
     @gpflow.params_as_tensors
     def K(self, X, X2=None):
@@ -131,13 +135,15 @@ class CustomKernel(gpflow.kernels.Kernel):
         g_one =gather_cols(X, self.psi_indices, name=None)
         g_one = tf.reshape(g_one,(1,self.num_data_points ,len(self.psi_indices)))
         user_id_one = gather_cols(X, [self.user_index], name=None)
-        day_one = gather_cols(X, [self.user_day_index], name=None)
+
+        #day_one = gather_cols(X, [self.user_day_index], name=None)
         
         t_one = self.sigma_u1
         t_two = tf.multiply(tf.math.sqrt(self.sigma_u1),tf.math.sqrt(self.sigma_u2))
         rho_term = tf.subtract(self.sigma_rho,1)
         t_two = tf.multiply(t_two,self.sigma_rho)
         t_three = self.sigma_u2
+        
         t_four = t_two
         row_one = tf.stack([t_one, t_two],axis=0)
         row_two = tf.stack([t_three, t_four],axis=0)
@@ -151,14 +157,14 @@ class CustomKernel(gpflow.kernels.Kernel):
             g_two = gather_cols(X2,  self.psi_indices, name=None)
             #g_two = tf.reshape(g_two,(1,100,2))
             user_id_two = gather_cols(X2, [self.user_index], name=None)
-            day_two = gather_cols(X2, [self.user_day_index], name=None)
+        # day_two = gather_cols(X2, [self.user_day_index], name=None)
         
         
         
         else:
             #print('called')
             user_id_two = user_id_one
-            day_two = day_one
+            #day_two = day_one
             f_two = gather_cols(X, self.baseline_indices, name=None)
             g_two=gather_cols(X, self.psi_indices, name=None)
         
@@ -181,19 +187,21 @@ class CustomKernel(gpflow.kernels.Kernel):
         effects_one = tf.multiply(effects,self.select_users)
         
         
-        effects = tf.reshape(tf.tensordot(g_one,self.sigma_v,axes=[[2],[1]]),(self.num_data_points ,2))
+        #effects = tf.reshape(tf.tensordot(g_one,self.sigma_v,axes=[[2],[1]]),(self.num_data_points ,2))
         #effects = tf.tensordot(tf.transpose(g_one),self.sigma_v[0],axes=[[0],[1]])
         
         
-        effects = tf.tensordot(effects,tf.transpose(g_two),axes = [[1],[0]])
-        effects_two = tf.multiply(effects,self.rhos)
+        #effects = tf.tensordot(effects,tf.transpose(g_two),axes = [[1],[0]])
         
-        effects = tf.add(effects_one,effects_two)
+        #effects_two = tf.multiply(effects,self.rhos)
+        
+        
+        #effects = tf.add(effects_one,effects_two)
         
         
         #print('eff')
         #print(effects.shape)
-        result = tf.add(baselines,effects)
+        result = tf.add(baselines,effects_one)
         
         #noise = 1000*np.eye(100)
         noise= tf.multiply(self.noise_term,tf.constant(np.eye(self.num_data_points )))

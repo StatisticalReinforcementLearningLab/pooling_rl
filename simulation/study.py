@@ -1,6 +1,7 @@
 import pickle
 import participant
 import random
+import numpy as np
 
 class study:
     
@@ -12,7 +13,7 @@ class study:
     Also which participants are involved at which times. 
     '''
     
-    def __init__(self,root,population_size,study_length):
+    def __init__(self,root,population_size,study_length,which_gen='case_one'):
         #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
         self.root =root
             #'../../murphy_lab/lab/pooling/distributions/'
@@ -37,11 +38,11 @@ class study:
         
         self.population = {}
     
-        self.init_population()
+    
         
         self.history = {}
         
-        self.weather_update_hours = [6,10,12,16,20]
+        self.weather_update_hours = [9,12,15,18,20]
         
         self.location_update_hours = set([9,12,16,18,20])
         
@@ -49,13 +50,18 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
+        self.Z_one = -0.99543
+        self.Z_two = 1.5265399999999998
+        self.beta = np.array([-0.88722 ,0.03533, -0.28816,0.23429 ,1.99952,0.03189,0.03189,   0.14462])
+        self.sigma = 0.6304924999999999
     
-    
+        self.init_population(which_gen)
+            
     def get_gid(self):
         #4.0/36
          return int(random.random()>.5)+1
     
-    def init_population(self):
+    def init_population(self,which_gen):
          
         for k,v in self.person_to_time.items():
             
@@ -63,6 +69,16 @@ class study:
             
             gid = self.get_gid()
             
-            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k])
+            Z=None
+            if which_gen=='case_two':
+                Z = self.Z_one
+                if gid==2:
+                    Z=self.Z_two
+            if which_gen=='case_three':
+                Z=np.random.normal(loc=0,scale=self.sigma**2)
+
+            
+            
+            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z)
             
             self.population[k]=person

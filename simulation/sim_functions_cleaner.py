@@ -41,11 +41,18 @@ with open('{}key_matches_non_intervention.pkl'.format(root),'rb') as f:
     matched = pickle.load(f)
 
 
-with open('{}dists_intervention.pkl'.format(root),'rb') as f:
-    dists_intervention = pickle.load(f)
+with open('{}dists_intervention_anti_sedentary.pkl'.format(root),'rb') as f:
+    dists_intervention_anti_sedentary = pickle.load(f)
 
-with open('{}key_matches_interventions.pkl'.format(root),'rb') as f:
-    matched_intervention = pickle.load(f)
+with open('{}key_matches_intervention_anti_sedentary.pkl'.format(root),'rb') as f:
+    matched_intervention_anti_sedentary = pickle.load(f)
+
+
+with open('{}dists_intervention_activity_suggestion.pkl'.format(root),'rb') as f:
+    dists_intervention_activity_suggestion = pickle.load(f)
+
+with open('{}key_matches_intervention_activity_suggestion.pkl'.format(root),'rb') as f:
+    matched_intervention_activity_suggestion = pickle.load(f)
 
 
 #with open('{}interventions_both_groups_estf.pkl'.format(root),'rb') as f:
@@ -86,7 +93,7 @@ def get_weather_prior(time_of_day,month):
 def get_time_of_day(an_index):
     with open('{}hour_to_id.pkl'.format(root),'rb') as f:
         hour_lookup = pickle.load(f)
-    return hour_lookup[str(an_index.hour)]
+    return hour_lookup[an_index.hour]
 
 
 def get_day_of_week(an_index):
@@ -150,7 +157,7 @@ def get_next_weather(tod,month,weather):
     return val
 
 def get_pretreatment(steps):
-    steps = math.log(steps+.5)
+    #steps = math.log(steps+.5)
     return int(steps>math.log(.5))
 
 def get_next_location(gid,dow,tod,loc):
@@ -185,10 +192,13 @@ def get_steps_no_action(gid,tod,dow,loc,wea,pre):
     dist_key = matched[new_key]
 
     dist = dists[dist_key]
-       
+    scale=dist[1]
+    if scale==0:
+        scale=scale+.001
+    
     ##CHANGE TO TRUNCATED
-    x = halfnorm.rvs(loc=dist[0],scale=dist[1])
-    #np.random.normal(loc=dist[0],scale=dist[1])
+    #x = halfnorm.rvs(loc=dist[0],scale=dist[1])
+    x=np.random.normal(loc=dist[0],scale=scale)
     #while(x<0):
     #x = np.random.normal(loc=dist[0],scale=dist[1])
     return x
@@ -197,16 +207,27 @@ def get_steps_action(context):
     ids = ['aint','gid','tod','dow','wea','pre','loc']
     context = [str(c) for c in context]
     new_key = []
+    message_type=context[0]
+    context[0]='1'
+    
     for i in range(len(ids)):
         new_key.append(ids[i])
         new_key.append(context[i])
     new_key = '-'.join(new_key)
-    
-    dist_key = matched_intervention[new_key]
 
-    dist = dists_intervention[dist_key]
-    x = halfnorm.rvs(loc=dist[0],scale=dist[1])
-    #x = np.random.normal(loc=dist[0],scale=dist[1])
+
+    if message_type==1:
+        dist_key = matched_intervention_activity_suggestion[new_key]
+        dist = dists_intervention_activity_suggestion[dist_key]
+    else:
+        dist_key = matched_intervention_anti_sedentary[new_key]
+        dist = dists_intervention_anti_sedentary[dist_key]
+    
+    #x = halfnorm.rvs(loc=dist[0],scale=dist[1])
+    scale=dist[1]
+    if scale==0:
+        scale=scale+.001
+    x = np.random.normal(loc=dist[0],scale=scale)
     # while(x<0):
     #      x = np.random.normal(loc=dist[0],scale=dist[1])
     return x
@@ -409,3 +430,70 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,
 
 
 
+def get_add_one(action,state_vector,beta):
+    return action*np.dot(beta,state_vector)
+
+def get_add_two(action,state_vector,beta,Z):
+    if Z is None:
+        Z=0
+    return action*(np.dot(beta,state_vector)+Z)
+
+def get_add_three(action,state_vector,sigma,beta):
+
+    return action*(np.dot(beta,state_vector)+Z)
+
+def get_additive(action,state_vector,beta,Z=None,which='case_one'):
+    if which=='case_one':
+        return get_add_one(action,state_vector,beta)
+    elif which == 'case_two':
+        return get_add_two(action,state_vector,Z,beta)
+    elif which=='case_three':
+        return get_add_three(action,state_vector,Z,beta)
+    else:
+        return 'wrong case'
+
+
+
+def get_data_for_txt_effect_update_batch(exp,glob):
+    all_data = []
+    steps=[]
+    probs = []
+    actions = []
+    
+    ##might add pi to the user's history
+    for user_id,data in exp.population.items():
+        history_dict=data.history
+        if len(history_dict)>0:
+            for hk,h in history_dict.items():
+                if h['avail'] and h['decision_time']:
+                    pi = h['prob']
+                    
+                    v=[h[i] for i in glob.responsivity_features]
+                    steps.append(h['steps'])
+                    probs.append(pi)
+                    actions.append(h['action'])
+                    all_data.append(v)
+
+    return np.array(all_data),np.array(steps),np.array(probs),np.array(actions)
+
+
+def get_data_for_txt_effect_update(history_dict,glob):
+    all_data = []
+    steps=[]
+    probs = []
+    actions = []
+    
+    ##might add pi to the user's history
+    #for user_id,history in history_dict.items():
+    
+    for hk,h in history_dict.items():
+        if h['avail'] and h['decision_time']:
+            pi = h['prob']
+            
+            v=[h[i] for i in glob.responsivity_features]
+            steps.append(h['steps'])
+            probs.append(pi)
+            actions.append(h['action'])
+            all_data.append(v)
+
+    return np.array(all_data),np.array(steps),np.array(probs),np.array(actions)
