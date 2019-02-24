@@ -259,7 +259,7 @@ def make_to_save(exp):
     for pid,pdata in exp.population.items():
         for time,context in pdata.history.items():
             key = '{}-{}'.format(pid,time)
-            to_save[key]=context
+            to_save[key]=[context['steps'],context['action']]
     return to_save
 
 
@@ -319,7 +319,7 @@ if __name__=="__main__":
             
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
-            
+            print('finished running')
             filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer_daily_post.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
