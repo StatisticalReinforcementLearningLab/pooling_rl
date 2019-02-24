@@ -11,8 +11,11 @@ random.seed(datetime.now())
 from scipy.stats import halfnorm
 
 
-if '/Users/sabina/pooling_rl/' in os.getcwd():
+if '/Users/sabina/' in os.getcwd():
     root ='../../Downloads/distributions/'
+    if 'GPy' in os.getcwd():
+        root ='../Downloads/distributions/'
+
 else:
     root = '../../regal/murphy_lab/pooling/distributions/'
 #'../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
@@ -497,3 +500,35 @@ def get_data_for_txt_effect_update(history_dict,glob):
             all_data.append(v)
 
     return np.array(all_data),np.array(steps),np.array(probs),np.array(actions)
+
+
+def create_phi_from_past(history_matrix,pi,baseline_features,responsivity_features):
+    all_data = []
+    steps=[]
+    
+    
+    ##might add pi to the user's history
+    
+        
+    for h in history_matrix:
+        
+            
+            
+            v = [1]
+            v.extend([h[i] for i in range(len(baseline_features))])
+            v.append(pi*1)
+            v.extend([pi*h[i] for i in range(len(responsivity_features))])
+            #action = h[-1]
+            #if action<0:
+            #   action=0
+            user_id = h[-2]
+#v.append((action-pi)*1)
+#v.extend([(action-pi)*h[i] for i in responsivity_features])
+                #v.append(action)
+            v.append(float(user_id))
+      
+            all_data.append(v)
+
+
+
+    return np.array(all_data)

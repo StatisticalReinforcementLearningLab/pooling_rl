@@ -32,7 +32,11 @@ class TS_global_params:
         self.gamma_mdp = .9
         self.lambda_knot = .9 
         self.prob_sedentary = .9 
-        self.weight = .5 
+        self.weight = .5
+        
+        self.inv_term = None
+        self.to_save_params = {}
+        
         #print(self.baseline_features)
         #self.z_index = [i+1 for i in range(len(self.baseline_features))]
         #self.x_index = len(self.z_index)+1

@@ -342,6 +342,7 @@ def get_M(global_params,user_id,user_study_day,history):
     M = [[] for i in range(history.shape[0])]
 
     H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
+    #inv_term = global_params.inv_term
     for x_old_i in range(history.shape[0]):
         x_old = history[x_old_i]
         old_user_id = x_old[global_params.user_id_index]
@@ -467,14 +468,20 @@ def calculate_posterior(global_params,user_id,user_study_day,X,y):
     #print('current global cov')
     #print(global_params.cov)
     #.reshape(X.shape[0],X.shape[0])
-    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta)
+    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta,global_params.inv_term)
     #.reshape(X.shape[0],X.shape[0])
     sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v.reshape(2,2),global_params.noise_term,M,X.shape[0],global_params.sigma_theta)
 
     return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
 
+def get_inv_term(cov,X_dim,noise_term):
+    noise = noise_term * np.eye(X_dim)
+    middle_term = np.add(cov,noise)
+    #inv_term = np.linalg.inv(middle_term)
+    return np.linalg.inv(middle_term)
 
-def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta):
+
+def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta,inv_term):
     #M = get_M(global_params,user_id,user_study_day,history[0])
     
     ##change this to be mu_theta
@@ -490,14 +497,16 @@ def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta):
 
     ##middle_term = np.dot(middle_term,adjusted_rewards)
     ##return np.add(mu_theta,middle_term)
-    noise = noise_term * np.eye(X_dim)
+    ###noise = noise_term * np.eye(X_dim)
     #print(noise.shape)
     #print(cov.shape)
     #print('in get middle')
-    middle_term = np.add(cov,noise)
+    ###middle_term = np.add(cov,noise)
     #print(middle_term)
     #print(M.shape)
-    middle_term = np.matmul(M.T,np.linalg.inv(middle_term))
+    
+    #np.linalg.inv(middle_term)
+    middle_term = np.matmul(M.T,inv_term)
     #print(middle_term)
     middle_term = np.matmul(middle_term,adjusted_rewards)
     #print(middle_term)
