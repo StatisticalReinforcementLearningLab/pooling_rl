@@ -296,11 +296,11 @@ if __name__=="__main__":
     study_length = sys.argv[3]
     start_index = sys.argv[4]
     end_index = sys.argv[5]
-    case = sys.argv[6]
+  
 
-
-    for case in ['case_one','case_two','case_three']:
-        for i in range(int(start_index),int(end_index)):
+    for i in range(int(start_index),int(end_index)):
+        for case in ['case_one','case_two','case_three']:
+        
             pop_size=population
             experiment = study.study('../../regal/murphy_lab/pooling/distributions/',pop_size,'short',which_gen=case)
             glob,personal = initialize_policy_params_TS(experiment,7)
