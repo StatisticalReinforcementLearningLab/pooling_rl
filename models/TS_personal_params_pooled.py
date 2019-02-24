@@ -30,7 +30,7 @@ class TS_personal_params:
         self.etas = {}
         
         self.last_update = {}
-    
+        self.update_period=1
     
     def update_mus(self,pid,mu_value,which_mu):
         if which_mu==0:

@@ -175,7 +175,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     
                     if global_policy_params.decision_times>200 and global_policy_params.history!=None:
-                        if time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period)
+                        if time==participant.last_update_day+pd.DateOffset(days=personal_policy_params.update_period)
                             history = global_policy_params.history
                             temp = pb.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
