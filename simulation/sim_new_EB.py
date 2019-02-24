@@ -92,7 +92,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
             
                 ##CHANGE THIS    
-                temp_params = pb.run(history[0],history[1],global_policy_params,gp_train_type = 'empirical_bayes')
+                temp_params = run_gpy.run(history[0],history[1],global_policy_params)
+                #cov,X_dim,noise_term
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
