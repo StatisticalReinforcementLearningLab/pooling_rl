@@ -273,7 +273,7 @@ if __name__=="__main__":
 
 
     for case in ['case_one','case_two','case_three']:
-        for i in range(start_index,end_index):
+        for i in range(int(start_index),int(end_index)):
             pop_size=32
             experiment = study.study('../../regal/murphy_lab/pooling/distributions/',pop_size,'short',which_gen=case)
             glob,personal = initialize_policy_params_TS(experiment,7)
