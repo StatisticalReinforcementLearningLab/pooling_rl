@@ -260,3 +260,33 @@ def run_many(start_index,end_index):
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
           
 
+if __name__=="__main__":
+    
+    ##parse command line arguments
+    
+    population = sys.argv[1]
+    update_time = sys.argv[2]
+    study_length = sys.argv[3]
+    start_index = sys.argv[4]
+    end_index = sys.argv[5]
+    case = sys.argv[6]
+
+
+    for case in ['case_one','case_two','case_three']:
+        for i in range(start_index,end_index):
+            pop_size=32
+            experiment = study.study('../../regal/murphy_lab/pooling/distributions/',pop_size,'short',which_gen=case)
+            glob,personal = initialize_policy_params_TS(experiment,7)
+            hist = new_kind_of_simulation(experiment,'TS',personal,glob)
+            to_Save = make_to_save(experiment)
+            
+            #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}.pkl'.format('../../Downloads/pooling_results/batch/',case,pop_size,7,'short',i)
+            # with open(filename,'wb') as f:
+            #     pickle.dump(to_Save,f)
+            
+            to_save = make_to_save(experiment)
+            gids = make_to_groupids(exp)
+            
+            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim)
+            with open(filename,'wb') as f:
+                pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
