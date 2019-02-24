@@ -295,7 +295,7 @@ if __name__=="__main__":
             #     pickle.dump(to_Save,f)
             
             to_save = make_to_save(experiment)
-            gids = make_to_groupids(exp)
+            gids = make_to_groupids(experiment)
             
             filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim)
             with open(filename,'wb') as f:
