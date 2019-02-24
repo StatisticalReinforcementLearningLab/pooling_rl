@@ -52,7 +52,7 @@ class TS_global_params:
         self.sigma_theta =self.get_theta(self.theta_dim)
         #self.sigma_v=.5*np.eye(2)
         
-        self.sigma_v =np.array([[4492.02905157 ,   0.0        ],[   0.0 ,        2027.39758508]])
+        #self.sigma_v =np.array([[4492.02905157 ,   0.0        ],[   0.0 ,        2027.39758508]])
             #np.array([[84268.04299068,     0.0        ],[    0.0,         13464.64044625]])
         #self.sigma_v = np.array([[5.21906177e-00, 0.00000000e+00],
         # [0.00000000e+00, 1.00000000e-2]])
@@ -64,14 +64,14 @@ class TS_global_params:
         ##off diagonal
         ##14992.74343105
         #self.sigma_u =np.array([[2449.49426332e+01,  739.56533143e+01],[ 739.56533143e+01,  223.29672266e+01]])
-        self.sigma_u =np.array([[ 3.57943015e+03, -5.98283390e-02],
-                             [-5.98283390e-02,  0.1]])
+        self.sigma_u =np.array([[ 1.47652434, 0.20616501,],
+                             [0.20616501,  1.15894301]])
         #self.sigma_u =np.array([[200, 150],[150, 100 ]])
-        self.rho_term = .01
-        self.u1 = 22886.50901787
-        self.u2 = 9821.60955232
+        self.rho_term = 1.1576026856712
+        self.u1 = 1.47652434
+        self.u2 = 1.15894301
         #90800.30211642
-        self.noise_term=14367.371087724912
+        self.noise_term=7.49989571
             #90800.30211642
         #tried random
         #95224.65812823
