@@ -411,25 +411,25 @@ def get_M_faster(global_params,user_id,user_study_day,history):
     #print(history)
   
     user_ids = history[:,global_params.user_id_index]
-    days_ids = history[:,global_params.user_day_index]
+    #days_ids = history[:,global_params.user_day_index]
   
     my_days = np.ma.masked_where(user_ids==user_id, user_ids).mask.astype(float)
-    if type(my_days)!=np.ndarray:
-        my_days = np.zeros(history.shape[0])
+  #if type(my_days)!=np.ndarray:
+  #  my_days = np.zeros(history.shape[0])
     user_matrix = np.diag(my_days)
     
-    rho_diag = np.diag([rbf_custom_np(d,user_study_day) for d in days_ids])
+    #rho_diag = np.diag([rbf_custom_np(d,user_study_day) for d in days_ids])
     
-    t_two = np.matmul(user_matrix,temp)
+    t_two = user_matrix*temp
     
-    temp = np.dot(H,global_params.sigma_v.reshape(2,2))
-    temp = np.dot(temp,H.T)
+    #temp = np.dot(H,global_params.sigma_v.reshape(2,2))
+    #temp = np.dot(temp,H.T)
     temp = np.dot(phi,temp)
-    #temp = rbf_custom_np(user_study_day,old_day_id)*temp
+    ##temp = rbf_custom_np(user_study_day,old_day_id)*temp
     t_three = np.matmul(rho_diag,temp)
     term = np.add(t_one,t_two)
     
-    term = np.add(term,t_three)
+    #term = np.add(term,t_three)
     
     
     
