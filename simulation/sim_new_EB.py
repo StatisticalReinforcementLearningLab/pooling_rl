@@ -1,8 +1,8 @@
 import pandas as pd
 import sys
 sys.path
-sys.path.append('../pooling_rl/models')
-sys.path.append('../pooling_rl/simulation')
+sys.path.append('../models')
+#sys.path.append('../pooling_rl/simulation')
 import numpy as np
 import pickle
 import random
@@ -238,9 +238,9 @@ def make_to_groupids(exp):
     return to_save        
  
 
-def run_many():
+def run_many(start_index,end_index):
     for case in ['case_one','case_two','case_three']:
-        for i in range(100):
+        for i in range(start_index,end_index):
             pop_size=32
             experiment = study.study('../../regal/murphy_lab/pooling/distributions/',pop_size,'short',which_gen=case)
             glob,personal = initialize_policy_params_TS(experiment,7)
