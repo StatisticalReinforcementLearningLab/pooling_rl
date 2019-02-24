@@ -401,19 +401,24 @@ def get_M_faster(global_params,user_id,user_study_day,history):
     
     phi = history[:,global_params.baseline_indices]
     ##should be fine
+    #print(global_params.sigma_theta)
     t_one = np.dot(phi,global_params.sigma_theta)
+    #print(t_one.shape)
     temp = np.dot(H,global_params.sigma_u)
+    #print(temp.shape)
+    #print(global_params.sigma_u)
     temp = np.dot(temp,H.T)
-    temp = np.dot(phi.T,temp)
+    temp = np.dot(phi,temp)
     
     user_ids = history[:,global_params.user_id_index]
 
     my_days = np.ma.masked_where(user_ids==user_id, user_ids).mask.astype(float)
-
+    
+    if type(my_days)!=np.ndarray:
+        my_days = np.zeros(history.shape[0])
     user_matrix = np.diag(my_days)
-    
-    
-    t_two = user_matrix*temp
+
+    t_two = np.matmul(user_matrix,temp)
   
     term = np.add(t_one,t_two)
     
@@ -440,9 +445,9 @@ def calculate_posterior_faster(global_params,user_id,user_study_day,X,y):
     #print('current global cov')
     #print(global_params.cov)
     #.reshape(X.shape[0],X.shape[0])
-    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta)
+    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta,global_params.inv_term)
     #.reshape(X.shape[0],X.shape[0])
-    sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v.reshape(2,2),global_params.noise_term,M,X.shape[0],global_params.sigma_theta)
+    sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),None,global_params.noise_term,M,X.shape[0],global_params.sigma_theta,global_params.inv_term)
     
     return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
 
@@ -500,7 +505,7 @@ def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta,inv_term):
     #print(middle_term)
     return np.add(mu_theta,middle_term)
 
-def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta):
+def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta,inv_term):
     #M = get_M(global_params,user_id,user_study_day,history[0])
     
     ##change this to be mu_theta
@@ -509,7 +514,8 @@ def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta):
     
     
     
-    first_term = np.add(sigma_u,sigma_v)
+    #first_term = np.add(sigma_u,sigma_v)
+    first_term = sigma_u
     #print(first_term.shape)
     #print(H.shape)
     first_term = np.dot(H,first_term)
@@ -517,11 +523,11 @@ def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta):
     first_term = np.dot(first_term,H.T)
     #print(first_term)
     
-    noise = noise_term * np.eye(x_dim)
+    #noise = noise_term * np.eye(x_dim)
     #print(noise.shape)
-    middle_term = np.add(cov,noise)
+    #middle_term = np.add(cov,noise)
     #print(middle_term.shape)
-    middle_term = np.dot(M.T,np.linalg.inv(middle_term))
+    middle_term = np.dot(M.T,inv_term)
     #print(middle_term.shape)
     middle_term = np.dot(middle_term,M)
     #print(middle_term.shape)

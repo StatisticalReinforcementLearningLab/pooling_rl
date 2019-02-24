@@ -228,6 +228,15 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 context_dict =  {'steps':steps,'action':action,'weather':weather,'location_1':int(location==1),\
                     'ltps':steps_last_time_period,'location_2':int(location==2),'location_3':int(location==3),\
                         'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability,'prob':prob,'dow':dow,'tod':tod,'pretreatment':sf.get_pretreatment(steps_last_time_period)}
+
+#if global_policy_params.decision_times%100==0:
+# my_directory = '{}/pop_size_{}_update_{}_study_length_{}/participant_{}'.format(global_policy_params.write_directory,len(experiment.population),global_policy_params.update_period,experiment.study_length,participant.pid)
+#  if not os.path.exists(my_directory):
+# os.makedirs(my_directory)
+                        # with open('{}/history_{}.pkl'.format(my_directory,global_policy_params.decision_times),'wb') as f:
+#   pickle.dump(participant.history,f)
+
+
                 participant.history[time]=context_dict
 
 
@@ -284,7 +293,7 @@ if __name__=="__main__":
 
     for case in ['case_one','case_two','case_three']:
         for i in range(int(start_index),int(end_index)):
-            pop_size=32
+            pop_size=population
             experiment = study.study('../../regal/murphy_lab/pooling/distributions/',pop_size,'short',which_gen=case)
             glob,personal = initialize_policy_params_TS(experiment,7)
             hist = new_kind_of_simulation(experiment,'TS',personal,glob)
@@ -297,6 +306,6 @@ if __name__=="__main__":
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
             
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim)
+            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
