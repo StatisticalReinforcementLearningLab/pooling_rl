@@ -84,7 +84,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('updates_case_two_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('updates_case_two_daily_post_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>200:
                 glob.last_global_update_time=time
                 history =pb.make_history_new(.1,global_policy_params,experiment)
@@ -175,11 +175,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     
                     if global_policy_params.decision_times>200 and global_policy_params.history!=None:
-                     
+                        if time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period)
                             history = global_policy_params.history
                             temp = pb.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1] )
+                            participant.last_update_day=time
                     
                     #print(temp[0].shape)
                     else:
@@ -249,7 +250,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     to_save = make_to_save(experiment)
                     gids = make_to_groupids(experiment)
                     
-                    filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_{}_safer.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim_num,global_policy_params.decision_times)
+                    filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_{}_safer_daily_post.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim_num,global_policy_params.decision_times)
                     with open(filename,'wb') as f:
                         pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
 
@@ -287,7 +288,7 @@ def run_many(start_index,end_index):
             to_save = make_to_save(experiment)
             gids = make_to_groupids(exp)
     
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_safer.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim_num)
+            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_safer_daily_post.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim_num)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
           
@@ -319,6 +320,6 @@ if __name__=="__main__":
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
             
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer_daily_post.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
