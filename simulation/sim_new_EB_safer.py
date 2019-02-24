@@ -249,7 +249,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     to_save = make_to_save(experiment)
                     gids = make_to_groupids(experiment)
                     
-                    filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_{}_safer.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim_num,global_policy_params.decision_times)
+                    filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_{}_safer_f.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim_num,global_policy_params.decision_times)
                     with open(filename,'wb') as f:
                         pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
 
@@ -287,7 +287,7 @@ def run_many(start_index,end_index):
             to_save = make_to_save(experiment)
             gids = make_to_groupids(exp)
     
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_safer.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim_num)
+            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_safer_f.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim_num)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
           
@@ -319,6 +319,6 @@ if __name__=="__main__":
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
             
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer_f.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
