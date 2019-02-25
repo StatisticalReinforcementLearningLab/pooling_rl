@@ -48,3 +48,27 @@ def run(X,y,global_params):
     cov = m.kern.K(X)
 
     return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':m.objective_function()}
+
+
+def get_cov(X,y,global_params):
+    #initial_u1,initial_u2,initial_rho,initial_noise,baseline_indices,psi_indices,user_index
+    user_mat= get_users(X[:,global_params.user_id_index],X[:,global_params.user_id_index])
+    
+    first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
+    
+    kernel = GPy.kern.CustomKernel(len(global_params.baseline_indices),baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_index=global_params.user_id_index,initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term,user_mat=user_mat,first_mat = first_mat)
+    
+    m = GPy.models.GPRegression(X,y,kernel)
+    
+    
+    m.Gaussian_noise.variance=global_params.noise_term
+    
+    #m.optimize(max_iters=100)
+    
+    #sigma_u = get_sigma_u(m.kern.u1.values[0],m.kern.u2.values[0],m.kern.rho.values[0])
+    
+    #noise = m.Gaussian_noise.variance.values
+    
+    cov = m.kern.K(X)
+    
+    return {'sigma_u':global_params.sigma_u,'cov':cov,'noise':global_params.noise_term,'like':m.objective_function()}
