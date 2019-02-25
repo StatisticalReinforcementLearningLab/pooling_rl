@@ -213,7 +213,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         steps = sf.get_steps_action(context)
                         add = sf.get_add_two(action,z,experiment.beta,participant.Z)
                         participant.steps = steps+add
-                        participant.steps = steps
+                     
 
                         print('p_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,steps,participant.gid,file=open('updates_case_two_participant_{}_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                     else:
