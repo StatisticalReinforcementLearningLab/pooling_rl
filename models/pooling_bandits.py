@@ -174,7 +174,7 @@ def get_history_norw(exp,glob):
 
 
 
-def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
+def create_phi_new(history_dict,pi,baseline_features,responsivity_features,mu_theta):
     all_data = []
     steps=[]
     
@@ -201,7 +201,8 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
                 #v.append(float(h['study_day']))
                 all_data.append(v)
                 steps.append([h['steps']])
-        
+
+    steps = get_RT(steps,np.array(all_data),mu_theta,len(all_data[0]-1))
         
     return np.array(all_data),np.array(steps)
 
@@ -210,7 +211,7 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features):
 def make_history_new(pi,glob,exp=None):
     g=get_history_norw(exp,glob)
     #g = get_history(glob.write_directory,glob.decision_times)
-    ad = create_phi_new(g,pi,glob.baseline_features,glob.responsivity_features)
+    ad = create_phi_new(g,pi,glob.baseline_features,glob.responsivity_features,glob.mu_theta)
     if len(ad[0])==0:
         return [[],[]]
     
@@ -379,7 +380,7 @@ def get_M(global_params,user_id,user_study_day,history):
 
 def get_RT(y,X,sigma_theta,x_dim):
     
-    to_return = [y[i]-np.dot(X[i][0:x_dim],np.ones(x_dim)) for i in range(len(X))]
+    to_return = [y[i]-np.dot(X[i][0:x_dim],sigma_theta) for i in range(len(X))]
     return np.array([i[0] for i in to_return])
 
 
