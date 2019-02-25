@@ -235,7 +235,10 @@ def get_steps_action(context):
     #      x = np.random.normal(loc=dist[0],scale=dist[1])
     return x
     
-
+def get_RT(y,X,sigma_theta,x_dim):
+    
+    to_return = [y[i]-np.dot(X[i][0:x_dim],sigma_theta) for i in range(len(X))]
+    return np.array([i[0] for i in to_return])
 
 def to_yid(steps):
     

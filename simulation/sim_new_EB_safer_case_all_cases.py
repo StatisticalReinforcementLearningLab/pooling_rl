@@ -94,8 +94,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##CHANGE THIS
                 try:
                     temp_params = run_gpy.run(history[0],history[1],global_policy_params)
-                except:
-                    temp_params={'cov':global_policy_params.cov,'noise':global_policy_params.noise_term,\
+                except  Exception as e:
+                    print(e)
+                    temp_params={'cov':global_policy_params.cov,'sigma_u':global_policy_params.sigma_u,'noise':global_policy_params.noise_term,\
                         'like':-100333
 }
                 #cov,X_dim,noise_term
