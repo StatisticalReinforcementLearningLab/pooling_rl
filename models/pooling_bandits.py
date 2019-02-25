@@ -204,7 +204,7 @@ def create_phi_new(history_dict,pi,baseline_features,responsivity_features,mu_th
 
     steps = get_RT(np.array(steps),np.array(all_data),mu_theta,len(all_data[0])-1)
         
-    return np.array(all_data),np.array([[y] for y in get_RT(steps)])
+    return np.array(all_data),np.array([[y] for y in steps])
 
 
 
