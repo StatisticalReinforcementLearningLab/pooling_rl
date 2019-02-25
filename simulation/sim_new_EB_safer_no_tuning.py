@@ -213,7 +213,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         add = sf.get_add_two(action,z,experiment.beta,participant.Z)
                         participant.steps = steps+add
                     #participant.steps = steps
-                        print('p_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,steps,participant.gid,file=open('../../murphy_lab/lab/pooling/{}_two/updates_no_tuning_{}_participant_{}_{}_{}.txt'.format(case,case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,steps,participant.gid,file=open('../../murphy_lab/lab/pooling/{}_two/updates_no_tuning_{}_participant_{}_{}_{}.txt'.format(case,case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                     else:
                         #participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)

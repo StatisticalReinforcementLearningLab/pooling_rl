@@ -219,12 +219,12 @@ def get_steps_action(context):
     new_key = '-'.join(new_key)
 
 
-    if message_type==1:
-        dist_key = matched_intervention_activity_suggestion[new_key]
-        dist = dists_intervention_activity_suggestion[dist_key]
-    else:
-        dist_key = matched_intervention_anti_sedentary[new_key]
-        dist = dists_intervention_anti_sedentary[dist_key]
+    #if message_type==1:
+    #    dist_key = matched_intervention_activity_suggestion[new_key]
+    #    dist = dists_intervention_activity_suggestion[dist_key]
+    #else:
+    dist_key = matched_intervention_anti_sedentary[new_key]
+    dist = dists_intervention_anti_sedentary[dist_key]
     
     #x = halfnorm.rvs(loc=dist[0],scale=dist[1])
     scale=dist[1]
