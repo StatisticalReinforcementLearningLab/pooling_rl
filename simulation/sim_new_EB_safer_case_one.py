@@ -102,7 +102,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
-                print('global_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/case_one/updates_case_one_global_{}_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                print('global_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/case_one_two/updates_case_one_global_{}_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 global_policy_params.update_params(temp_params)
                 global_policy_params.inv_term=inv_term
                 #print(temp_params)
@@ -213,7 +213,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         add = sf.get_add_two(action,z,experiment.beta,participant.Z)
                         participant.steps = steps+add
                     #participant.steps = steps
-                        print('p_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,steps,participant.gid,file=open('../../murphy_lab/lab/pooling/case_one/updates_case_one_participant_{}_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,steps,participant.gid,file=open('../../murphy_lab/lab/pooling/case_one_two/updates_case_one_participant_{}_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                     else:
                         #participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps)
@@ -320,6 +320,6 @@ if __name__=="__main__":
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
             print('finished running')
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer_f.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
-            with open(filename,'wb') as f:
-                pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
+            #filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer_f.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
+            #with open(filename,'wb') as f:
+#pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
