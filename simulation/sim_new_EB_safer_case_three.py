@@ -102,7 +102,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
-                print('global_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/case_three/updates_case_three_global_{}_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                print('global_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/case_three_two/updates_case_three_global_{}_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 global_policy_params.update_params(temp_params)
                 global_policy_params.inv_term=inv_term
                 #print(temp_params)
