@@ -234,6 +234,7 @@ def get_steps_action(context):
     # while(x<0):
     #      x = np.random.normal(loc=dist[0],scale=dist[1])
     return x
+#dist[0]
     
 def get_RT(y,X,sigma_theta,x_dim):
     
@@ -434,6 +435,10 @@ def simulate_run(num_people,time_indices,decision_times,action_algorithm = None,
   
     return all_people,states
 
+def get_add_no_action(state_vector,beta,Z):
+    if Z is None:
+        Z=0
+    return np.dot(beta,state_vector)+Z
 
 
 def get_add_one(action,state_vector,beta):
@@ -471,7 +476,7 @@ def get_data_for_txt_effect_update_batch(exp,glob):
         history_dict=data.history
         if len(history_dict)>0:
             for hk,h in history_dict.items():
-                if h['avail'] and h['decision_time']:
+                if h['avail'] and h['decision_time'] and hk<=glob.last_global_update_time:
                     pi = h['prob']
                     
                     v=[h[i] for i in glob.responsivity_features]

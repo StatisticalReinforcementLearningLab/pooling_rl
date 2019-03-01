@@ -145,7 +145,7 @@ class TS_batch_params:
         return [0 for i in range(num_responsivity_features+1)]
     
     def get_asigma(self,adim):
-        return np.diag([10 for i in range(adim)])
+        return np.diag([1 for i in range(adim)])
     
     
     def comput_rho(self,sigma_u):
@@ -162,7 +162,7 @@ class TS_batch_params:
         self.updated_cov=True
 
     def get_theta(self,dim_baseline):
-        m = 1000*np.eye(dim_baseline)
+        m = 1*np.eye(dim_baseline)
         #m = np.add(m,.1)
         return m
 

@@ -20,6 +20,9 @@ def get_probs(batch,init):
 
 def prob_cal_ts(z,x,mu,Sigma,global_params):
     pos_mean = np.dot(z,mu)
+    #print('in ts')
+    #print(mu)
+    #print(pos_mean)
     pos_var = np.dot(np.dot(np.transpose(z),Sigma),z)
     pos_var = max(0,pos_var)
 
@@ -28,6 +31,7 @@ def prob_cal_ts(z,x,mu,Sigma,global_params):
   
     # probability
     pit_zero = norm.cdf((pos_mean)/(pos_var**.5))
+    #print(pit_zero)
   
     # clipping
     prob =  min(bandit.py_c_func(global_params.pi_max, max(bandit.py_c_func(global_params.pi_min, pit_zero))))

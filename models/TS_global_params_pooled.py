@@ -14,8 +14,8 @@ class TS_global_params:
     
     def __init__(self,xi=10,baseline_features=None,psi_features=None,resp_features=None):
         self.nums = set([np.float64,int,float])
-        self.pi_max = .8
-        self.pi_min = .1
+        self.pi_max = 1.0
+        self.pi_min = 0.0
         self.sigma = 1
         self.baseline_features=baseline_features
         self.responsivity_features = resp_features
@@ -48,7 +48,7 @@ class TS_global_params:
         #2 has to do with random effects, not likely to change soon
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
         print(self.theta_dim)
-        self.mu_theta =np.ones(self.theta_dim)
+        self.mu_theta =np.zeros(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
         #self.sigma_v=.5*np.eye(2)
         
@@ -64,21 +64,30 @@ class TS_global_params:
         ##off diagonal
         ##14992.74343105
         #self.sigma_u =np.array([[2449.49426332e+01,  739.56533143e+01],[ 739.56533143e+01,  223.29672266e+01]])
-        self.sigma_u =np.array([[2.17412222, 0.61305586],
-                             [0.61305586, 1.39429461]])
+        
+        #continuous
+        self.sigma_u =np.array([[ 0.28800755, -0.17554317],
+                                [-0.17554317,  0.5466027 ]])
+        ##non continuous
+        #np.array([[2.17412222, 0.61305586],
+        #  [0.61305586, 1.39429461]])
 
 ##old
 #np.array([[ 1.47652434, 0.20616501,],
 #                            [0.20616501,  1.15894301]])
         #self.sigma_u =np.array([[200, 150],[150, 100 ]])
-        self.rho_term =1.3521119759922764
+        #continuous
+        self.rho_term =0.5575684246756394
+        #non continuous
+            #1.3521119759922764
             #1.1576026856712
-        self.u1 =2.17412222
+        self.u1 =0.28800755
         #1.47652434
-        self.u2 =1.3942946
+        self.u2 = 0.5466027
         #1.15894301
         #90800.30211642
-        self.noise_term=7.50134618
+        self.noise_term=6.32098482
+            #7.50134618
         #7.49989571
             #90800.30211642
         #tried random
@@ -209,7 +218,7 @@ class TS_global_params:
         return [0 for i in range(num_responsivity_features+1)]
     
     def get_asigma(self,adim):
-        return np.diag([10 for i in range(adim)])
+        return np.diag([1 for i in range(adim)])
     
     
     def comput_rho(self,sigma_u):
@@ -226,7 +235,7 @@ class TS_global_params:
         self.updated_cov=True
 
     def get_theta(self,dim_baseline):
-        m = 10*np.eye(dim_baseline)
+        m = 1*np.eye(dim_baseline)
         #m = np.add(m,.1)
         return m
 

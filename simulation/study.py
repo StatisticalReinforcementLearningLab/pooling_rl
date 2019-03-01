@@ -52,7 +52,8 @@ class study:
         self.study_length=study_length
         self.Z_one = -0.99543
         self.Z_two = 1.5265399999999998
-        self.beta = np.array([-0.88722 ,0.03533, -0.28816,0.23429 ,1.99952,0.03189,0.03189,   0.14462])
+        #intercept,tod,dow,weather,previous steps,loc 1,loc 2,loc 3
+        self.beta =np.array([-0.88722 ,0.03533, -0.28816,0.23429 ,1.99952,0.03189,0.03189,   0.14462])
         self.sigma = 0.6304924999999999
     
         self.init_population(which_gen)
