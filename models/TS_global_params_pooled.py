@@ -12,19 +12,21 @@ class TS_global_params:
     Keeps track of hyper-parameters for any TS procedure. 
     '''
     
-    def __init__(self,xi=10,baseline_features=None,psi_features=None,resp_features=None):
+    def __init__(self,xi=10,baseline_keys=None,psi_features=None,responsivity_keys=None):
         self.nums = set([np.float64,int,float])
         self.pi_max = 1.0
         self.pi_min = 0.0
         self.sigma = 1
-        self.baseline_features=baseline_features
-        self.responsivity_features = resp_features
-        self.num_baseline_features = len(baseline_features)
+        self.baseline_keys=baseline_keys
+        #self.baseline_features = baseline_keys
+        #self.responsivity_features = responsivity_keys
+        self.responsivity_keys = responsivity_keys
+        self.num_baseline_features = len(baseline_keys)
         self.psi_features = psi_features
-        self.num_responsivity_features = len(resp_features)
-        self.baseline_indices = [i for i in range(self.num_baseline_features)]
+        self.num_responsivity_features = len(responsivity_keys)
+        #self.baseline_indices = [i for i in range(self.num_baseline_features)]
         self.psi_indices = psi_features
-        self.responsivity_indices = None
+        #self.responsivity_indices = None
         
         self.xi  = xi
         
@@ -100,6 +102,7 @@ class TS_global_params:
 
         self.last_global_update_time = None
         
+        self.standardize=False
         
         self.user_id_index=None
         self.user_day_index = None
