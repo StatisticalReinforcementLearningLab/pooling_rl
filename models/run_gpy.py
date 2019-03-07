@@ -43,9 +43,10 @@ def run(X,users,y,global_params):
     m.Gaussian_noise.variance=global_params.noise_term
 
     m.optimize(max_iters=100)
-
+    print('optimization worked')
     sigma_u = get_sigma_u(m.kern.u1.values[0],m.kern.u2.values[0],m.kern.rho.values[0])
-
+    print('sigma u ')
+    print(sigma_u)
     noise = m.Gaussian_noise.variance.values
 
     cov = m.kern.K(X)
