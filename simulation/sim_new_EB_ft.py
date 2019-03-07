@@ -73,7 +73,7 @@ def initialize_policy_params_TS(experiment,update_period,root,standardize=False)
         
     return global_p ,personal_p     
 
-def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None,,case=None,feat_trans=feat_trans):
+def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None,case=None,feat_trans=feat_trans):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     for time in experiment.study_days:
