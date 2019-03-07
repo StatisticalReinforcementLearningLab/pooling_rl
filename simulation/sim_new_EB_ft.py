@@ -27,27 +27,24 @@ import feature_transformations as feat_trans
 
 def initialize_policy_params_TS(experiment,update_period):
     
-    global_p =gtp.TS_global_params(24,baseline_features=['pretreatment','weather','dow','tod'],psi_features=[0,5], resp_features= ['pretreatment','weather','dow','tod'])
+    global_p =gtp.TS_global_params(21,baseline_keys=['pretreatment','weather','dow','tod'],psi_features=[0,5], responsivity_keys= ['pretreatment','weather','dow','tod'])
     personal_p = pp.TS_personal_params()
-    #global_p =gtp.TS_global_params(10,context_dimension)
     
     
+    global_p.standardize = standardize
+    global_p.kdim =21
     
-    #global_p.mu_dimension = 64
-
-    global_p.kdim =24
-    #194
     global_p.baseline_indices = [i for i in range(24)]
-    #[i for i in range(192)]
-    #[0,1,2,3,4,5,6]
+    
     global_p.psi_indices =[0,5]
     #[0,64]
     global_p.user_id_index =24
+    #192
+    #global_p.user_day_index =19
     #193
     
     #global_p.baseline_features = [i for i in range(192)]
     global_p.psi_features =[0,5]
-    #[0,64]
     
     global_p.update_period = update_period
     
@@ -88,13 +85,16 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('updates_safer_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>200:
                 glob.last_global_update_time=time
-                history =pb.make_history_new(.1,global_policy_params,experiment)
+                
+                ##hows this happening now?
+                temp =feat_trans.get_history_decision_time_avail(experiment,time)
                     #print(history[1])
-            
+                t = feat_trans.history_semi_continuous(temp,global_policy_params)
+                history = feat_trans.get_phi_from_history_lookups(t)
             
                 ##CHANGE THIS
                 try:
-                    temp_params = run_gpy.run(history[0],history[1],global_policy_params)
+                    temp_params = run_gpy.run(history[0],history[1],history[2],global_policy_params)
                 except:
                     temp_params={'cov':global_policy_params.cov,'noise':global_policy_params.noise_term,\
                         'like':-100333
@@ -180,7 +180,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             history = global_policy_params.history
                             temp = pb.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
-                                                  history[0], history[1] )
+                                                  history[0], history[1],history[2] )
                     
                     #print(temp[0].shape)
                     else:
@@ -199,7 +199,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                     elif policy=='TS':
                       
-                        z=np.array([1,tod,dow,weather,sf.get_pretreatment(participant.steps),int(location==1),int(location==2),int(location==3)])
+                        z=np.array([1,sf.get_pretreatment(participant.steps),weather,dow,tod])
                         
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
                         action = int(uniform() < prob)
@@ -211,7 +211,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                         #participant.steps_last_time_period = participant.steps
                         steps = sf.get_steps_action(context)
-                        add = sf.get_add_two(action,z,experiment.beta,participant.Z)
+                        add = sf.get_add_two(action,z,experiment.beta[:-3],participant.Z)
                         participant.steps = steps+add
                         
                     else:
@@ -231,7 +231,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps = steps     
                 
                 ##history:
-                context_dict =  {'steps':steps,'action':action,'weather':weather,'location_1':int(location==1),\
+                context_dict =  {'steps':participant.steps,'action':action,'weather':weather,'location_1':int(location==1),\
                     'ltps':steps_last_time_period,'location_2':int(location==2),'location_3':int(location==3),\
                         'study_day':participant.current_day_counter,'decision_time':dt,'time':time,'avail':availability,'prob':prob,'dow':dow,'tod':tod,'pretreatment':sf.get_pretreatment(steps_last_time_period)}
 

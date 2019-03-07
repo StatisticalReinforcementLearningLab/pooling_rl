@@ -26,9 +26,9 @@ def get_sigma_u(u1,u2,rho):
     off_diagaonal_term = u1**.5*u2**.5*(rho-1)
     return np.array([[u1,off_diagaonal_term],[off_diagaonal_term,u2]])
 
-def run(X,y,global_params):
+def run(X,users,y,global_params):
     #initial_u1,initial_u2,initial_rho,initial_noise,baseline_indices,psi_indices,user_index
-    user_mat= get_users(X[:,global_params.user_id_index],X[:,global_params.user_id_index])
+    user_mat= get_users(users,users)
 
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
 

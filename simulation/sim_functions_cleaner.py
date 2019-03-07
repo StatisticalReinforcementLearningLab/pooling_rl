@@ -161,7 +161,7 @@ def get_next_weather(tod,month,weather):
 
 def get_pretreatment(steps):
     #steps = math.log(steps+.5)
-    return int(steps>math.log(.5))
+    return int(steps>4.13)
 
 def get_next_location(gid,dow,tod,loc):
     

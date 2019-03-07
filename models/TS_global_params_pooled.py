@@ -68,27 +68,31 @@ class TS_global_params:
         #self.sigma_u =np.array([[2449.49426332e+01,  739.56533143e+01],[ 739.56533143e+01,  223.29672266e+01]])
         
         #continuous
-        self.sigma_u =np.array([[ 0.28800755, -0.17554317],
-                                [-0.17554317,  0.5466027 ]])
+        #self.sigma_u =np.array([[ 0.28800755, -0.17554317],
+        #                        [-0.17554317,  0.5466027 ]])
         ##non continuous
-        #np.array([[2.17412222, 0.61305586],
-        #  [0.61305586, 1.39429461]])
+        self.sigma_u =np.array([[2.17412222, 0.61305586],
+          [0.61305586, 1.39429461]])
 
 ##old
 #np.array([[ 1.47652434, 0.20616501,],
 #                            [0.20616501,  1.15894301]])
         #self.sigma_u =np.array([[200, 150],[150, 100 ]])
         #continuous
-        self.rho_term =0.5575684246756394
+        #self.rho_term =0.5575684246756394
         #non continuous
-            #1.3521119759922764
+        self.rho_term =1.3521119759922764
             #1.1576026856712
-        self.u1 =0.28800755
-        #1.47652434
-        self.u2 = 0.5466027
-        #1.15894301
+        #continuous
+        #self.u1 = 0.28800755
+        self.u1 =1.47652434
+        #continuous
+        #self.u2 = 0.5466027
+        self.u2 =1.15894301
         #90800.30211642
-        self.noise_term=6.32098482
+        #continuous
+        #self.noise_term=6.32098482
+        self.noise_term =7.50134618
             #7.50134618
         #7.49989571
             #90800.30211642
@@ -110,71 +114,14 @@ class TS_global_params:
             #'../../regal/murphy_lab/pooling/temp_EB'
         self.updated_cov = False
         self.history = None
-    
-        self.one_hot_indices = {'tod-0-dow-0-wea-0-pre-0-loc-2': 0,
-    'tod-0-dow-0-wea-0-pre-0-loc-0': 1,
-        'tod-0-dow-1-wea-1-pre-0-loc-0': 2,
-            'tod-1-dow-0-wea-0-pre-0-loc-2': 3,
-                'tod-0-dow-0-wea-1-pre-1-loc-3': 4,
-                    'tod-0-dow-0-wea-1-pre-1-loc-2': 5,
-                        'tod-0-dow-1-wea-0-pre-1-loc-1': 6,
-                            'tod-0-dow-0-wea-1-pre-0-loc-3': 7,
-                                'tod-1-dow-0-wea-1-pre-0-loc-1': 8,
-                                    'tod-1-dow-1-wea-0-pre-0-loc-2': 9,
-                                        'tod-0-dow-0-wea-1-pre-0-loc-0': 10,
-                                            'tod-1-dow-0-wea-0-pre-0-loc-0': 11,
-                                                'tod-0-dow-1-wea-0-pre-0-loc-2': 12,
-                                                    'tod-1-dow-1-wea-0-pre-1-loc-3': 13,
-                                                        'tod-1-dow-0-wea-0-pre-0-loc-1': 14,
-                                                            'tod-1-dow-0-wea-1-pre-1-loc-2': 15,
-                                                                'tod-0-dow-1-wea-1-pre-0-loc-3': 16,
-                                                                    'tod-1-dow-0-wea-0-pre-1-loc-3': 17,
-                                                                        'tod-0-dow-0-wea-1-pre-0-loc-2': 18,
-                                                                            'tod-0-dow-0-wea-0-pre-1-loc-3': 19,
-                                                                                'tod-1-dow-1-wea-1-pre-1-loc-1': 20,
-                                                                                    'tod-0-dow-1-wea-0-pre-1-loc-2': 21,
-                                                                                        'tod-0-dow-0-wea-0-pre-1-loc-2': 22,
-                                                                                            'tod-1-dow-1-wea-1-pre-0-loc-0': 23,
-                                                                                                'tod-0-dow-1-wea-0-pre-0-loc-1': 24,
-                                                                                                    'tod-0-dow-1-wea-1-pre-0-loc-2': 25,
-                                                                                                        'tod-0-dow-1-wea-0-pre-0-loc-0': 26,
-                                                                                                            'tod-1-dow-0-wea-1-pre-0-loc-3': 27,
-                                                                                                                'tod-1-dow-0-wea-1-pre-1-loc-0': 28,
-                                                                                                                    'tod-0-dow-1-wea-1-pre-1-loc-2': 29,
-                                                                                                                        'tod-0-dow-1-wea-1-pre-1-loc-1': 30,
-                                                                                                                            'tod-1-dow-1-wea-1-pre-0-loc-3': 31,
-                                                                                                                                'tod-1-dow-0-wea-0-pre-1-loc-2': 32,
-                                                                                                                                    'tod-1-dow-1-wea-0-pre-1-loc-1': 33,
-                                                                                                                                        'tod-0-dow-1-wea-1-pre-1-loc-0': 34,
-                                                                                                                                            'tod-1-dow-1-wea-0-pre-1-loc-2': 35,
-                                                                                                                                                'tod-1-dow-1-wea-1-pre-1-loc-0': 36,
-                                                                                                                                                    'tod-0-dow-0-wea-1-pre-1-loc-1': 37,
-                                                                                                                                                        'tod-0-dow-1-wea-0-pre-1-loc-0': 38,
-                                                                                                                                                            'tod-1-dow-1-wea-0-pre-0-loc-3': 39,
-                                                                                                                                                                'tod-0-dow-1-wea-1-pre-0-loc-1': 40,
-                                                                                                                                                                    'tod-1-dow-1-wea-1-pre-0-loc-1': 41,
-                                                                                                                                                                        'tod-0-dow-0-wea-1-pre-1-loc-0': 42,
-                                                                                                                                                                            'tod-1-dow-0-wea-1-pre-0-loc-2': 43,
-                                                                                                                                                                                'tod-1-dow-0-wea-1-pre-1-loc-1': 44,
-                                                                                                                                                                                    'tod-0-dow-1-wea-0-pre-0-loc-3': 45,
-                                                                                                                                                                                        'tod-1-dow-1-wea-1-pre-1-loc-2': 46,
-                                                                                                                                                                                            'tod-0-dow-0-wea-1-pre-0-loc-1': 47,
-                                                                                                                                                                                                'tod-1-dow-1-wea-1-pre-1-loc-3': 48,
-                                                                                                                                                                                                    'tod-1-dow-0-wea-1-pre-1-loc-3': 49,
-                                                                                                                                                                                                        'tod-0-dow-1-wea-1-pre-1-loc-3': 50,
-                                                                                                                                                                                                            'tod-1-dow-1-wea-0-pre-0-loc-0': 51,
-                                                                                                                                                                                                                'tod-0-dow-0-wea-0-pre-0-loc-1': 52,
-                                                                                                                                                                                                                    'tod-1-dow-0-wea-0-pre-1-loc-0': 53,
-                                                                                                                                                                                                                        'tod-1-dow-0-wea-0-pre-1-loc-1': 54,
-                                                                                                                                                                                                                            'tod-0-dow-0-wea-0-pre-1-loc-1': 55,
-                                                                                                                                                                                                                                'tod-1-dow-1-wea-0-pre-0-loc-1': 56,
-                                                                                                                                                                                                                                    'tod-0-dow-1-wea-0-pre-1-loc-3': 57,
-                                                                                                                                                                                                                                        'tod-1-dow-1-wea-0-pre-1-loc-0': 58,
-                                                                                                                                                                                                                                            'tod-0-dow-0-wea-0-pre-0-loc-3': 59,
-                                                                                                                                                                                                                                                'tod-1-dow-0-wea-0-pre-0-loc-3': 60,
-                                                                                                                                                                                                                                                    'tod-1-dow-1-wea-1-pre-0-loc-2': 61,
-                                                                                                                                                                                                                                                        'tod-0-dow-0-wea-0-pre-1-loc-0': 62,
-                                                                                                                                                                                                                                                            'tod-1-dow-0-wea-1-pre-0-loc-0': 63}
+        self.mus0 = None
+        self.sigmas0 =None
+        
+        self.mus1 = None
+        self.sigmas1 =None
+        
+        self.mus2 = None
+        self.sigmas2 = None
     
     
     def feat0_function(self,z,x):
@@ -246,3 +193,24 @@ class TS_global_params:
         cov = np.eye(current_dts)
         #cov = np.add(cov,.001)
         self.cov=cov
+
+
+    def update_mus(self,pid,mu_value,which_mu):
+        if which_mu==0:
+            self.mus0=mu_value
+        
+        if which_mu==1:
+            self.mus1=mu_value
+        
+        if which_mu==2:
+            self.mus2=mu_value
+
+    def update_sigmas(self,pid,sigma_value,which_sigma):
+        if which_sigma==0:
+            self.sigmas0=sigma_value
+        
+        if which_sigma==1:
+            self.sigmas1=sigma_value
+
+        if which_sigma==2:
+            self.sigmas2=sigma_value

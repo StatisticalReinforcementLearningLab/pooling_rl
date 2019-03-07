@@ -51,9 +51,24 @@ class study:
         self.last_update_day = study_days[0]
         self.study_length=study_length
         self.Z_one = -0.99543
-        self.Z_two = 1.5265399999999998
+        self.Z_two =.99543
+            #1.5265399999999998
         #intercept,tod,dow,weather,previous steps,loc 1,loc 2,loc 3
-        self.beta =np.array([-0.88722 ,0.03533, -0.28816,0.23429 ,1.99952,0.03189,0.03189,   0.14462])
+        #took location out
+        #,0.03189,0.03189,   0.14462
+        #took weather out
+        #,0.23429
+        #dow
+        #, -0.28816
+        #tod
+        #0.03533
+        #-0.38
+        #tod = -.138
+        #intercept,pre,wea,dow,tod
+        self.beta =np.array([.27,.33,.369,-.087,-.2,0,0,-.18])
+        #self.beta =np.array([-.75,.27,.14,-.04])
+        #old
+            #np.array([-0.88722  ,1.99952,0.23429])
         self.sigma = 0.6304924999999999
     
         self.init_population(which_gen)
@@ -76,7 +91,8 @@ class study:
                 if gid==2:
                     Z=self.Z_two
             if which_gen=='case_three':
-                Z=np.random.normal(loc=0,scale=self.sigma**2)
+                #**2
+                Z=np.random.normal(loc=0,scale=self.sigma)
 
             
             

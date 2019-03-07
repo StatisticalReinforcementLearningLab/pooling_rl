@@ -53,7 +53,7 @@ def rbf_custom_np( X, X2=None):
     #print(X2)
     if X2 is None:
         X2=X
-    return math.exp(-((X-X2)**2)/100.0)
+    return math.exp(-((X-X2)**2)/1.0)
 
 def get_sigma_u(u1,u2,rho):
     off_diagaonal_term = u1**.5*u2**.5*(rho-1)

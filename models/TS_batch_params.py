@@ -12,7 +12,7 @@ class TS_batch_params:
     Keeps track of hyper-parameters for any TS procedure. 
     '''
     
-    def __init__(self,xi=10,baseline_features=None,psi_features=None,resp_features=None):
+    def __init__(self,xi=10,baseline_keys=None,psi_features=None,resp_features=None):
         self.nums = set([np.float64,int,float])
         self.pi_max = .8
         self.pi_min = .1
@@ -99,7 +99,7 @@ class TS_batch_params:
             self.sigmas1=sigma_value
 
         if which_sigma==2:
-                self.sigmas2=sigma_value
+            self.sigmas2=sigma_value
     
     def feat0_function(self,z,x):
         

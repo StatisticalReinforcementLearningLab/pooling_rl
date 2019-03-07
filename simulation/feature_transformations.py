@@ -23,17 +23,17 @@ class feature_transformation:
                 self.loc_label_to_val = pickle.load(f)
 
 
-            with open('{}dists_base_olog.pkl'.format(root),'rb') as f:
+            with open('{}dists_base_ologn.pkl'.format(root),'rb') as f:
                 self.dists = pickle.load(f)
 
-            with open('{}key_matches_base_olog.pkl'.format(root),'rb') as f:
+            with open('{}key_matches_base_ologn.pkl'.format(root),'rb') as f:
                 self.matched = pickle.load(f)
 
 
-            with open('{}dists_intervention_anti_sedentary_olog.pkl'.format(root),'rb') as f:
+            with open('{}dists_intervention_anti_sedentary_ologn.pkl'.format(root),'rb') as f:
                 self.dists_intervention_anti_sedentary = pickle.load(f)
 
-            with open('{}key_matches_intervention_anti_sedentary_olog.pkl'.format(root),'rb') as f:
+            with open('{}key_matches_intervention_anti_sedentary_ologn.pkl'.format(root),'rb') as f:
                 self.matched_intervention_anti_sedentary = pickle.load(f)
 
 
@@ -63,11 +63,19 @@ class feature_transformation:
             pass
 
         
-        def get_history_decision_time_avail(self,exp,glob):
+        def get_history_decision_time_avail(self,exp,last_update_time):
             to_return = {}
                             
             for userid,data in exp.population.items():
-                to_return[userid]= {k:v for k,v in data.history.items() if k<glob.last_global_update_time and v['avail'] and v['decision_time']}
+                to_return[userid]= {k:v for k,v in data.history.items() if k<last_update_time and v['avail'] and v['decision_time']}
+            
+            return to_return
+            
+        def get_history_decision_time_avail_single(self,history_dict,last_update_time):
+            to_return = {}
+            
+            for userid,data in history_dict.items():
+                to_return[userid]= {k:v for k,v in data.items() if k<last_update_time and v['avail'] and v['decision_time']}
             
             return to_return
         
@@ -112,13 +120,16 @@ class feature_transformation:
             
             all_data = []
             all_users = []
+            all_steps = []
+            
             for h_i in history_lookups['base']:
                 vec = history_lookups['base'][h_i]
                 rvec = history_lookups['resp'][h_i]
                 prob = history_lookups['probs'][h_i]
                 action = history_lookups['actions'][h_i]
                 user = history_lookups['users'][h_i]
-            
+                steps = history_lookups['steps'][h_i]
+                
                 v = [1]
                 v.extend(vec)
                 v.append(prob*1)
@@ -126,9 +137,9 @@ class feature_transformation:
                 v.append((action-prob))
                 v.extend([(action-prob)*r for r in rvec])
                 all_users.append(user)
-            
+                all_steps.append(steps)
                 all_data.append(v)
-            return np.array(all_data),all_users
+            return np.array(all_data),all_users,all_steps
 
         def get_form_TS(self,history_lookups):
             keys = history_lookups['base'].keys()
