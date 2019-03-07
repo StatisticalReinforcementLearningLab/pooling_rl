@@ -139,7 +139,7 @@ class feature_transformation:
                 all_users.append(user)
                 all_steps.append(steps)
                 all_data.append(v)
-            return np.array(all_data),all_users,all_steps
+            return np.array(all_data),np.array(all_users),np.array([[s] for s in all_steps])
 
         def get_form_TS(self,history_lookups):
             keys = history_lookups['base'].keys()
