@@ -83,7 +83,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('../../murphy_lab/lab/pooling/{}_two/updates_safer_three_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('../../murphy_lab/lab/pooling/{}/updates_safer_three_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>200:
                 glob.last_global_update_time=time
                 
@@ -108,7 +108,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
-                print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/{}_two/updates_global_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/{}/updates_global_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 global_policy_params.update_params(temp_params)
                 global_policy_params.inv_term=inv_term
                 #print(temp_params)
