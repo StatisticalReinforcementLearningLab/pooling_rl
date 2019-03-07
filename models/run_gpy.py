@@ -29,7 +29,9 @@ def get_sigma_u(u1,u2,rho):
 def run(X,users,y,global_params):
     #initial_u1,initial_u2,initial_rho,initial_noise,baseline_indices,psi_indices,user_index
     user_mat= get_users(users,users)
-
+    print(user_mat.shape)
+    print(first_mat.shape)
+    print(global_params.baseline_indices)
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
 
     kernel = GPy.kern.CustomKernel(len(global_params.baseline_indices),baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_index=global_params.user_id_index,initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term,user_mat=user_mat,first_mat = first_mat)
