@@ -32,13 +32,13 @@ def initialize_policy_params_TS(experiment,update_period,root,standardize=False)
     
     
     global_p.standardize = standardize
-    global_p.kdim =21
+    #global_p.kdim =21
     
-    global_p.baseline_indices = [i for i in range(24)]
+    global_p.baseline_indices =  [i for i in range(self.theta_dim)]
     
     global_p.psi_indices =[0,5]
     #[0,64]
-    global_p.user_id_index =24
+    global_p.user_id_index =None
     #192
     #global_p.user_day_index =19
     #193

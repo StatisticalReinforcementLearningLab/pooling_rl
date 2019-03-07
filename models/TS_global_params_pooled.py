@@ -50,7 +50,7 @@ class TS_global_params:
         
         #2 has to do with random effects, not likely to change soon
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
-        self.baseline_indices = [i for i in range(self.theta_dim)]
+       
         print(self.theta_dim)
         self.mu_theta =np.zeros(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
