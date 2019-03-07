@@ -14,9 +14,9 @@ def get_users(users,userstwo):
         return (xx==yy).astype('float')
 
 def get_first_mat(sigma_theta,data,baseline_indices):
-    new_data = data[:,[baseline_indices]].reshape((data.shape[0],data.shape[1]-1))
+    new_data = data[:,[baseline_indices]].reshape((data.shape[0],data.shape[1]))
 
-    new_data_two = data[:,[baseline_indices]].reshape((data.shape[0],data.shape[1]-1))
+    new_data_two = data[:,[baseline_indices]].reshape((data.shape[0],data.shape[1]))
     result = np.dot(new_data,sigma_theta)
 
     results = np.dot(result,new_data_two.T)
