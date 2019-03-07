@@ -73,7 +73,7 @@ def initialize_policy_params_TS(experiment,update_period):
         
     return global_p ,personal_p     
 
-def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None):
+def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None,feat_trans=feat_trans):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     for time in experiment.study_days:
@@ -270,28 +270,7 @@ def make_to_groupids(exp):
         key = 'participant-{}'.format(pid)
         to_save[key]=gid
     return to_save        
- 
 
-def run_many(start_index,end_index):
-    for case in ['case_one','case_two','case_three']:
-        for i in range(start_index,end_index):
-            pop_size=32
-            experiment = study.study('../../regal/murphy_lab/pooling/distributions/',pop_size,'short',which_gen=case)
-            glob,personal = initialize_policy_params_TS(experiment,7)
-            hist = new_kind_of_simulation(experiment,'TS',personal,glob)
-            to_Save = make_to_save(experiment)
-            
-            #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}.pkl'.format('../../Downloads/pooling_results/batch/',case,pop_size,7,'short',i)
-           # with open(filename,'wb') as f:
-           #     pickle.dump(to_Save,f)
-                
-            to_save = make_to_save(experiment)
-            gids = make_to_groupids(exp)
-    
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_safer_f.pkl'.format('../../murphy_lab/lab/pooling',population,update_time,study_length,case,sim_num)
-            with open(filename,'wb') as f:
-                pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
-          
 
 if __name__=="__main__":
     
@@ -308,18 +287,15 @@ if __name__=="__main__":
         for case in ['case_one','case_two','case_three']:
         
             pop_size=population
-            experiment = study.study('../../regal/murphy_lab/pooling/distributions/',pop_size,'short',which_gen=case)
-            glob,personal = initialize_policy_params_TS(experiment,7)
-            hist = new_kind_of_simulation(experiment,'TS',personal,glob,i)
-            #to_Save = make_to_save(experiment)
-            
-            #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}.pkl'.format('../../Downloads/pooling_results/batch/',case,pop_size,7,'short',i)
-            # with open(filename,'wb') as f:
-            #     pickle.dump(to_Save,f)
+            experiment = study.study('../../murphy_lab/lab/pooling/distributions/',pop_size,'short',which_gen=case)
+            glob,personal = initialize_policy_params_TS(experiment,7,standardize=True)
+            feat_trans = tf.feature_transformation('../../murphy_lab/lab/pooling/distributions/')
+          
+            hist = new_kind_of_simulation(experiment,'TS',personal,glob,i,feat_trans)
             
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
             
-            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_final_safer_f.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_new_params.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
