@@ -25,7 +25,7 @@ from sklearn import preprocessing
 import tensorflow as tf
 import feature_transformations as feat_trans
 
-def initialize_policy_params_TS(experiment,update_period):
+def initialize_policy_params_TS(experiment,update_period,root,standardize=False):
     
     global_p =gtp.TS_global_params(21,baseline_keys=['pretreatment','weather','dow','tod'],psi_features=[0,5], responsivity_keys= ['pretreatment','weather','dow','tod'])
     personal_p = pp.TS_personal_params()
@@ -51,7 +51,7 @@ def initialize_policy_params_TS(experiment,update_period):
     #print(type(personal_p))
     
     for person in experiment.population.keys():
-        experiment.population[person].root = '../../regal/murphy_lab/pooling/distributions/'
+        experiment.population[person].root = root
         initial_context = [0 for i in range(global_p.theta_dim)]
         personal_p.mus0[person]= global_p.get_mu0(initial_context)
         personal_p.mus1[person]= global_p.get_mu1(global_p.num_baseline_features)
@@ -73,7 +73,7 @@ def initialize_policy_params_TS(experiment,update_period):
         
     return global_p ,personal_p     
 
-def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None,feat_trans=feat_trans):
+def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None,,case=None,feat_trans=feat_trans):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     for time in experiment.study_days:
@@ -82,7 +82,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('updates_safer_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('../../murphy_lab/lab/pooling/{}_two/updates_safer_three_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>200:
                 glob.last_global_update_time=time
                 
@@ -103,7 +103,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
-                
+                print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/{}_two/updates_global_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 global_policy_params.update_params(temp_params)
                 global_policy_params.inv_term=inv_term
                 #print(temp_params)
@@ -175,7 +175,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     action=0
                     
                     
-                    if global_policy_params.decision_times>200 and global_policy_params.history!=None:
+                    if global_policy_params.decision_times>20 and global_policy_params.history!=None:
                      
                             history = global_policy_params.history
                             temp = pb.calculate_posterior_faster(global_policy_params,\
@@ -245,14 +245,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 
                 participant.history[time]=context_dict
-                if global_policy_params.decision_times%100==0:
+                    #if global_policy_params.decision_times%100==0:
                     
-                    to_save = make_to_save(experiment)
-                    gids = make_to_groupids(experiment)
+                    # to_save = make_to_save(experiment)
+                    # gids = make_to_groupids(experiment)
                     
-                    filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_{}_safer_f.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim_num,global_policy_params.decision_times)
-                    with open(filename,'wb') as f:
-                        pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
+                    # filename = '{}/results/population_size_{}_update_days_{}_{}_EB_{}_{}_testing_{}_safer_f.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,sim_num,global_policy_params.decision_times)
+                    # with open(filename,'wb') as f:
+#pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params},f)
 
 def make_to_save(exp):
     to_save  = {}
@@ -285,13 +285,13 @@ if __name__=="__main__":
 
     for i in range(int(start_index),int(end_index)):
         for case in ['case_one','case_two','case_three']:
-        
+            root = '../../murphy_lab/lab/pooling/distributions/'
             pop_size=population
             experiment = study.study('../../murphy_lab/lab/pooling/distributions/',pop_size,'short',which_gen=case)
-            glob,personal = initialize_policy_params_TS(experiment,7,standardize=True)
+            glob,personal = initialize_policy_params_TS(experiment,7,standardize=True,root=root)
             feat_trans = tf.feature_transformation('../../murphy_lab/lab/pooling/distributions/')
           
-            hist = new_kind_of_simulation(experiment,'TS',personal,glob,i,feat_trans)
+            hist = new_kind_of_simulation(experiment,'TS',personal,glob,i,case,feat_trans)
             
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
