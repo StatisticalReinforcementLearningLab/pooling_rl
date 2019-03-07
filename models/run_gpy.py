@@ -51,8 +51,8 @@ def run(X,users,y,global_params):
     noise = m.Gaussian_noise.variance.values
 
     cov = m.kern.K(X)
-    print('cov')
-    print(cov)
+    #print('cov')
+    #print(cov)
     return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':m.objective_function()}
 
 

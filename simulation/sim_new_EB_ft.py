@@ -104,7 +104,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         'like':-100333
 }
                 #cov,X_dim,noise_term
-                print(temp_params)
+                #print(temp_params)
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
