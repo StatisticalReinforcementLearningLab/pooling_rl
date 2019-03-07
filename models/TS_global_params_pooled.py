@@ -18,6 +18,7 @@ class TS_global_params:
         self.pi_min = 0.0
         self.sigma = 1
         self.baseline_keys=baseline_keys
+        
         #self.baseline_features = baseline_keys
         #self.responsivity_features = responsivity_keys
         self.responsivity_keys = responsivity_keys
@@ -49,6 +50,7 @@ class TS_global_params:
         
         #2 has to do with random effects, not likely to change soon
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
+        self.baseline_indices = [i for i in range(len(self.theta_dim))]
         print(self.theta_dim)
         self.mu_theta =np.zeros(self.theta_dim)
         self.sigma_theta =self.get_theta(self.theta_dim)
