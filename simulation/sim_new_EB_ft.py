@@ -24,6 +24,7 @@ import pooling_bandits as pb
 from sklearn import preprocessing
 import tensorflow as tf
 import feature_transformations
+import simple_bandits
 
 def initialize_policy_params_TS(experiment,update_period,root,standardize=False):
     
@@ -182,7 +183,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     if global_policy_params.decision_times>20 and global_policy_params.history!=None:
                      
                             history = global_policy_params.history
-                            temp = pb.calculate_posterior_faster(global_policy_params,\
+                            temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1],history[2] )
                     

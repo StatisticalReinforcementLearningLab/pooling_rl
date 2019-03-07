@@ -7,6 +7,7 @@ import numpy as np
 import time
 import os
 
+
 def get_users(users,userstwo):
         
         xx,yy = np.meshgrid(users,userstwo,sparse=True)
