@@ -220,7 +220,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps = steps+add
                     
                     
-                        print('p_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,participant.steps,participant.gid,file=open('../../murphy_lab/lab/pooling/{}_two/updates_participant_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,participant.steps,participant.gid,file=open('../../murphy_lab/lab/pooling/{}/updates_participant_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
