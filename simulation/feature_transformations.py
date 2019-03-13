@@ -23,17 +23,17 @@ class feature_transformation:
                 self.loc_label_to_val = pickle.load(f)
 
 
-            with open('{}dists_base_ologn.pkl'.format(root),'rb') as f:
+            with open('{}dists_base_3_8.pkl'.format(root),'rb') as f:
                 self.dists = pickle.load(f)
 
-            with open('{}key_matches_base_ologn.pkl'.format(root),'rb') as f:
+            with open('{}key_matches_base_3_8.pkl'.format(root),'rb') as f:
                 self.matched = pickle.load(f)
 
 
-            with open('{}dists_intervention_anti_sedentary_ologn.pkl'.format(root),'rb') as f:
+            with open('{}dists_intervention_anti_sed_3_8.pkl'.format(root),'rb') as f:
                 self.dists_intervention_anti_sedentary = pickle.load(f)
 
-            with open('{}key_matches_intervention_anti_sedentary_ologn.pkl'.format(root),'rb') as f:
+            with open('{}key_matches_intervention_anti_sed_3_8.pkl'.format(root),'rb') as f:
                 self.matched_intervention_anti_sedentary = pickle.load(f)
 
 
@@ -44,10 +44,10 @@ class feature_transformation:
                 self.matched_intervention_activity_suggestion = pickle.load(f)
 
 
-            with open('{}initial_location_distributions_est_tref_3_1.pkl'.format(root),'rb') as f:
+            with open('{}initial_location_distributions_basic.pkl'.format(root),'rb') as f:
                 self.loc_lookup_prior = pickle.load(f)
 
-            with open('{}location_conditiononed_on_last_location_tref_3_1.pkl'.format(root),'rb') as f:
+            with open('{}location_conditiononed_on_last_location_basic.pkl'.format(root),'rb') as f:
                 self.loc_lookup_transition = pickle.load(f)
 
             with open('{}initial_temperature_distributions_est_tref_3_1.pkl'.format(root),'rb') as f:
@@ -62,6 +62,8 @@ class feature_transformation:
         def history_to_matrix_for_gp(self,which_history = None):
             pass
 
+        def add_intercept(self,data):
+            return [[1]+x for x in data]
         
         def get_history_decision_time_avail(self,exp,last_update_time):
             to_return = {}

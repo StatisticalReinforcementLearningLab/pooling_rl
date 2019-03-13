@@ -18,13 +18,13 @@ class study:
         self.root =root
             #'../../murphy_lab/lab/pooling/distributions/'
         
-        with open('{}person_to_time_indices_pop_{}_{}.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}person_to_time_indices_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
             pse=pickle.load(f)
-        with open('{}person_to_decision_times_pop_{}_{}.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}person_to_decision_times_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
             dts=pickle.load(f)
-        with open('{}time_to_active_participants_pop_{}_{}.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}time_to_active_participants_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
             dates_to_people=pickle.load(f)
-        with open('{}all_ordered_times_{}.pkl'.format(root,study_length),'rb') as f:
+        with open('{}all_ordered_times_{}_unstaggered.pkl'.format(root,study_length),'rb') as f:
             study_days=pickle.load(f)
         
         self.person_to_time = pse 
@@ -50,8 +50,8 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
-        self.Z_one = -0.99543
-        self.Z_two =.99543
+        self.Z_one = -0.0773
+        self.Z_two =0.647
             #1.5265399999999998
         #intercept,tod,dow,weather,previous steps,loc 1,loc 2,loc 3
         #took location out
@@ -65,17 +65,23 @@ class study:
         #-0.38
         #tod = -.138
         #intercept,pre,wea,dow,tod
-        self.beta =np.array([.27,.33,.369,-.087,-.2,0,0,-.18])
+#, -0.06405887,  0.09447067,  0.16481901, -0.20736237,
+#0.01136896
+#weighted
+#self.beta =np.array([.13, -0.06405887,0.09447067,  0.16481901,-0.20736237,0.01136896])
+        self.beta = np.array([0.0977,0.08576116, 0.11150488,0.18145672, -0.21754123,0.25537478])
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma = 0.6304924999999999
+        self.sigma =0.191575
+            #0.6304924999999999
     
         self.init_population(which_gen)
             
     def get_gid(self):
         #4.0/36
-         return int(random.random()>.5)+1
+        #return 2
+         return int(random.random()>=.5)+1
     
     def init_population(self,which_gen):
          

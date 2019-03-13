@@ -14,9 +14,10 @@ class TS_global_params:
     
     def __init__(self,xi=10,baseline_keys=None,psi_features=None,responsivity_keys=None):
         self.nums = set([np.float64,int,float])
-        self.pi_max = 1.0
-        self.pi_min = 0.0
-        self.sigma = 1
+        self.pi_max = 0.8
+        self.pi_min = 0.1
+        self.sigma =6**.5
+            #6**.5
         self.baseline_keys=baseline_keys
         
         #self.baseline_features = baseline_keys

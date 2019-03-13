@@ -5,6 +5,9 @@ data/
 .p
 .R
 .csv
+*.png
+.png
+*.pkl
 **/*.ipynb_checkpoints/
 .DS_Store
 temp/
