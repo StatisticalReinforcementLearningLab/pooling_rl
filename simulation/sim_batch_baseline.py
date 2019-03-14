@@ -246,10 +246,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
             
             
-            else:
+                else:
                 #participant.steps_last_time_period = participant.steps
-                steps = tf.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
-                participant.steps = steps
+                    steps = tf.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
+                    participant.steps = steps
                 
                 ##history:
                 context_dict =  {'steps':participant.steps,'add':add,'action':action,'weather':weather,'location':location,'location_1':int(location==1),\
@@ -260,7 +260,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                     'dow':dow,'tod':tod,\
                                         'pretreatment':sf.get_pretreatment(steps_last_time_period),\
                                     'optimal_reward':optimal_reward,'optimal_action':optimal_action}
-            participant.history[time]=context_dict
+                participant.history[time]=context_dict
 
 
     return additives
