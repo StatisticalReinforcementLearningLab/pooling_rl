@@ -197,9 +197,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     if policy==None:
                         action = sf.get_action(policy)
-                
-                
-                    
+
                     elif policy=='TS':
                         
                         
@@ -217,17 +215,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                               #print('prob _ {}'.format(prob))
                                               #print(type(prob))
                         action = int(uniform() < prob)
-                    
-                    
-                    
+
                     if availability:
-                        
-                        
-                        
-                        #tod_check.add(tod)
-                        
-                        
-                        
+
                         context = [action,participant.gid,tod,dow,weather,sf.get_pretreatment(steps_last_time_period),location,\
                                    0,0,0]
                             
@@ -252,7 +242,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         
         
         
-            global_policy_params.decision_times =   global_policy_params.decision_times+1
+                    global_policy_params.decision_times =   global_policy_params.decision_times+1
             
             
             
