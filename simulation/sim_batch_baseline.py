@@ -234,16 +234,16 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                    #participant.steps_last_time_period = participant.steps
                                    #print(sf.get_pretreatment(participant.steps))
                                    
-                                   steps = tf.get_steps_action(context)
+                        steps = tf.get_steps_action(context)
                                    
                                    #add = sf.get_add_two(action,z,experiment.beta,participant.Z)
-                                   add = sf.get_add_no_action(z,experiment.beta,participant.Z)
-                                   additives.append([action,add,prob])
-                                   participant.steps = steps+(action*add)
+                        add = sf.get_add_no_action(z,experiment.beta,participant.Z)
+                        additives.append([action,add,prob])
+                        participant.steps = steps+(action*add)
                                    
                                    ##calculate optimal
-                                   optimal_reward = get_optimal_reward(experiment.beta,z)
-                                   optimal_action = int(optimal_reward>=0)
+                        optimal_reward = get_optimal_reward(experiment.beta,z)
+                        optimal_action = int(optimal_reward>=0)
 
                     else:
     #participant.steps_last_time_period = participant.steps
