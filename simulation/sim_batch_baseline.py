@@ -12,7 +12,7 @@ import sim_functions_cleaner  as sf
 import operator
 import study
 import time as time_module
-import run_gpy
+import run_gpy_simple
 import TS_personal_params_pooled as pp
 import TS_global_params_pooled as gtp
 from numpy.random import uniform
