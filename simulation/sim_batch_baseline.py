@@ -81,6 +81,9 @@ def initialize_policy_params_TS(experiment,update_period,standardize=False):
 
     return global_p ,personal_p
 
+def get_optimal_reward(beta,states):
+    return np.dot(beta,states)
+
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,feat_trans=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
