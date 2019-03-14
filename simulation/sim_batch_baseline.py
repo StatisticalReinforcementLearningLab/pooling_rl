@@ -23,7 +23,7 @@ import TS
 import pooling_bandits as pb
 from sklearn import preprocessing
 import tensorflow as tf
-import feature_transformations as feat_trans
+import feature_transformations
 import simple_bandits
 
 def initialize_policy_params_TS(experiment,update_period,standardize=False):
@@ -316,11 +316,11 @@ if __name__=="__main__":
             root = '../../murphy_lab/lab/pooling/distributions/'
             pop_size=32
             experiment = study.study(root,pop_size,'short',which_gen=case)
-            feat_trans = tf.feature_transformation(root)
+            feat_trans = feature_transformations.feature_transformation(root)
             glob,personal = initialize_policy_params_TS(experiment,7,standardize=False)
 
 
-            hist = new_kind_of_simulation(experiment,'TS',personal,glob,tf=feat_trans)
+            hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans)
             to_save = make_to_save(experiment)
             actions,rewards = get_regret(experiment)
     
