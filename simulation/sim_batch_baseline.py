@@ -23,7 +23,7 @@ import TS
 import pooling_bandits as pb
 from sklearn import preprocessing
 import tensorflow as tf
-import feature_transformations
+import feature_transformations as feat_trans
 import simple_bandits
 
 def initialize_policy_params_TS(experiment,update_period,standardize=False):
@@ -81,7 +81,7 @@ def initialize_policy_params_TS(experiment,update_period,standardize=False):
 
     return global_p ,personal_p
 
-def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,tf=None):
+def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,feat_trans=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     additives = []
@@ -101,12 +101,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #history =pb.make_history_new(.1,glob,experiment)
                 #history = do_work.get_data_for_txt_effect_update_batch(experiment,global_policy_params)
                 
-                temp_hist = tf.get_history_decision_time_avail(experiment,time)
+                temp_hist = feat_trans.get_history_decision_time_avail(experiment,time)
                 
-                temp_hist= tf.history_semi_continuous(temp_hist,global_policy_params)
+                temp_hist= feat_trans.history_semi_continuous(temp_hist,global_policy_params)
                 #sf.get_data_for_txt_effect_u
                 
-                context,steps,probs,actions= tf.get_form_TS(temp_hist)
+                context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
                 
                 ##do I need intercept here?
                 temp_params = run_gpy_simple.run(context,np.array([[a] for a in steps]),global_policy_params)
@@ -132,9 +132,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         dow = sf.get_day_of_week(time)
         if time==experiment.study_days[0]:
             #print('init weather')
-            weather = tf.get_weather_prior(tod,time.month)
+            weather = feat_trans.get_weather_prior(tod,time.month)
         elif time.hour in experiment.weather_update_hours and time.minute==0:
-            weather = tf.get_next_weather(str(tod),str(time.month),weather)
+            weather = feat_trans.get_next_weather(str(tod),str(time.month),weather)
         ##location depends on person
         
         for person in experiment.dates_to_people[time]:
@@ -155,7 +155,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 if time == participant.times[0]:
                     #get first location
-                    location = tf.get_location_prior(str(participant.gid),str(tod),str(dow))
+                    location = feat_trans.get_location_prior(str(participant.gid),str(tod),str(dow))
                     participant.set_inaction_duration(0)
                     participant.set_action_duration(0)
                 
@@ -176,7 +176,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                     
                     if time.hour in experiment.location_update_hours:
-                        location = tf.get_next_location(participant.gid,tod,dow,participant.get_loc())
+                        location = feat_trans.get_next_location(participant.gid,tod,dow,participant.get_loc())
                     
                     
                     
@@ -224,7 +224,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                    #participant.steps_last_time_period = participant.steps
                                    #print(sf.get_pretreatment(participant.steps))
                                    
-                        steps = tf.get_steps_action(context)
+                        steps = feat_trans.get_steps_action(context)
                                    
                                    #add = sf.get_add_two(action,z,experiment.beta,participant.Z)
                         add = sf.get_add_no_action(z,experiment.beta,participant.Z)
@@ -237,7 +237,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                     else:
     #participant.steps_last_time_period = participant.steps
-                        steps = tf.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
                         participant.steps = steps
         
         
@@ -248,7 +248,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
                 else:
                 #participant.steps_last_time_period = participant.steps
-                    steps = tf.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
+                    steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
                     participant.steps = steps
                 
                 ##history:
