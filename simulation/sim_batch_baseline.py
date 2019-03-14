@@ -325,6 +325,7 @@ if __name__=="__main__":
 
             hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans)
             to_save = make_to_save(experiment)
+            gids = make_to_groupids(experiment)
             actions,rewards = get_regret(experiment)
     
     #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}.pkl'.format('../../Downloads/pooling_results/batch/',case,pop_size,7,'short',i)
