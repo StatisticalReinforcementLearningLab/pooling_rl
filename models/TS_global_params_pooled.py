@@ -16,7 +16,7 @@ class TS_global_params:
         self.nums = set([np.float64,int,float])
         self.pi_max = 0.8
         self.pi_min = 0.1
-        self.sigma =6**.5
+        self.sigma =1**.5
             #6**.5
         self.baseline_keys=baseline_keys
         
