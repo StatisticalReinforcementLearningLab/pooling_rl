@@ -337,6 +337,6 @@ if __name__=="__main__":
             actions,rewards = get_regret(experiment)
             
             
-            filename = '{}/results/population_size_EB_pooled_{}_update_days_{}_{}_batch_{}_{}_new_params.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_EB_weighted_pooled_{}_update_days_{}_{}_batch_{}_{}_new_params.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params,'regrets':rewards,'actions':actions},f)
