@@ -221,7 +221,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                               0,0,0]
                     
                         #participant.steps_last_time_period = participant.steps
-                        steps = sf.get_steps_action(context,seed=participant.rando_gen)
+                        steps = feat_trans.get_steps_action(context,seed=participant.rando_gen)
                         add = sf.get_add_two(action,z,experiment.beta,participant.Z)
                         participant.steps = steps+add
                         optimal_reward = get_optimal_reward(experiment.beta,z)
