@@ -146,7 +146,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 if time == participant.times[0]:
                     #get first location 
-                    location = feat_trans.get_location_prior(str(participant.gid),str(dow),str(tod),seed=participant.rando_gen)
+                    location = feat_trans.get_location_prior(str(participant.gid),str(tod),str(dow),seed=participant.rando_gen)
                     participant.set_inaction_duration(0)
                     participant.set_action_duration(0)
                   
@@ -167,7 +167,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                  
 
                 if time.hour in experiment.location_update_hours:
-                    location = feat_trans.get_next_location(participant.gid,dow,tod,participant.get_loc(),seed=participant.rando_gen)
+                    location = feat_trans.get_next_location(participant.gid,tod,dow,participant.get_loc(),seed=participant.rando_gen)
                 
     
                 
@@ -231,7 +231,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
-                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps,seed=participant.rando_gen)
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
                         participant.steps = steps
 
                 
@@ -242,7 +242,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                 else:
                     #participant.steps_last_time_period = participant.steps
-                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,participant.steps,seed=participant.rando_gen)
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
                         participant.steps = steps     
                 
                 ##history:
