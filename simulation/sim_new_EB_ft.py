@@ -175,10 +175,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 
 
-                    prob = -1
-                    add=None
-                    optimal_action = -1
-                    optimal_reward = -100
+                prob = -1
+                add=None
+                optimal_action = -1
+                optimal_reward = -100
                 if time in participant.decision_times:
         
                     
