@@ -12,7 +12,7 @@ class participant:
     Also which participants are involved at which times. 
     '''
     
-    def __init__(self, pid=None,times=None,decision_times=None,gid=None,Z=None):
+    def __init__(self, pid=None,times=None,decision_times=None,gid=None,Z=None,rg=None):
         self.root = None
         #self.root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
         #self.root = '../../murphy_lab/lab/pooling/distributions/'
@@ -51,7 +51,7 @@ class participant:
         self.steps = 0
         self.last_update_day = times[0]
         self.Z=Z
-    
+        self.rando_gen = rg
     
     def set_current_day(self,time):
         if time.date()!=self.current_day.date():

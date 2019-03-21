@@ -13,11 +13,12 @@ class study:
     Also which participants are involved at which times. 
     '''
     
-    def __init__(self,root,population_size,study_length,which_gen='case_one'):
+    def __init__(self,root,population_size,study_length,which_gen='case_one',sim_number = None):
         #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
         self.root =root
             #'../../murphy_lab/lab/pooling/distributions/'
-        
+        self.study_seed = sim_number+3000
+        self.rando_gen = np.random.RandomState(seed=sim_number+2000)
         with open('{}person_to_time_indices_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
             pse=pickle.load(f)
         with open('{}person_to_decision_times_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
@@ -38,7 +39,7 @@ class study:
         
         self.population = {}
     
-    
+        self.algo_seed = 2000
         
         self.history = {}
         
@@ -50,8 +51,9 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
-        self.Z_one = -0.0773
-        self.Z_two =0.647
+        self.Z_one = -0.10736186999999998
+        self.Z_two = 0.10736186999999998
+            #0.5922135199999999
             #1.5265399999999998
         #intercept,tod,dow,weather,previous steps,loc 1,loc 2,loc 3
         #took location out
@@ -92,7 +94,7 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =0.191575
+        self.sigma =0.17489384749999998
             #0.6304924999999999
     
         self.init_population(which_gen)
@@ -121,6 +123,6 @@ class study:
 
             
             
-            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z)
+            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=np.random.RandomState(seed=k))
             
             self.population[k]=person

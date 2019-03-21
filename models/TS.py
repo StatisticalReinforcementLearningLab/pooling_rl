@@ -18,7 +18,8 @@ def gen_nextdosage(x,a):
 def get_probs(batch,init):
     return [b[init.prob_index] for b in batch if b[init.avail_index]==1]
 
-def prob_cal_ts(z,x,mu,Sigma,global_params):
+def prob_cal_ts(z,x,mu,Sigma,global_params,seed=None):
+    
     pos_mean = np.dot(z,mu)
     #print('in ts')
     #print(mu)

@@ -7,7 +7,7 @@ import math
 
 import random
 from datetime import datetime
-random.seed(datetime.now())
+
 from sklearn import preprocessing
 
 class feature_transformation:
@@ -160,7 +160,8 @@ class feature_transformation:
               
             return x
 
-        def get_location_prior(self,group_id,day_of_week,time_of_day):
+        def get_location_prior(self,group_id,day_of_week,time_of_day,seed=None):
+            #random.seed(seed)
             loc_lookup=self.loc_lookup_prior
             key = '{}-{}-{}'.format(group_id,day_of_week,time_of_day)
 
@@ -171,12 +172,12 @@ class feature_transformation:
                 print('sdf')
                 print(key)
                                             
-            val = np.argmax(np.random.multinomial(1,ps))
+            val = np.argmax(seed.multinomial(1,ps))
             return val
 
 
-        def get_next_location(self,gid,dow,tod,loc):
-  
+        def get_next_location(self,gid,dow,tod,loc,seed=None):
+            #random.seed(seed)
             loc_dists = self.loc_lookup_transition
         
             relevant_context = [gid,dow,tod,loc]
@@ -185,13 +186,13 @@ class feature_transformation:
             
             dist = loc_dists[context_key]
             
-            val = np.argmax(np.random.multinomial(1,dist))
+            val = np.argmax(seed.multinomial(1,dist))
             
             return val
         
 
-        def get_weather_prior(self,time_of_day,month):
- 
+        def get_weather_prior(self,time_of_day,month,seed=None):
+            #random.seed(seed)
             loc_lookup = self.temperature_lookup_prior
             key = '{}-{}'.format(time_of_day,month)
 
@@ -202,11 +203,12 @@ class feature_transformation:
                 ps = loc_lookup[key]
 
 
-            val = np.argmax(np.random.multinomial(1,ps))
+            val = np.argmax(seed.multinomial(1,ps))
             return val
 
-        def get_next_weather(self,tod,month,weather):
+        def get_next_weather(self,tod,month,weather,seed=None):
                     #print('weather changed')
+                    #random.seed(seed)
             loc_dists = self.temperature_lookup_transition
                             
             relevant_context = [tod,month,weather]
@@ -215,13 +217,13 @@ class feature_transformation:
           
             dist = loc_dists[context_key]
 
-            val = np.argmax(np.random.multinomial(1,dist))
+            val = np.argmax(seed.multinomial(1,dist))
                                                     
             return val
 
 
-        def get_steps_no_action(self,gid,tod,dow,loc,wea,pre):
-    
+        def get_steps_no_action(self,gid,tod,dow,loc,wea,pre,seed=None):
+            #random.seed(seed)
             keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'wea',str(wea),'pre',str(pre),'loc',str(loc)]
     
             new_key = '-'.join(keys)
@@ -233,11 +235,12 @@ class feature_transformation:
         
             if scale==0:
                 scale=scale+.001
-            x=np.random.normal(loc=dist[0],scale=scale)
+            x=seed.normal(loc=dist[0],scale=scale)
   
             return x
 
-        def get_steps_action(self,context):
+        def get_steps_action(self,context,seed=None):
+            
             ids = ['aint','gid','tod','dow','wea','pre','loc']
             context = [str(c) for c in context]
             new_key = []
@@ -258,6 +261,6 @@ class feature_transformation:
             scale=dist[1]
             if scale==0:
                 scale=scale+.001
-            x = np.random.normal(loc=dist[0],scale=scale)
+            x = seed.normal(loc=dist[0],scale=scale)
 
             return x
