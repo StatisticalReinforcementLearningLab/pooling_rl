@@ -227,7 +227,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         optimal_reward = get_optimal_reward(experiment.beta,z)
                         optimal_action = int(optimal_reward>=0)
 
-                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,participant.steps,participant.gid,file=open('../../murphy_lab/lab/pooling/{}/updates_participant_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('../../murphy_lab/lab/pooling/{}/updates_participant_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
