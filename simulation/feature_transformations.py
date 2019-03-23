@@ -204,11 +204,13 @@ class feature_transformation:
 
 
             val = np.argmax(seed.multinomial(1,ps))
+            #val = int(seed.uniform()>.5)
             return val
 
         def get_next_weather(self,tod,month,weather,seed=None):
                     #print('weather changed')
                     #random.seed(seed)
+                    #return int(seed.uniform()>.5)
             loc_dists = self.temperature_lookup_transition
                             
             relevant_context = [tod,month,weather]
@@ -218,7 +220,9 @@ class feature_transformation:
             dist = loc_dists[context_key]
 
             val = np.argmax(seed.multinomial(1,dist))
-                                                    
+            
+            #val = int(seed.uniform()>.5)
+            
             return val
 
 
