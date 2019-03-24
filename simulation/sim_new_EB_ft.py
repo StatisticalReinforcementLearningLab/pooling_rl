@@ -334,9 +334,10 @@ if __name__=="__main__":
             
             to_save = make_to_save(experiment)
             gids = make_to_groupids(experiment)
+            print('done about to get rewards')
             actions,rewards = get_regret(experiment)
             
-            
+            print('done about to save')
             filename = '{}/results/population_size_EB_weighted_pooled_{}_update_days_{}_{}_batch_{}_{}_new_params.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
             #'likelis':glob.to_save_params,
             with open(filename,'wb') as f:
