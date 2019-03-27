@@ -23,24 +23,24 @@ class feature_transformation:
                 self.loc_label_to_val = pickle.load(f)
 
 
-            with open('{}dists_base_3_8.pkl'.format(root),'rb') as f:
+            with open('{}dists_base_3_25.pkl'.format(root),'rb') as f:
                 self.dists = pickle.load(f)
 
-            with open('{}key_matches_base_3_8.pkl'.format(root),'rb') as f:
+            with open('{}key_matches_base_3_25.pkl'.format(root),'rb') as f:
                 self.matched = pickle.load(f)
 
 
-            with open('{}dists_intervention_anti_sed_3_8.pkl'.format(root),'rb') as f:
+            with open('{}dists_anti_sedentary_3_25.pkl'.format(root),'rb') as f:
                 self.dists_intervention_anti_sedentary = pickle.load(f)
 
-            with open('{}key_matches_intervention_anti_sed_3_8.pkl'.format(root),'rb') as f:
+            with open('{}key_matches_anti_sedentary_3_25.pkl'.format(root),'rb') as f:
                 self.matched_intervention_anti_sedentary = pickle.load(f)
 
 
-            with open('{}dists_intervention_activity_suggestion_olog.pkl'.format(root),'rb') as f:
+            with open('{}dists_activity_suggestion_3_25.pkl'.format(root),'rb') as f:
                 self.dists_intervention_activity_suggestion = pickle.load(f)
 
-            with open('{}key_matches_intervention_activity_suggestion_olog.pkl'.format(root),'rb') as f:
+            with open('{}key_matches_activity_suggestion_3_25.pkl'.format(root),'rb') as f:
                 self.matched_intervention_activity_suggestion = pickle.load(f)
 
 
@@ -226,9 +226,9 @@ class feature_transformation:
             return val
 
 
-        def get_steps_no_action(self,gid,tod,dow,loc,wea,pre,seed=None):
+        def get_steps_no_action(self,gid,tod,dow,loc,pre,seed=None):
             #random.seed(seed)
-            keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'wea',str(wea),'pre',str(pre),'loc',str(loc)]
+            keys = ['gid',str(gid),'tod',str(tod),'dow',str(dow),'pre',str(pre),'loc',str(loc)]
     
             new_key = '-'.join(keys)
     
@@ -245,7 +245,7 @@ class feature_transformation:
 
         def get_steps_action(self,context,seed=None):
             
-            ids = ['aint','gid','tod','dow','wea','pre','loc']
+            ids = ['aint','gid','tod','dow','pre','loc']
             context = [str(c) for c in context]
             new_key = []
             message_type=context[0]

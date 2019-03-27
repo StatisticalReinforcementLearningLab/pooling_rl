@@ -18,6 +18,8 @@ class study:
         self.root =root
             #'../../murphy_lab/lab/pooling/distributions/'
         self.study_seed = sim_number+3000
+        self.sim_number = sim_number
+        self.algo_rando_gen =np.random.RandomState(seed=7000000)
         self.rando_gen = np.random.RandomState(seed=sim_number+2000)
         with open('{}person_to_time_indices_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
             pse=pickle.load(f)
@@ -51,8 +53,10 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
-        self.Z_one = -0.10736186999999998
-        self.Z_two = 0.10736186999999998
+        self.Z_one =0.00405055
+            #-0.10736186999999998
+        self.Z_two =0.49381715000000004
+            #0.10736186999999998
             #0.5922135199999999
             #1.5265399999999998
         #intercept,tod,dow,weather,previous steps,loc 1,loc 2,loc 3
@@ -78,7 +82,7 @@ class study:
           #independent only
            #np.array([0.0977, 0.0858,0.111,0.181,-0.217,0.255])
            #  real weather 0.24941052, real location 0.22540878
-        self.beta =np.array([0.04772972,  0.0696645 ,  0.21549613, 0.24941052 ,-0.22475609 , 0.22540878])
+        self.beta =np.array([0.07912183,  0.11717383,  0.12143829, -0.07507128,  0.25115448])
         #np.array([0.04772972,  0.0696645 ,  0.21549613, 0.24941052 ,-0.22475609 , 0.22540878])
         #np.array([0.05,  -0.1,  0.05,  0.2	 , -0.3,  0.6 ])
             #np.array([0.25,  -0.1 ,  0.25, -0.1 ,-0.1 ,0.25])
@@ -99,7 +103,7 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =0.17489384749999998
+        self.sigma =0.12244165000000001
             #0.6304924999999999
     
         self.init_population(which_gen)
@@ -115,7 +119,7 @@ class study:
             
             ##Get GID 
             
-            gid = self.get_gid()
+            #gid = self.get_gid()
             
             Z=None
             if which_gen=='case_two':
@@ -126,8 +130,11 @@ class study:
                 #**2
                 Z=np.random.normal(loc=0,scale=self.sigma)
 
+            person_seed = k+self.sim_number*1000
+            rg=np.random.RandomState(seed=person_seed)
             
+            gid = int(rg.uniform()>=.5)+1
             
-            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=np.random.RandomState(seed=k))
+            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg)
             
             self.population[k]=person

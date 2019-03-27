@@ -28,7 +28,7 @@ import simple_bandits
 
 def initialize_policy_params_TS(experiment,update_period,root,standardize=False):
     
-    global_p =gtp.TS_global_params(21,baseline_keys=['tod','dow','weather','pretreatment','location'],psi_features=[0,6], responsivity_keys= ['tod','dow','weather','pretreatment','location'])
+    global_p =gtp.TS_global_params(21,baseline_keys=['tod','dow','pretreatment','location'],psi_features=[0,5], responsivity_keys= ['tod','dow','pretreatment','location'])
     personal_p = pp.TS_personal_params()
     
     
@@ -37,7 +37,7 @@ def initialize_policy_params_TS(experiment,update_period,root,standardize=False)
     
     #global_p.baseline_indices =  [i for i in range(self.theta_dim)]
     
-    global_p.psi_indices =[0,6]
+    global_p.psi_indices =[0,5]
     #[0,64]
     global_p.user_id_index =None
     #192
@@ -45,7 +45,7 @@ def initialize_policy_params_TS(experiment,update_period,root,standardize=False)
     #193
     
     #global_p.baseline_features = [i for i in range(192)]
-    global_p.psi_features =[0,6]
+    global_p.psi_features =[0,5]
     
     global_p.update_period = update_period
     
@@ -86,7 +86,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('../../murphy_lab/lab/pooling/{}/updates_new_safer_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('../../murphy_lab/lab/pooling/{}/updates_newnw_safer_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>2:
                 glob.last_global_update_time=time
                 
@@ -111,7 +111,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
-                print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/{}/updates_global_new_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/{}/updates_global_newnew_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 global_policy_params.update_params(temp_params)
                 global_policy_params.inv_term=inv_term
                 #print(temp_params)
@@ -210,14 +210,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                     elif policy=='TS':
                       
-                        z=np.array([1,tod,dow,weather,sf.get_pretreatment(participant.steps),location])
+                        z=np.array([1,tod,dow,sf.get_pretreatment(participant.steps),location])
                         
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
-                        action = int(experiment.rando_gen.uniform() < prob)
+                        action = int(experiment.algo_rando_gen.uniform() < prob)
                             
                     if availability:
                   
-                        context = [action,participant.gid,tod,dow,weather,sf.get_pretreatment(participant.steps),location,\
+                        context = [action,participant.gid,tod,dow,sf.get_pretreatment(participant.steps),location,\
                               0,0,0]
                     
                         #participant.steps_last_time_period = participant.steps
@@ -227,11 +227,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         optimal_reward = get_optimal_reward(experiment.beta,z)
                         optimal_action = int(optimal_reward>=0)
 
-                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('../../murphy_lab/lab/pooling/{}/updates_participant_new_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('../../murphy_lab/lab/pooling/{}/updates_participant_newnw_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
-                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
                         participant.steps = steps
 
                 
@@ -242,7 +242,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                 else:
                     #participant.steps_last_time_period = participant.steps
-                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
                         participant.steps = steps     
                 
                 ##history:
