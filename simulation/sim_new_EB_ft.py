@@ -81,13 +81,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     for time in experiment.study_days:
-        
+       
        
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('../../murphy_lab/lab/pooling/{}/updates_newbigtest_safer_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('pooling/{}/updates_newbigtest_safer_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>2:
+                return
                 glob.last_global_update_time=time
                 
                 ##hows this happening now?
@@ -111,7 +112,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
-                print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('../../murphy_lab/lab/pooling/{}/updates_global_newbigtest_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 global_policy_params.update_params(temp_params)
                 global_policy_params.inv_term=inv_term
                 #print(temp_params)
@@ -227,7 +228,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         optimal_reward = get_optimal_reward(experiment.beta,z)
                         optimal_action = int(optimal_reward>=0)
 
-                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('../../murphy_lab/lab/pooling/{}/updates_participant_newbigtest_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('pooling/{}/updates_participant_newbigtest_{}_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
@@ -326,9 +327,9 @@ if __name__=="__main__":
         #for case in ['case_one','case_two','case_three']:
             root = '../../murphy_lab/lab/pooling/distributions/'
             pop_size=population
-            experiment = study.study('../../murphy_lab/lab/pooling/distributions/',pop_size,'short',which_gen=case,sim_number=int(start_index))
+            experiment = study.study('pooling/distributions/',pop_size,'short',which_gen=case,sim_number=int(start_index))
             glob,personal = initialize_policy_params_TS(experiment,int(update_time),standardize=False,root=root)
-            ft = feature_transformations.feature_transformation('../../murphy_lab/lab/pooling/distributions/')
+            ft = feature_transformations.feature_transformation('pooling/distributions/')
           
             hist = new_kind_of_simulation(experiment,'TS',personal,glob,i,case,ft)
             
@@ -338,7 +339,7 @@ if __name__=="__main__":
             actions,rewards = get_regret(experiment)
             
             print('done about to save')
-            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
             #'likelis':glob.to_save_params,
             with open(filename,'wb') as f:
                 pickle.dump({'gids':gids,'regrets':rewards,'actions':actions},f)

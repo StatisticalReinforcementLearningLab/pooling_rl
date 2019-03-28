@@ -19,8 +19,8 @@ class study:
             #'../../murphy_lab/lab/pooling/distributions/'
         self.study_seed = sim_number+3000
         self.sim_number = sim_number
-        self.algo_rando_gen =np.random.RandomState(seed=7000000)
-        self.rando_gen = np.random.RandomState(seed=sim_number+2000)
+        self.algo_rando_gen =np.random.RandomState(seed=8000000)
+        #self.rando_gen = np.random.RandomState(seed=sim_number+2000)
         with open('{}person_to_time_indices_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
             pse=pickle.load(f)
         with open('{}person_to_decision_times_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
