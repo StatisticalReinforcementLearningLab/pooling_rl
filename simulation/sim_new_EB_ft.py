@@ -89,7 +89,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             experiment.last_update_day=time
             print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('pooling/{}/updates_newbigtest_safer_{}_{}.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>2:
-                return
+            
                 glob.last_global_update_time=time
                 
                 ##hows this happening now?
