@@ -1,7 +1,8 @@
 import pandas as pd
 import sys
 sys.path
-sys.path.append('pooling_rl/models')
+sys.path.append('../../../home00/stomkins/pooling_rl/models')
+sys.path.append('../../../home00/stomkins/pooling_rl/simulation')
 #sys.path.append('../pooling_rl/simulation')
 import numpy as np
 import pickle
