@@ -17,7 +17,7 @@ if '/Users/sabina/' in os.getcwd():
         root ='../Downloads/distributions/'
 
 else:
-    root = '../../scratchlfs/murphy_lab/stomkins/pooling/distributions/'
+    root = 'pooling/distributions/'
 #'../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
 #root = '../../murphy_lab/lab/pooling/distributions/'
 
