@@ -123,11 +123,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             ##global context shared across all participants
         tod = sf.get_time_of_day(time)
         dow = sf.get_day_of_week(time)
-        if time==experiment.study_days[0]:
-            print('init weather')
-            weather = feat_trans.get_weather_prior(tod,time.month,seed = experiment.rando_gen)
-        elif time.hour in experiment.weather_update_hours and time.minute==0:
-            weather = feat_trans.get_next_weather(str(tod),str(time.month),weather,seed = experiment.rando_gen)
+            #if time==experiment.study_days[0]:
+            #print('init weather')
+            #weather = feat_trans.get_weather_prior(tod,time.month,seed = experiment.rando_gen)
+            #elif time.hour in experiment.weather_update_hours and time.minute==0:
+            #weather = feat_trans.get_next_weather(str(tod),str(time.month),weather,seed = experiment.rando_gen)
             ##location depends on person 
             
         for person in experiment.dates_to_people[time]:
@@ -248,10 +248,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         participant.steps = steps     
                 
                 ##history:
-                context_dict =  {'steps':participant.steps,'add':add,'action':action,'weather':weather,'location':location,'location_1':int(location==1),\
+                context_dict =  {'steps':participant.steps,'add':add,'action':action,'location':location,'location_1':int(location==1),\
                     'ltps':steps_last_time_period,'location_2':int(location==2),'location_3':int(location==3),\
                         'study_day':participant.current_day_counter,\
-                            'temperature':weather,'decision_time':dt,\
+                            'decision_time':dt,\
                                 'time':time,'avail':availability,'prob':prob,\
                                     'dow':dow,'tod':tod,\
                                         'pretreatment':sf.get_pretreatment(steps_last_time_period),\
