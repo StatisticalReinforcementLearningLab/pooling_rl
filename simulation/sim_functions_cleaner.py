@@ -17,7 +17,7 @@ if '/Users/sabina/' in os.getcwd():
         root ='../Downloads/distributions/'
 
 else:
-    root = '../../regal/murphy_lab/pooling/distributions/'
+    root = '../../scratchlfs/murphy_lab/stomkins/pooling/distributions/'
 #'../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/distributions/'
 #root = '../../murphy_lab/lab/pooling/distributions/'
 
@@ -25,73 +25,6 @@ else:
 #    dists = pickle.load(f)
 
 
-####
-with open('{}label_to_temperature_value_stats.pkl'.format(root),'rb') as f:
-    weather_label_to_val = pickle.load(f)
-
-with open('{}loc_label_to_intervention_label_tref.pkl'.format(root),'rb') as f:
-    loc_label_to_val = pickle.load(f)
-
-
-#with open('{}conversion_pretreatment.pkl'.format(root),'rb') as f:
-#    hour_pretreatment_label_to_val = pickle.load(f)
-
-
-with open('{}dists_non_intervention.pkl'.format(root),'rb') as f:
-    dists = pickle.load(f)
-
-with open('{}key_matches_non_intervention.pkl'.format(root),'rb') as f:
-    matched = pickle.load(f)
-
-
-with open('{}dists_intervention_anti_sedentary.pkl'.format(root),'rb') as f:
-    dists_intervention_anti_sedentary = pickle.load(f)
-
-with open('{}key_matches_intervention_anti_sedentary.pkl'.format(root),'rb') as f:
-    matched_intervention_anti_sedentary = pickle.load(f)
-
-
-with open('{}dists_intervention_activity_suggestion.pkl'.format(root),'rb') as f:
-    dists_intervention_activity_suggestion = pickle.load(f)
-
-with open('{}key_matches_intervention_activity_suggestion.pkl'.format(root),'rb') as f:
-    matched_intervention_activity_suggestion = pickle.load(f)
-
-
-#with open('{}interventions_both_groups_estf.pkl'.format(root),'rb') as f:
-#intervention_dists = pickle.load(f)
-
-def get_location_prior(group_id,day_of_week,time_of_day):
-    with open('{}initial_location_distributions_est_tref.pkl'.format(root),'rb') as f:
-        loc_lookup = pickle.load(f)
-    key = '{}-{}-{}'.format(group_id,day_of_week,time_of_day)
-    
-    ##make a bit smoother while loop instead 
-    if key in loc_lookup:
-        ps = loc_lookup[key]
-    else:
-        print('sdf')
-        print(key)
-                
-    val = np.argmax(np.random.multinomial(1,ps))
-    return val
-
-
-def get_weather_prior(time_of_day,month):
-    with open('{}initial_temperature_distributions_est.pkl'.format(root),'rb') as f:
-        loc_lookup = pickle.load(f)
-    key = '{}-{}'.format(time_of_day,month)
-    
-    ##make a bit smoother while loop instead 
-    if key in loc_lookup:
-        ps = loc_lookup[key]
-    else:
-        key =  '{}'.format(time_of_day)
-        ps = loc_lookup[key]
-        
-                
-    val = np.argmax(np.random.multinomial(1,ps))
-    return val
 
 def get_time_of_day(an_index):
     with open('{}hour_to_id.pkl'.format(root),'rb') as f:

@@ -325,7 +325,7 @@ if __name__=="__main__":
 
     for i in range(int(start_index),int(end_index)):
         #for case in ['case_one','case_two','case_three']:
-            root = '../../murphy_lab/lab/pooling/distributions/'
+            root = 'pooling/distributions/'
             pop_size=population
             experiment = study.study('pooling/distributions/',pop_size,'short',which_gen=case,sim_number=int(start_index))
             glob,personal = initialize_policy_params_TS(experiment,int(update_time),standardize=False,root=root)
