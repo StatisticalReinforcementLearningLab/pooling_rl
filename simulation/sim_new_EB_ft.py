@@ -140,7 +140,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #update global context variables
                 participant.set_tod(tod)
                 participant.set_dow(dow)
-                participant.set_wea(weather)
+                #participant.set_wea(weather)
                 
                 
                 availability = (participant.rando_gen.uniform() < 0.8)
