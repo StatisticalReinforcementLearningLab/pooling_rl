@@ -2,6 +2,8 @@ import pandas as pd
 import sys
 sys.path
 sys.path.append('pooling_rl/models')
+sys.path.append('../../../home00/stomkins/pooling_rl/models')
+sys.path.append('../../../home00/stomkins/pooling_rl/simulation')
 #sys.path.append('../pooling_rl/simulation')
 import numpy as np
 import pickle
@@ -28,7 +30,7 @@ import simple_bandits
 
 def initialize_policy_params_TS(experiment,update_period,standardize=False):
     
-    global_p =gtp.TS_global_params(21,baseline_keys=['tod','dow','weather','pretreatment','location'],psi_features=[0,6], responsivity_keys= ['tod','dow','weather','pretreatment','location'])
+    global_p =gtp.TS_global_params(21,baseline_keys=['tod','dow','pretreatment','location'],psi_features=[0,5], responsivity_keys= ['tod','dow','pretreatment','location'])
     personal_p = pp.TS_personal_params()
     
     
@@ -37,7 +39,7 @@ def initialize_policy_params_TS(experiment,update_period,standardize=False):
     
     global_p.baseline_indices = [i for i in range(len(global_p.baseline_keys))]
     
-    global_p.psi_indices =[0,6]
+    global_p.psi_indices =[0,5]
     #[0,64]
     
     #192
@@ -45,7 +47,7 @@ def initialize_policy_params_TS(experiment,update_period,standardize=False):
     #193
     
     #global_p.baseline_features = [i for i in range(192)]
-    global_p.psi_features =[0,6]
+    global_p.psi_features =[0,5]
     #[0,64]
     
     global_p.update_period = update_period
@@ -96,7 +98,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #break
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('outs/updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('outs/updates_batch_baseline_EB_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>2:
                 global_policy_params.last_global_update_time=time
                 
@@ -133,11 +135,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         ##global context shared across all participants
         tod = sf.get_time_of_day(time)
         dow = sf.get_day_of_week(time)
-        if time==experiment.study_days[0]:
+            #if time==experiment.study_days[0]:
             #print('init weather')
-            weather = feat_trans.get_weather_prior(tod,time.month)
-        elif time.hour in experiment.weather_update_hours and time.minute==0:
-            weather = feat_trans.get_next_weather(str(tod),str(time.month),weather)
+            #weather = feat_trans.get_weather_prior(tod,time.month)
+            #elif time.hour in experiment.weather_update_hours and time.minute==0:
+            #weather = feat_trans.get_next_weather(str(tod),str(time.month),weather)
         ##location depends on person
         
         for person in experiment.dates_to_people[time]:
@@ -153,12 +155,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 participant.set_wea(weather)
                 
                 
-                availability = (uniform() < 0.8)
+                availability = (participant.rando_gen.uniform() < 0.8)
                 participant.set_available(availability)
                 
                 if time == participant.times[0]:
                     #get first location
-                    location = feat_trans.get_location_prior(str(participant.gid),str(tod),str(dow))
+                    location = feat_trans.get_location_prior(str(participant.gid),str(tod),str(dow),seed = participant.rando_gen)
                     participant.set_inaction_duration(0)
                     participant.set_action_duration(0)
                 
@@ -179,7 +181,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                     
                     if time.hour in experiment.location_update_hours:
-                        location = feat_trans.get_next_location(participant.gid,tod,dow,participant.get_loc())
+                        location = feat_trans.get_next_location(participant.gid,tod,dow,participant.get_loc(),seed = participant.rando_gen)
                     
                     
                     
@@ -221,18 +223,18 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                     if availability:
 
-                        context = [action,participant.gid,tod,dow,weather,sf.get_pretreatment(steps_last_time_period),location,\
+                        context = [action,participant.gid,tod,dow,sf.get_pretreatment(steps_last_time_period),location,\
                                    0,0,0]
                             
                                    #participant.steps_last_time_period = participant.steps
                                    #print(sf.get_pretreatment(participant.steps))
                                    
-                        steps = feat_trans.get_steps_action(context)
+                        steps = feat_trans.get_steps_action(context,seed = participant.rando_gen)
                                    
                                    #add = sf.get_add_two(action,z,experiment.beta,participant.Z)
-                        add = sf.get_add_no_action(z,experiment.beta,participant.Z)
+                        add = action*sf.get_add_no_action(z,experiment.beta,participant.Z)
                         additives.append([action,add,prob])
-                        participant.steps = steps+(action*add)
+                        participant.steps = steps+add
                                    
                                    ##calculate optimal
                         optimal_reward = get_optimal_reward(experiment.beta,z)
@@ -240,7 +242,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                     else:
     #participant.steps_last_time_period = participant.steps
-                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(steps_last_time_period),seed = participant.rando_gen)
                         participant.steps = steps
         
         
@@ -251,14 +253,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
                 else:
                 #participant.steps_last_time_period = participant.steps
-                    steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,weather,sf.get_pretreatment(steps_last_time_period))
+                    steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(steps_last_time_period),seed = participant.rando_gen)
                     participant.steps = steps
                 
                 ##history:
-                context_dict =  {'steps':participant.steps,'add':add,'action':action,'weather':weather,'location':location,'location_1':int(location==1),\
+                context_dict =  {'steps':participant.steps,'add':add,'action':action,'location':location,'location_1':int(location==1),\
                     'ltps':steps_last_time_period,'location_2':int(location==2),'location_3':int(location==3),\
                         'study_day':participant.current_day_counter,\
-                            'temperature':weather,'decision_time':dt,\
+                            'decision_time':dt,\
                                 'time':time,'avail':availability,'prob':prob,\
                                     'dow':dow,'tod':tod,\
                                         'pretreatment':sf.get_pretreatment(steps_last_time_period),\
@@ -316,11 +318,11 @@ if __name__=="__main__":
     case = sys.argv[6]
 
     for i in range(int(start_index),int(end_index)):
-            root = '../../murphy_lab/lab/pooling/distributions/'
+            root = 'pooling/distributions/'
             pop_size=32
-            experiment = study.study(root,pop_size,'short',which_gen=case)
+            experiment = study.study(root,pop_size,'short',which_gen=case,sim_number=int(start_index))
             feat_trans = feature_transformations.feature_transformation(root)
-            glob,personal = initialize_policy_params_TS(experiment,7,standardize=False)
+            glob,personal = initialize_policy_params_TS(experiment,int(update_time),standardize=False)
 
 
             hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans)
@@ -335,6 +337,6 @@ if __name__=="__main__":
 
         
         
-            filename = '{}/results/population_size_batch_{}_update_days_{}_{}_batch_{}_{}_new_params.pkl'.format('../../murphy_lab/lab/pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_batch_baseline_EB_{}_update_days_{}_{}_batch_{}_{}_new_params.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params,'regrets':rewards,'actions':actions},f)
