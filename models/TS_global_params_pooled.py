@@ -73,8 +73,11 @@ class TS_global_params:
         #self.sigma_u =np.array([[ 0.28800755, -0.17554317],
         #                        [-0.17554317,  0.5466027 ]])
         ##non continuous
-        self.sigma_u =np.array([[2.17412222, 0.61305586],
-          [0.61305586, 1.39429461]])
+        #self.sigma_u =np.array([[2.17412222, 0.61305586],
+        #  [0.61305586, 1.39429461]])
+          
+        self.sigma_u =np.array([[ 0.27359038, 0.3575237184874702],
+                                  [0.3575237184874702, 0.5143725]])
 
 ##old
 #np.array([[ 1.47652434, 0.20616501,],
@@ -83,18 +86,22 @@ class TS_global_params:
         #continuous
         #self.rho_term =0.5575684246756394
         #non continuous
-        self.rho_term =1.3521119759922764
+        self.rho_term =0.3575237184874702
+            #1.3521119759922764
             #1.1576026856712
         #continuous
         #self.u1 = 0.28800755
-        self.u1 =1.47652434
+        #self.u1 =1.47652434
+        self.u1 = 0.27359038
         #continuous
         #self.u2 = 0.5466027
-        self.u2 =1.15894301
+        #self.u2 =1.15894301
+        self.u2 = 0.5143725
         #90800.30211642
         #continuous
         #self.noise_term=6.32098482
-        self.noise_term =7.50134618
+        self.noise_term =6.79041978
+            #7.50134618
             #7.50134618
         #7.49989571
             #90800.30211642
