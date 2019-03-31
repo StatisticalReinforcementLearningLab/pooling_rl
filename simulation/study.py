@@ -21,13 +21,13 @@ class study:
         self.sim_number = sim_number
         self.algo_rando_gen =np.random.RandomState(seed=8000000)
         #self.rando_gen = np.random.RandomState(seed=sim_number+2000)
-        with open('{}person_to_time_indices_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}person_to_time_indices_pop_{}_{}_unstaggered_6.pkl'.format(root,population_size,study_length),'rb') as f:
             pse=pickle.load(f)
-        with open('{}person_to_decision_times_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}person_to_decision_times_pop_{}_{}_unstaggered_6.pkl'.format(root,population_size,study_length),'rb') as f:
             dts=pickle.load(f)
-        with open('{}time_to_active_participants_pop_{}_{}_unstaggered.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}time_to_active_participants_pop_{}_{}_unstaggered_6.pkl'.format(root,population_size,study_length),'rb') as f:
             dates_to_people=pickle.load(f)
-        with open('{}all_ordered_times_{}_unstaggered.pkl'.format(root,study_length),'rb') as f:
+        with open('{}all_ordered_times_{}_unstaggered_6.pkl'.format(root,study_length),'rb') as f:
             study_days=pickle.load(f)
         
         self.person_to_time = pse 
