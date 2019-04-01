@@ -163,7 +163,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         
         
         
-                    print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('outs/updates_personalized_baseline_EB_{}_{}_six_weeks_only_nu.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
+                    print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('outs/updates_personalized_baseline_EB_{}_{}_six_weeks_only_pplus.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
                 #update global context variables
 
                 #participant.set_wea(weather)
@@ -351,6 +351,6 @@ if __name__=="__main__":
 
         
         
-            filename = '{}/results/population_size_personalized_baseline_EB_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_only_nu.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_personalized_baseline_EB_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_only_pplus.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params,'regrets':rewards,'actions':actions},f)
