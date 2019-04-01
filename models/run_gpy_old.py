@@ -26,11 +26,11 @@ def get_sigma_u(u1,u2,rho):
     off_diagaonal_term = u1**.5*u2**.5*(rho-1)
     return np.array([[u1,off_diagaonal_term],[off_diagaonal_term,u2]])
 
-def run(X,y,initial_u1,initial_u2,rho_term,noise_term,baseline_indices,psi_indices,user_id_index):
+def run(X,y,initial_u1,initial_u2,rho_term,noise_term,baseline_indices,psi_indices,user_id_index,user_mat=None,first_mat=None):
     #initial_u1,initial_u2,initial_rho,initial_noise,baseline_indices,psi_indices,user_index
-    user_mat= get_users(X[:,user_id_index],X[:,user_id_index])
+    #user_mat= get_users(X[:,user_id_index],X[:,user_id_index])
 
-    first_mat = get_first_mat(np.eye(len(baseline_indices)),X,baseline_indices)
+    #first_mat = get_first_mat(np.eye(len(baseline_indices)),X,baseline_indices)
 
     kernel = GPy.kern.CustomKernel(len(baseline_indices),baseline_indices=baseline_indices,psi_indices=psi_indices,user_index=user_id_index,initial_u1=initial_u1,initial_u2=initial_u2,initial_rho=rho_term,initial_noise=noise_term,user_mat=user_mat,first_mat = first_mat)
 

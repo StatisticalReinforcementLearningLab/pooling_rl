@@ -17,7 +17,7 @@ class study:
         #root =  '../../../../Volumes/dav/HeartSteps/pooling_rl_shared_data/processed/'
         self.root =root
             #'../../murphy_lab/lab/pooling/distributions/'
-        self.study_seed = sim_number+3000
+        self.study_seed = sim_number+30000000
         self.sim_number = sim_number
         self.algo_rando_gen =np.random.RandomState(seed=8000000)
         #self.rando_gen = np.random.RandomState(seed=sim_number+2000)

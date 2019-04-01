@@ -124,6 +124,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #1
                 ##for every active person update person specific aspects of their context
                 participant = experiment.population[person]
+                participant.set_tod(tod)
+                participant.set_dow(dow)
+                
+                
                 if time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
                     
                     history = participant.history
@@ -161,9 +165,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         
                     print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('outs/updates_personalized_baseline_EB_{}_{}_six_weeks_only_nu.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
                 #update global context variables
-                participant.set_tod(tod)
-                participant.set_dow(dow)
-                participant.set_wea(weather)
+
+                #participant.set_wea(weather)
                 
                 
                 availability = (participant.rando_gen.uniform() < 0.8)
