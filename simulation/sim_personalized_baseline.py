@@ -226,7 +226,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                         ##want this to be a function
                         z=np.array([1,tod,dow,to_call,location])
-                        prob =  TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.rando_gen)
+                        prob =  TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
                         
                                               #if participant.pid==1:
 
