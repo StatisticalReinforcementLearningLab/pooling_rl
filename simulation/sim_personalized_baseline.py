@@ -80,7 +80,7 @@ def initialize_policy_params_TS(experiment,update_period,standardize=False):
     return global_p ,personal_p
     
     
-  
+
 
 def get_optimal_reward(beta,states):
     return np.dot(beta,states)
@@ -226,8 +226,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                         ##want this to be a function
                         z=np.array([1,tod,dow,to_call,location])
-                        prob = TS.prob_cal_ts(z,0,global_policy_params.mus2,global_policy_params.sigmas2,\
-                                              global_policy_params)
+                        prob = TS.prob_cal_ts(z,0,global_policy_params.sigma,\
+                                              personal_policy_params.mus1[participant.pid],\
+                                              personal_policy_params.sigmas1[participant.pid],\
+                                              personal_policy_params.mus2[participant.pid],\
+                                              personal_policy_params.sigmas2[participant.pid],)
                                               #if participant.pid==1:
 
                                               #print('prob _ {}'.format(prob))
