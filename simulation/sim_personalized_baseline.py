@@ -29,41 +29,55 @@ import feature_transformations
 import simple_bandits
 
 def initialize_policy_params_TS(experiment,update_period,standardize=False):
-    
+    #,'location_1','location_2','location_3'
+    #'continuous_temp',
     global_p =gtp.TS_global_params(21,baseline_keys=['tod','dow','pretreatment','location'],psi_features=[0,5], responsivity_keys= ['tod','dow','pretreatment','location'])
     personal_p = pp.TS_personal_params()
+    #global_p =gtp.TS_global_params(10,context_dimension)
     
     
-    global_p.standardize = standardize
-    global_p.kdim =21
     
-    global_p.baseline_indices = [i for i in range(len(global_p.baseline_keys))]
+    #global_p.mu_dimension = 64
     
+    global_p.kdim =24
+    #194
+    global_p.baseline_indices = [i for i in range(24)]
+    #[i for i in range(192)]
+    #[0,1,2,3,4,5,6]
     global_p.psi_indices =[0,5]
     #[0,64]
+    global_p.user_id_index =21
     
-    #192
-    #global_p.user_day_index =19
-    #193
-    
-    #global_p.baseline_features = [i for i in range(192)]
     global_p.psi_features =[0,5]
     #[0,64]
     
     global_p.update_period = update_period
-    initial_context = [0 for i in range(global_p.theta_dim)]
     
-    global_p.mus0= global_p.get_mu0(initial_context)
-    #global_p.get_mu0(initial_context)
-    global_p.mus1= global_p.get_mu1(global_p.num_baseline_features)
-    global_p.mus2= global_p.get_mu2(global_p.num_responsivity_features)
-    #np.array([.120,3.3,-.11])
-    #global_p.get_mu2(global_p.num_responsivity_features)
+    global_p.standardize = standardize
+    #print(type(personal_p))
     
-    #global_p.sigmas0= global_p.get_asigma(len( personal_p.mus0[person]))
-    global_p.sigmas1= global_p.get_asigma(global_p.num_baseline_features+1)
-    global_p.sigmas2= global_p.get_asigma( global_p.num_responsivity_features+1)
-    
+    for person in experiment.population.keys():
+        experiment.population[person].root = '../../regal/murphy_lab/pooling/distributions/'
+        initial_context = [0 for i in range(global_p.theta_dim)]
+        personal_p.mus0[person]= global_p.get_mu0(initial_context)
+        personal_p.mus1[person]= global_p.get_mu1(global_p.num_baseline_features)
+        personal_p.mus2[person]= global_p.get_mu2(global_p.num_responsivity_features)
+        
+        personal_p.sigmas0[person]= global_p.get_asigma(len( personal_p.mus0[person]))
+        personal_p.sigmas1[person]= global_p.get_asigma(global_p.num_baseline_features+1)
+        personal_p.sigmas2[person]= global_p.get_asigma( global_p.num_responsivity_features+1)
+        
+        
+        
+        personal_p.batch[person]=[[] for i in range(len(experiment.person_to_time[person]))]
+        personal_p.batch_index[person]=0
+        
+        #personal_p.etas[person]=eta.eta()
+        
+        personal_p.last_update[person]=experiment.person_to_time[person][0]
+
+
+    return global_p ,personal_p
     
     
     #print(type(personal_p))
