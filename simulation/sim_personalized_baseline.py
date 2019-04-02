@@ -230,7 +230,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                               personal_policy_params.mus1[participant.pid],\
                                               personal_policy_params.sigmas1[participant.pid],\
                                               personal_policy_params.mus2[participant.pid],\
-                                              personal_policy_params.sigmas2[participant.pid],)
+                                              personal_policy_params.sigmas2[participant.pid])
                                               #if participant.pid==1:
 
                                               #print('prob _ {}'.format(prob))
