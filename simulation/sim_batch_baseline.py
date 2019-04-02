@@ -223,7 +223,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                                               #print('prob _ {}'.format(prob))
                                               #print(type(prob))
-                        action = int(uniform() < prob)
+                        action = int(experiment.algo_rando_gen.uniform() < prob)
 
                     if availability:
 
