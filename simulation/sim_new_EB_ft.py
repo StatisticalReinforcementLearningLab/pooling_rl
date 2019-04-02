@@ -343,4 +343,4 @@ if __name__=="__main__":
             filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_only_pplus.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
             #'likelis':glob.to_save_params,
             with open(filename,'wb') as f:
-                pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':history},f)
+                pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
