@@ -199,10 +199,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                     elif policy=='TS':
                       
-                        z=np.array([1,tod,dow,weather,sf.get_pretreatment(participant.steps),int(location==1),int(location==2),int(location==3)])
+                        z=np.array([1,tod,dow,sf.get_pretreatment(participant.steps),int(location==1),int(location==2),int(location==3)])
                         
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
-                        action = int(uniform() < prob)
+                        action = int(experiment.algo_rando_gen.uniform() < prob)
                             
                     if availability:
                   
