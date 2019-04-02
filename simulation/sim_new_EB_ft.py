@@ -188,7 +188,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     action=0
                     
                     
-                    if global_policy_params.decision_times>20 and global_policy_params.history!=None:
+                    if global_policy_params.decision_times>2 and global_policy_params.history!=None:
                      
                             history = global_policy_params.history
                             temp = simple_bandits.calculate_posterior_faster(global_policy_params,\

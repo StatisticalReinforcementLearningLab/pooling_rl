@@ -14,7 +14,7 @@ class TS_personal_params:
     def __init__(self):
         
         
-        
+        self.noises = {}
         self.mus0 = {}
         self.sigmas0 = {}
         
@@ -51,6 +51,9 @@ class TS_personal_params:
 
         if which_sigma==2:
             self.sigmas2[pid]=sigma_value
+
+    def update_noises(self,pid,noise_value):
+        self.noises[pid]=noise_value
 
     def update_batch(self,pid,context):
     

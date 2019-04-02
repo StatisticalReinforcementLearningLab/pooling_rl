@@ -21,7 +21,7 @@ def get_first_mat(sigma_theta,data,baseline_indices):
 
 
 
-def run(X,y,global_params):
+def run(X,y,global_params,initial_noise_term):
     
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
     #print(first_mat.shape)
@@ -31,7 +31,7 @@ def run(X,y,global_params):
     m = GPy.models.GPRegression(X,y,kernel)
     #print('got m')
 
-    m.Gaussian_noise.variance=global_params.noise_term**2
+    m.Gaussian_noise.variance=initial_noise_term
 
     m.optimize(max_iters=100)
     
@@ -40,18 +40,18 @@ def run(X,y,global_params):
     return {'noise':noise,'like':m.objective_function()}
 
 
-def get_cov(X,y,global_params):
+def get_cov(X,y,global_params,initial_noise_term):
     #initial_u1,initial_u2,initial_rho,initial_noise,baseline_indices,psi_indices,user_index
     user_mat= get_users(X[:,global_params.user_id_index],X[:,global_params.user_id_index])
     
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
     
-    kernel = GPy.kern.CustomKernel(len(global_params.baseline_indices),baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_index=global_params.user_id_index,initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term,user_mat=user_mat,first_mat = first_mat)
+    kernel = GPy.kern.CustomKernel(len(global_params.baseline_indices),baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_index=global_params.user_id_index,initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_rho=global_params.rho_term,initial_noise=initial_noise_term,user_mat=user_mat,first_mat = first_mat)
     
     m = GPy.models.GPRegression(X,y,kernel)
     
     
-    m.Gaussian_noise.variance=global_params.noise_term
+    m.Gaussian_noise.variance=initial_noise_term
     
     #m.optimize(max_iters=100)
     
@@ -61,4 +61,4 @@ def get_cov(X,y,global_params):
     
     cov = m.kern.K(X)
     
-    return {'sigma_u':global_params.sigma_u,'cov':cov,'noise':global_params.noise_term,'like':m.objective_function()}
+    return {'sigma_u':global_params.sigma_u,'cov':cov,'noise':m.Gaussian_noise.variance.values,'like':m.objective_function()}

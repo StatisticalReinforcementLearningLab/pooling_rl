@@ -143,11 +143,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     #sf.get_data_for_txt_effect_u
                     
                     context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
-                    #sf.get_data_for_txt_effect_update(history,global_policy_params)
+                    temp_params = run_gpy_simple.run(context,np.array([[a] for a in steps]),global_policy_params,personal_policy_params.noises[participant.pid])
                     
-                    #phi = get_phi(context,probs,actions,[i for i in range(len(context[0]))],[i for i in range(len(context[0]))])
-                    
-                    temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.sigma,\
+                    temp = TS.policy_update_ts_new( context,steps,probs,actions,personal_policy_params.noises[participant.pid],\
                                                    personal_policy_params.mus1[participant.pid],\
                                                    personal_policy_params.sigmas1[participant.pid],\
                                                    personal_policy_params.mus2[participant.pid],\

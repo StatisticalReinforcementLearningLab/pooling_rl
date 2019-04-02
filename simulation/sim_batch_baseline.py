@@ -99,7 +99,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
             print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('outs/updates_batch_baseline_EB_{}_{}_six_weeks_only_pplus.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
-            if global_policy_params.decision_times>2:
+            if global_policy_params.decision_times>1:
                 global_policy_params.last_global_update_time=time
                 
                 
@@ -114,11 +114,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
                 
                 ##do I need intercept here?
-                temp_params = run_gpy_simple.run(context,np.array([[a] for a in steps]),global_policy_params)
+                temp_params = run_gpy_simple.run(context,np.array([[a] for a in steps]),global_policy_params,global_policy_params.noise_term)
                 
                 global_policy_params.to_save_params[time]=temp_params['like']
                 
-                global_policy_params.noise_term = temp_params['noise']**.5
+                global_policy_params.noise_term = temp_params['noise']
                 global_policy_params.sigma = global_policy_params.noise_term
                 #print(global_policy_params.sigma)
                 temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.sigma,\
@@ -127,7 +127,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                                global_policy_params.mus2,\
                                                global_policy_params.sigmas2,
                                                )
-    
+                mu_beta = temp[0]
+                Sigma_beta = temp[1]
+                global_policy_params.update_mus(None,mu_beta,2)
+                global_policy_params.update_sigmas(None,Sigma_beta,2)
+                    #participant.last_update_day=time
     
     
         #del history
@@ -339,6 +343,6 @@ if __name__=="__main__":
     
         
         
-            filename = '{}/results/population_size_batch_baseline_EB_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_only_pplus.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_{}_baseline_EB_{}_update_days_{}_{}_batch_{}_{}_check.pkl'.format('batch',pop_size,update_time,study_length,case,i)
             with open(filename,'wb') as f:
                 pickle.dump({'history':to_save,'gids':gids,'likelis':glob.to_save_params,'regrets':rewards,'actions':actions},f)
