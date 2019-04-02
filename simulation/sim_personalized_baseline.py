@@ -80,22 +80,7 @@ def initialize_policy_params_TS(experiment,update_period,standardize=False):
     return global_p ,personal_p
     
     
-    #print(type(personal_p))
-    
-    for person in experiment.population.keys():
-        experiment.population[person].root = '../../murphy_lab/lab/pooling/distributions/'
-        
-        
-        
-        personal_p.batch[person]=[[] for i in range(len(experiment.person_to_time[person]))]
-        personal_p.batch_index[person]=0
-        
-        #personal_p.etas[person]=eta.eta()
-        
-        personal_p.last_update[person]=experiment.person_to_time[person][0]
-
-
-    return global_p ,personal_p
+  
 
 def get_optimal_reward(beta,states):
     return np.dot(beta,states)
