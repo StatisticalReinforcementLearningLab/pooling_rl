@@ -138,12 +138,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     #print(participant.last_update_day)
                     #print(history)
                     #return {participant.pid:history}
-                    temp_hist = tf.get_history_decision_time_avail_single({participant.pid:history},time)
+                    temp_hist = feat_trans.get_history_decision_time_avail_single({participant.pid:history},time)
                     
-                    temp_hist= tf.history_semi_continuous(temp_hist,global_policy_params)
+                    temp_hist= feat_trans.history_semi_continuous(temp_hist,global_policy_params)
                     #sf.get_data_for_txt_effect_u
                     
-                    context,steps,probs,actions= tf.get_form_TS(temp_hist)
+                    context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
                     #sf.get_data_for_txt_effect_update(history,global_policy_params)
                     
                     #phi = get_phi(context,probs,actions,[i for i in range(len(context[0]))],[i for i in range(len(context[0]))])
