@@ -226,7 +226,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             to_call = steps_last_time_period
                     
                         ##want this to be a function
-                        z=np.array([1,tod,dow,weather,to_call,location])
+                        z=np.array([1,tod,dow,to_call,location])
                         prob = TS.prob_cal_ts(z,0,global_policy_params.mus2,global_policy_params.sigmas2,\
                                               global_policy_params)
                                               #if participant.pid==1:
