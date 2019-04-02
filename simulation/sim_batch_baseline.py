@@ -335,6 +335,8 @@ if __name__=="__main__":
     #     pickle.dump(to_Save,f)
     
 
+    
+    
         
         
             filename = '{}/results/population_size_batch_baseline_EB_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_only_pplus.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
