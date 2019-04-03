@@ -111,9 +111,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 temp_hist= feat_trans.history_semi_continuous(temp_hist,global_policy_params)
                 #sf.get_data_for_txt_effect_u
                 
+                
+                ##this should all be fixed
+                
                 context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
                 
-                ##do I need intercept here?
+                ##do I need intercept here? yes I don't see why not
                 temp_params = run_gpy_simple.run(context,np.array([[a] for a in steps]),global_policy_params,global_policy_params.noise_term)
                 
                 global_policy_params.to_save_params[time]=temp_params['like']

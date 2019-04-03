@@ -100,7 +100,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
                 ##CHANGE THIS
                 try:
-                    temp_params = run_gpy.run(history[0], history[1],tf.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim),global_policy_params)
+                    temp_params = run_gpy.run(history[0], history[1],feat_trans:q
+                                              .get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim),global_policy_params)
                 
                 except Exception as e:
                     print(e)
