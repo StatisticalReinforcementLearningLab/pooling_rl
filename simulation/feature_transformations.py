@@ -109,6 +109,17 @@ class feature_transformation:
                 baseline_data = self.standardize(baseline_data)
             return {'base':baseline_data,'resp':responsivity_data,'probs':probs,'actions':actions,'users':users,'steps':steps}
 
+        def get_RT(self,y,X,sigma_theta,x_dim):
+                    
+            to_return = [y[i]-np.dot(X[i][0:x_dim],sigma_theta) for i in range(len(X))]
+            return np.array([i[0] for i in to_return])
+        
+        def get_RT_o(self,y,X,sigma_theta,x_dim):
+            
+            to_return = [y[i]-np.dot(X[i][0:x_dim],sigma_theta) for i in range(len(X))]
+            return np.array([i for i in to_return])
+        
+        
         def standardize(self,data):
             
             key_lookup = [i for i in sorted(data.keys())]

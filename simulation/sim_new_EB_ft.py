@@ -87,7 +87,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
         #history  = pb.make_history(experiment)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('pooling/{}/updates_newbigtest_safer_{}_{}six_weeks_only_pplus.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
+            print('Global update', time,global_policy_params.decision_times,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),file=open('pooling/{}/updates_newbigtest_safer_{}_{}_six_weeks_adjusted.txt'.format(case,len(experiment.population),global_policy_params.update_period), 'a'))
             if global_policy_params.decision_times>2:
             
                 glob.last_global_update_time=time
@@ -100,7 +100,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
                 ##CHANGE THIS
                 try:
-                    temp_params = run_gpy.run(history[0],history[1],history[2],global_policy_params)
+                    temp_params = run_gpy.run(history[0], history[1],tf.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim),global_policy_params)
                 
                 except Exception as e:
                     print(e)
@@ -230,7 +230,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         optimal_reward = get_optimal_reward(experiment.beta,z)
                         optimal_action = int(optimal_reward>=0)
 
-                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('pooling/{}/updates_participant_newbigtest_{}_{}_{}six_weeks_only_dc.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('pooling/{}/updates_participant_newbigtest_{}_{}_{}_six_weeks_adjusted.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
@@ -256,15 +256,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                 'time':time,'avail':availability,'prob':prob,\
                                     'dow':dow,'tod':tod,\
                                         'pretreatment':sf.get_pretreatment(steps_last_time_period),\
-                                'optimal_reward':optimal_reward,'optimal_action':optimal_action,'mu2':personal_policy_params.mus2[participant.pid]}
+                            'optimal_reward':optimal_reward,'optimal_action':optimal_action,'mu2':personal_policy_params.mus2[participant.pid],'noise':global_policy_params.noise_term}
 
-
-
-# my_directory = '{}/pop_size_{}_update_{}_study_length_{}/participant_{}'.format(global_policy_params.write_directory,len(experiment.population),global_policy_params.update_period,experiment.study_length,participant.pid)
-#  if not os.path.exists(my_directory):
-# os.makedirs(my_directory)
-                        # with open('{}/history_{}.pkl'.format(my_directory,global_policy_params.decision_times),'wb') as f:
-#   pickle.dump(participant.history,f)
 
 
                 participant.history[time]=context_dict
@@ -341,7 +334,7 @@ if __name__=="__main__":
             actions,rewards = get_regret(experiment)
             
             print('done about to save')
-            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_only_dc.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_adjusted.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
             #'likelis':glob.to_save_params,
             with open(filename,'wb') as f:
                 pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
