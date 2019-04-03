@@ -101,7 +101,9 @@ class TS_global_params:
         #90800.30211642
         #continuous
         #self.noise_term=6.32098482
-        self.noise_term =7.61294834
+        self.noise_term =1.15
+        #most recent learned
+        #7.61294834
             #7.50134618
             #7.50134618
         #7.49989571
