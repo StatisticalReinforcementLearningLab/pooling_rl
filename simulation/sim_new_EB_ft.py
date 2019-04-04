@@ -160,7 +160,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #temp_params['cov'] = cov
                 #print(cov)
                 #temp_params['cov']
-                inv_term = pb.get_inv_term(cov,history[0].shape[0],temp_params['noise'])
+                inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
                 print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_dbtest.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
