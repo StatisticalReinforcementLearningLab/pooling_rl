@@ -99,11 +99,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 history = feat_trans.get_phi_from_history_lookups(t)
                 
                 y_adjusted = feat_trans.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
-                history[2]=y_adjusted
+                
                 #print(y_adjusted)
                 ##CHANGE THIS
                 try:
-                    temp_params = run_gpy.run(history[0], history[1],history[2],global_policy_params)
+                    temp_params = run_gpy.run(history[0], history[1],y_adjusted,global_policy_params)
 
                 except Exception as e:
                     print(e)
@@ -197,7 +197,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             history = global_policy_params.history
                             temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
-                                                  history[0], history[1],history[2] )
+                                                  history[0], history[1],y_adjusted )
                     
                             print('participant')
                             print(participant.pid)
