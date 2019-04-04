@@ -135,18 +135,18 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #ymean = history[2].mean()
                 #global_policy_params.mu_theta[0]=ymean
                 y_adjusted = feat_trans.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
-                print('means')
-                print(history[2].mean())
-                print(steps.mean())
+                # print('means')
+                #print(history[2].mean())
+                #print(steps.mean())
                 #print(y_adjusted.std())
-                print(experiment.beta)
-                print(personal_policy_params.mus2[0])
-                print(len(history))
+                #print(experiment.beta)
+                #print(personal_policy_params.mus2[0])
+                #print(len(history))
                 #print(y_adjusted)
                 ##CHANGE THIS
                 try:
                     temp_params = run_gpy.run(history[0], history[1],y_adjusted,global_policy_params)
-                    print(temp_params)
+                #print(temp_params)
                 except Exception as e:
                     print(e)
                     print('was error')
@@ -156,9 +156,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 }
                 #cov,X_dim,noise_term
                 #print(temp_params)
-                cov = get_cov(history[0],global_policy_params.sigma_theta)
-                temp_params['cov'] = cov
-                print(cov)
+                #cov = get_cov(history[0],global_policy_params.sigma_theta)
+                #temp_params['cov'] = cov
+                #print(cov)
                 #temp_params['cov']
                 inv_term = pb.get_inv_term(cov,history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
@@ -265,11 +265,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
                     personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)    
                     
-                    if participant.pid==0:
-                        print(temp[0])
-                        print(global_posterior)
-                        print(temp[1])
-                        print(global_posterior_sigma)
+                    #if participant.pid==0:
+                    #    print(temp[0])
+                    #    print(global_posterior)
+                    #   print(temp[1])
+                    #    print(global_posterior_sigma)
                     
                     if policy==None:
                         action = sf.get_action(policy)
@@ -288,11 +288,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
-                        if participant.pid==0:
-                            print('z')
-                            print(z)
-                            print(np.dot(z,personal_policy_params.mus2[participant.pid]))
-                        print(np.dot(np.dot(np.transpose(z),personal_policy_params.sigmas2[participant.pid]),z))
+                        #if participant.pid==0:
+                            #print('z')
+                            #print(z)
+                            #print(np.dot(z,personal_policy_params.mus2[participant.pid]))
+                            #print(np.dot(np.dot(np.transpose(z),personal_policy_params.sigmas2[participant.pid]),z))
 
                         action = int(experiment.algo_rando_gen.uniform() < prob)
                             
@@ -415,7 +415,7 @@ if __name__=="__main__":
             actions,rewards = get_regret(experiment)
             
             print('done about to save')
-            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_onoise_dbtest.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_onoise_dbtestcov.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
             #'likelis':glob.to_save_params,
             with open(filename,'wb') as f:
                 pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
