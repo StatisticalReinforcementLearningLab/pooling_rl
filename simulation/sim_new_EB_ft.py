@@ -101,9 +101,40 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     #print(history[1])
                 t = feat_trans.history_semi_continuous(temp,global_policy_params)
                 history = feat_trans.get_phi_from_history_lookups(t)
-                ymean = history[2].mean()
-                global_policy_params.mu_theta[0]=ymean
-                y_adjusted = feat_trans.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
+                
+                
+                ##temporary
+                context,steps,probs,actions= tf.get_form_TS(t)
+            
+                temp_data = tf.get_phi_from_history_lookups(temp_hist)
+                #print(context)
+                # print(steps)
+                stepsmean = steps.mean()
+                global_policy_params.mu_theta[0]=stepsmean
+                steps = tf.get_RT_o(steps,temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
+                #print(steps.mean())
+                #print(steps.std())
+                #print(len(context))
+                #print(len(steps))
+                
+                ##why is it sigma here and not the noise, which should it be?
+                temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.noise_term,\
+                                               np.zeros(5),\
+                                               np.eye(5),\
+                                               np.zeros(5),\
+                                               np.eye(5),
+                                               )
+                
+                global_posterior = temp[0]
+                global_posterior_sigma = temp[1]
+                
+                
+                
+                
+                
+                #ymean = history[2].mean()
+                #global_policy_params.mu_theta[0]=ymean
+                #y_adjusted = feat_trans.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
                 print('means')
                 print(history[2].mean())
                 print(y_adjusted.mean())
@@ -227,6 +258,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         temp = [personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid]]
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
+                    mu_beta = global_posterior
+                    Sigma_beta = global_posterior_sigma
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
                     personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)    
                     
@@ -237,8 +270,13 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                         
                     elif policy=='TS':
+                        if 'pretreatment' in global_policy_params.baseline_keys:
+                            to_call = sf.get_pretreatment(steps_last_time_period)
+                        else:
+                            to_call = steps_last_time_period
                       
-                        z=np.array([1,tod,dow,sf.get_pretreatment(participant.steps),location])
+                      
+                        z=np.array([1,tod,dow,to_call,location])
                         
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
                         action = int(experiment.algo_rando_gen.uniform() < prob)
