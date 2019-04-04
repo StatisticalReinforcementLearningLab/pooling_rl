@@ -82,7 +82,7 @@ class study:
           #independent only
            #np.array([0.0977, 0.0858,0.111,0.181,-0.217,0.255])
            #  real weather 0.24941052, real location 0.22540878
-        self.beta =np.array([0.05, -0.1, 0.1, -0.05, 0.2])
+        self.beta =np.array([ 0.05, -0.1 ,  0.1 , -0.15,  0.2 ])
         #these are redone without weather and then always good to send....
             #np.array([0.07912183,  0.11717383,  0.12143829, -0.07507128,  0.25115448])
         #np.array([0.04772972,  0.0696645 ,  0.21549613, 0.24941052 ,-0.22475609 , 0.22540878])

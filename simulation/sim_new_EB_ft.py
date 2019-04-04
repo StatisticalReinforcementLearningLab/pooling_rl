@@ -97,7 +97,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     #print(history[1])
                 t = feat_trans.history_semi_continuous(temp,global_policy_params)
                 history = feat_trans.get_phi_from_history_lookups(t)
+                
                 y_adjusted = feat_trans.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
+                history[2]=y_adjusted
                 #print(y_adjusted)
                 ##CHANGE THIS
                 try:
