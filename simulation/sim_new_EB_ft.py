@@ -210,12 +210,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1],history[2] )
-                                #if participant.pid==0:
-                                # print('participant')
-                                #print(global_policy_params.mu_theta)
-                                #print(experiment.beta)
-                                #print(participant.pid)
-                                #print(temp[0])
+                            if participant.pid==0:
+                                print('participant')
+                                print(global_policy_params.mu_theta)
+                                print(experiment.beta)
+                                print(participant.pid)
+                                print(temp[0])
                     
                     #print(temp[0].shape)
                     else:
