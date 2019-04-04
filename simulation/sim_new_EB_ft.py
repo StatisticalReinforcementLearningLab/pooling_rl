@@ -137,7 +137,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #y_adjusted = feat_trans.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
                 print('means')
                 print(history[2].mean())
-                print(y_adjusted.mean())
+                print(steps.mean())
                 print(y_adjusted.std())
                 print(experiment.beta)
                 print(personal_policy_params.mus2[0])
