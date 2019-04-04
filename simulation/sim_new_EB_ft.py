@@ -260,8 +260,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         global_posterior=personal_policy_params.mus2[participant.pid]
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
-                    mu_beta = global_posterior
-                    Sigma_beta = global_posterior_sigma
+                    #mu_beta = global_posterior
+                    #Sigma_beta = global_posterior_sigma
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
                     personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)    
                     if participant.pid==0:
