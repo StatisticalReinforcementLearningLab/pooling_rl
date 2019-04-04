@@ -103,6 +103,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 history = feat_trans.get_phi_from_history_lookups(t)
                 
                 y_adjusted = feat_trans.get_RT_o(history[2],history[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
+                print('means')
+                print(history[2].mean())
+                print(y_adjusted.mean())
+                print(y_adjusted.std())
                 
                 #print(y_adjusted)
                 ##CHANGE THIS
@@ -247,7 +251,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         optimal_reward = get_optimal_reward(experiment.beta,z)
                         optimal_action = int(optimal_reward>=0)
 
-                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('pooling/{}/updates_participant_newbigtest_{}_{}_{}_six_weeks_onoise_db.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('pooling/{}/updates_participant_newbigtest_{}_{}_{}_six_weeks_onoise_dbtest.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
