@@ -104,7 +104,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                 
                 ##temporary
-                context,steps,probs,actions= tf.get_form_TS(t)
+                context,steps,probs,actions=  feat_trans.get_form_TS(t)
             
                 temp_data = feat_trans.get_phi_from_history_lookups(temp_hist)
                 #print(context)
