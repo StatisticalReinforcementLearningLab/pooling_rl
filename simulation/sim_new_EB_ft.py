@@ -197,11 +197,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 availability = (participant.rando_gen.uniform() < 0.8)
                 participant.set_available(availability)
                 
-                if participant.pid==0 and time in participant.decision_times:
-                        print(sim_num)
-                        print(np.__version__)
-                        print(participant.rando_gen.rand())
-                        print(context_dict)
+                #if participant.pid==0 and time in participant.decision_times:
+                #print(sim_num)
+                #print(np.__version__)
+                #print(participant.rando_gen.rand())
+                #print(context_dict)
 
                 
                 if time == participant.times[0]:
