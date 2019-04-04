@@ -137,11 +137,11 @@ class study:
             rg=np.random.RandomState(seed=person_seed)
             
             gid = int(rg.uniform()>=.5)+1
-            print('init')
+            #print('init')
             
-            print(k)
-            print(self.sim_number)
+            #print(k)
+            #print(self.sim_number)
             
             person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg)
-            print(person.rando_gen.uniform())
+            #print(person.rando_gen.uniform())
             self.population[k]=person

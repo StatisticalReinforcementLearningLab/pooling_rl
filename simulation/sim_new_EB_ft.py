@@ -226,7 +226,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 
                  
 
-                if time.hour in experiment.location_update_hours:
+                if time.hour in experiment.location_update_hours  and time.minute==0:
                     location = feat_trans.get_next_location(participant.gid,tod,dow,participant.get_loc(),seed=participant.rando_gen)
                 
     
