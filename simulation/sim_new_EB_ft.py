@@ -194,6 +194,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #participant.set_wea(weather)
                 if participant.pid==0 and time in participant.decision_times:
                         print(sim_num)
+                        print(np.__version__)
                         print(participant.rando_gen.rand())
                         print(context_dict)
                 
