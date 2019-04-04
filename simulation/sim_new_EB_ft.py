@@ -78,6 +78,9 @@ def initialize_policy_params_TS(experiment,update_period,root,standardize=False)
 def get_optimal_reward(beta,states):
     return np.dot(beta,states)
 
+def get_cov(history,sigma_theta):
+    return np.dot(np.dot(history,sigma_theta),history.T)
+
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None,case=None,feat_trans=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
@@ -114,7 +117,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 }
                 #cov,X_dim,noise_term
                 #print(temp_params)
-                inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
+                cov = get_cov(history,global_policy_params.sigma_theta)
+                global_policy_params.cov = cov
+                #temp_params['cov']
+                inv_term = pb.get_inv_term(cov,history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
                 global_policy_params.to_save_params[time]=temp_params['like']
                 print('global_info', time,global_policy_params.decision_times,temp_params['noise'],time_module.strftime('%l:%M%p %Z on %b %d, %Y'),temp_params['like'],file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_dbtest.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
@@ -122,6 +128,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 global_policy_params.inv_term=inv_term
                 #print(temp_params)
                 global_policy_params.history = history
+                
                 #del history
             ##update global context
             ##global context shared across all participants
