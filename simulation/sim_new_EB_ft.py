@@ -264,9 +264,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     #Sigma_beta = global_posterior_sigma
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
                     personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)    
+                    
                     if participant.pid==0:
                         print(temp[0])
                         print(global_posterior)
+                        print(temp[1])
+                        print(global_posterior_sigma)
                     
                     if policy==None:
                         action = sf.get_action(policy)
@@ -281,8 +284,16 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                       
                       
                         z=np.array([1,tod,dow,to_call,location])
-                        
+
+
+
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params)
+                        if participant.pid==0:
+                            print('z')
+                            print(z)
+                            print(np.dot(z,personal_policy_params.mus2[participant.pid]))
+                            print(np.dot(np.dot(np.transpose(z),Sigma),z))
+
                         action = int(experiment.algo_rando_gen.uniform() < prob)
                             
                     if availability:
