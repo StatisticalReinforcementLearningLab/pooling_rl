@@ -292,7 +292,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             print('z')
                             print(z)
                             print(np.dot(z,personal_policy_params.mus2[participant.pid]))
-                            print(np.dot(np.dot(np.transpose(z),Sigma),z))
+                        print(np.dot(np.dot(np.transpose(z),personal_policy_params.sigmas2[participant.pid]),z))
 
                         action = int(experiment.algo_rando_gen.uniform() < prob)
                             
