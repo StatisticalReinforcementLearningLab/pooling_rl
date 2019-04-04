@@ -265,7 +265,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
                     personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)    
                     if participant.pid==0:
-                        print(mu_beta)
+                        print(temp[0])
                         print(global_posterior)
                     
                     if policy==None:
