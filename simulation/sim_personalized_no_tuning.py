@@ -202,30 +202,30 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                     
                     
-                    dt=True
-                    action=0
+                        dt=True
+                        action=0
                     
                     
                     
                     
-                    if policy==None:
-                        action = sf.get_action(policy)
+                        if policy==None:
+                            action = sf.get_action(policy)
                     
                     
 
-                    elif policy=='TS':
+                        elif policy=='TS':
                         
                         #,int(location==1),int(location==2),int(location==3)
                         #temperature,
                         #sf.get_pretreatment()
-                        z=np.array([1,tod,dow,sf.get_pretreatment(participant.steps),location])
+                            z=np.array([1,tod,dow,sf.get_pretreatment(participant.steps),location])
                         
                         
-                        prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
+                            prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
                         
                         #print('prob {}'.format(prob))
                         #random.seed(participant.pid)
-                        action = int(experiment.algo_rando_gen.uniform() <prob)
+                            action = int(experiment.algo_rando_gen.uniform() <prob)
                         #int(experiment.rando_gen.uniform() < prob)
                         
                         
@@ -242,16 +242,16 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                        0,0,0]
                                 
                                 
-                                       steps = tf.get_steps_action(context,seed=participant.rando_gen)
+                            steps = tf.get_steps_action(context,seed=participant.rando_gen)
                                        
                                        
-                                       add = action*sf.get_add_no_action(z,experiment.beta,participant.Z)
+                            add = action*sf.get_add_no_action(z,experiment.beta,participant.Z)
                                        
                                        
-                                       participant.steps =  steps+add
+                            participant.steps =  steps+add
                                        
-                                       optimal_reward = get_optimal_reward(experiment.beta,z)
-                                       optimal_action = int(optimal_reward>=0)
+                            optimal_reward = get_optimal_reward(experiment.beta,z)
+                            optimal_action = int(optimal_reward>=0)
 
                         else:
                         
