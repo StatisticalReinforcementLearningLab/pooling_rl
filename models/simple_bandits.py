@@ -238,4 +238,4 @@ def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta,inv_term
     last = np.add(sigma_theta,first_term)
     last = np.subtract(last,middle_term)
     
-    return middle_term
+    return last
