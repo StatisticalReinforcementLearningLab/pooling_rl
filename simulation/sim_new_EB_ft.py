@@ -264,7 +264,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     Sigma_beta = global_posterior_sigma
                     personal_policy_params.update_mus(participant.pid,mu_beta,2)
                     personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)    
-                    
+                    if participant.pid==0:
+                        print(mu_beta)
+                        print(global_posterior)
                     
                     if policy==None:
                         action = sf.get_action(policy)
@@ -326,9 +328,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 
                 participant.history[time]=context_dict
-                if participant.pid==0 and time in participant.decision_times:
-                    print(participant.rando_gen.rand())
-                    print(context_dict)
+                    #if participant.pid==0 and time in participant.decision_times:
+                    #print(participant.rando_gen.rand())
+                    #print(context_dict)
                     #if global_policy_params.decision_times%100==0:
                     
                     # to_save = make_to_save(experiment)
