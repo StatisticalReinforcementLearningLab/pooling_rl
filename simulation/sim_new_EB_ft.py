@@ -109,11 +109,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 print(y_adjusted.mean())
                 print(y_adjusted.std())
                 print(personal_policy_params.mus2[0])
-                
+                print(len(history))
                 #print(y_adjusted)
                 ##CHANGE THIS
                 try:
-                    temp_params = run_gpy.run(history[0], history[1],y_adjusted,global_policy_params)
+                    temp_params = run_gpy.run(history[0], history[1],history[2],global_policy_params)
                     print(temp_params)
                 except Exception as e:
                     print(e)
