@@ -213,7 +213,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                     if time.hour==0 and time.minute==0:
                         participant.current_day_counter=participant.current_day_counter+1
-                    
+
                     #print(time)
                     steps_last_time_period = participant.steps
                 
@@ -288,7 +288,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                         #participant.steps_last_time_period = participant.steps
                         steps = feat_trans.get_steps_action(context,seed=participant.rando_gen)
-                        add = sf.get_add_two(action,z,experiment.beta,participant.Z)
+                        add = action*(sf.get_add_no_action(z,experiment.beta,participant.Z))
                         participant.steps = steps+add
                         optimal_reward = get_optimal_reward(experiment.beta,z)
                         optimal_action = int(optimal_reward>=0)
@@ -324,6 +324,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 
                 participant.history[time]=context_dict
+                if participant.pid==0 and time.hour==0 and time.minute==0:
+                        print(context_dict)
                     #if global_policy_params.decision_times%100==0:
                     
                     # to_save = make_to_save(experiment)
