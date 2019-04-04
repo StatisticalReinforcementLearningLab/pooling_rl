@@ -106,12 +106,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##temporary
                 context,steps,probs,actions= tf.get_form_TS(t)
             
-                temp_data = tf.get_phi_from_history_lookups(temp_hist)
+                temp_data = feat_trans.get_phi_from_history_lookups(temp_hist)
                 #print(context)
                 # print(steps)
                 stepsmean = steps.mean()
                 global_policy_params.mu_theta[0]=stepsmean
-                steps = tf.get_RT_o(steps,temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
+                steps = feat_trans.get_RT_o(steps,temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
                 #print(steps.mean())
                 #print(steps.std())
                 #print(len(context))
@@ -327,6 +327,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                 participant.history[time]=context_dict
                 if participant.pid==0 and time in participant.decision_times:
+                    print(participant.rando_gen)
                     print(context_dict)
                     #if global_policy_params.decision_times%100==0:
                     
