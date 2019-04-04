@@ -324,8 +324,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
 
                 participant.history[time]=context_dict
-                if participant.pid==0 and time.hour==0 and time.minute==0:
-                        print(context_dict)
+                if participant.pid==0 and time in participant.decision_times:
+                    print(context_dict)
                     #if global_policy_params.decision_times%100==0:
                     
                     # to_save = make_to_save(experiment)
