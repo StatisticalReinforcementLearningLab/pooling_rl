@@ -200,6 +200,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                                   history[0], history[1],y_adjusted )
                             
                             print('participant')
+                            print(global_policy_params.mu_theta)
                             print(experiment.beta)
                             print(participant.pid)
                             print(temp[0])
