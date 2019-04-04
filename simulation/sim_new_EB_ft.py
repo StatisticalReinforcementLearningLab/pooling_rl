@@ -138,7 +138,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 print('means')
                 print(history[2].mean())
                 print(steps.mean())
-                print(y_adjusted.std())
+                #print(y_adjusted.std())
                 print(experiment.beta)
                 print(personal_policy_params.mus2[0])
                 print(len(history))
