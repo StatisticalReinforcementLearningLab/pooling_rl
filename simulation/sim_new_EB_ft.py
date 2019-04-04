@@ -102,9 +102,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##CHANGE THIS
                 try:
                     temp_params = run_gpy.run(history[0], history[1],history[2],global_policy_params)
-                    print('participant')
-                    print(participant.pid)
-                    print(temp_params)
+
                 except Exception as e:
                     print(e)
                     print('was error')
@@ -198,6 +196,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
                                                   participant.pid,participant.current_day_counter,\
                                                   history[0], history[1],history[2] )
+                    
+                            print('participant')
+                            print(participant.pid)
+                            print(temp[0])
                     
                     #print(temp[0].shape)
                     else:
