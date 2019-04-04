@@ -79,6 +79,7 @@ def get_optimal_reward(beta,states):
     return np.dot(beta,states)
 
 def get_cov(history,sigma_theta):
+    tr = np.dot(history,sigma_theta)
     return np.dot(np.dot(history,sigma_theta),history.T)
 
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim_num=None,case=None,feat_trans=None):
