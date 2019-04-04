@@ -84,76 +84,23 @@ def get_optimal_reward(beta,states):
 
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,sim=None,which_gen=None,tf = None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
-    #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
-    tod_check = set([])
-    
-    
-    additives = []
-    
     for time in experiment.study_days:
-        #if time>experiment.study_days[0]+pd.DateOffset(days=3):
-        #break
+        
         #if time> experiment.study_days[0]:
         #history  = pb.make_history(experiment)
-        #time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period)
         if time==experiment.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
             experiment.last_update_day=time
-            
             #print('Global update', time,global_policy_params.decision_times, file=open('updates_{}_{}.txt'.format(len(experiment.population),global_policy_params.update_period), 'a'))
-            if global_policy_params.decision_times>2 :
+            if global_policy_params.decision_times>2:
                 global_policy_params.last_global_update_time=time
-                
-                
-                temp_hist = tf.get_history_decision_time_avail(experiment,time)
-                
-                #print('update')
-                
-                temp_hist= tf.history_semi_continuous(temp_hist,global_policy_params)
-                
-                
-                
-                context,steps,probs,actions= tf.get_form_TS(temp_hist)
-                
-                temp_data = tf.get_phi_from_history_lookups(temp_hist)
-                #print(context)
-                # print(steps)
-                stepsmean = steps.mean()
-                global_policy_params.mu_theta[0]=stepsmean
-                steps = tf.get_RT_o(steps,temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
-                #print(steps.mean())
-                #print(steps.std())
-                #print(len(context))
-                #print(len(steps))
-                
-                ##why is it sigma here and not the noise, which should it be?
-                temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.noise_term,\
-                                               np.zeros(5),\
-                                               np.eye(5),\
-                                               np.zeros(5),\
-                                               np.eye(5),
-                                               )
-                                               #global_policy_params.mus1,\
-                                               #global_policy_params.sigmas1,\
-                                               #global_policy_params.mus2,\
-                                               #global_policy_params.sigmas2,
-                                               
-                                               mu_beta = temp[0]
-                                               Sigma_beta = temp[1]
-                                               print(mu_beta)
-                                               global_policy_params.update_mus(None,mu_beta,2)
-                                               global_policy_params.update_sigmas(None,Sigma_beta,2)
     
         tod = sf.get_time_of_day(time)
         dow = sf.get_day_of_week(time)
-        
-        
-        
-        
         #if time==experiment.study_days[0]:
-        #print('init weather')
-        #weather = tf.get_weather_prior(tod,time.month,seed=experiment.rando_gen)
-        #temperature = tf.continuous_temperature(weather)
+        # print('init weather')
+        #   weather = tf.get_weather_prior(tod,time.month,seed=experiment.rando_gen)
+        #  temperature = tf.continuous_temperature(weather)
         #elif time.hour in experiment.weather_update_hours and time.minute==0:
         #weather = tf.get_next_weather(str(tod),str(time.month),weather,seed=experiment.rando_gen)
         #temperature = tf.continuous_temperature(weather)
@@ -166,31 +113,63 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #1
                 ##for every active person update person specific aspects of their context
                 participant = experiment.population[person]
-                
-                #update global context variables
                 participant.set_tod(tod)
                 participant.set_dow(dow)
+                
+                if time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
+                    
+                    history = participant.history
+                    
+                    #print(participant.pid)
+                    #print('updated')
+                    #print(len(history))
+                    #print(participant.last_update_day)
+                    #print(history)
+                    #return {participant.pid:history}
+                    temp_hist = tf.get_history_decision_time_avail_single({participant.pid:history},time)
+                    
+                    temp_hist= tf.history_semi_continuous(temp_hist,global_policy_params)
+                    #sf.get_data_for_txt_effect_u
+                    
+                    context,steps,probs,actions= tf.get_form_TS(temp_hist)
+                    #sf.get_data_for_txt_effect_update(history,global_policy_params)
+                    stepsmean = steps.mean()
+                    global_policy_params.mu_theta[0]=stepsmean
+                    #phi = get_phi(context,probs,actions,[i for i in range(len(context[0]))],[i for i in range(len(context[0]))])
+                    
+                    temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.sigma,\
+                                                   personal_policy_params.mus1[participant.pid],\
+                                                   personal_policy_params.sigmas1[participant.pid],\
+                                                   personal_policy_params.mus2[participant.pid],\
+                                                   personal_policy_params.sigmas2[participant.pid],
+                                                   
+                                                   )
+                    mu_beta = temp[0]
+                    Sigma_beta = temp[1]
+                    personal_policy_params.update_mus(participant.pid,mu_beta,2)
+                    personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
+                    participant.last_update_day=time
+                #history = None
+                
+                #update global context variables
+                
                 #participant.set_wea(weather)
                 
-                
+                #random.seed(participant.pid)
                 availability = (participant.rando_gen.uniform() < 0.8)
-                #print(participant.pid)
-                #print(availability)
                 participant.set_available(availability)
                 
                 if time == participant.times[0]:
                     #get first location
-                    location = tf.get_location_prior(str(participant.gid),str(tod),str(dow),seed = participant.rando_gen)
+                    location = tf.get_location_prior(str(participant.gid),str(tod),str(dow),seed=participant.rando_gen)
                     participant.set_inaction_duration(0)
                     participant.set_action_duration(0)
-                #participant.set_duration(0)
-                #participant.set_dosage(0)
-                #personal_policy_params.etas[participant.pid]
+                
                 
                 
                 if time <= participant.times[0]:
                     steps_last_time_period = 0
-                
+        
                 ##set first pre-treatment, yesterday step count, variation and dosage
                 else:
                     
@@ -200,108 +179,111 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     #print(time)
                     steps_last_time_period = participant.steps
                 
-                    
-                    
+                
+
                 if time.hour in experiment.location_update_hours and time.minute==0:
-                        location = tf.get_next_location(participant.gid,tod,dow,participant.get_loc(),seed =participant.rando_gen)
+                    location = tf.get_next_location(participant.gid,tod,dow,participant.get_loc(),seed=participant.rando_gen)
                 
                     
                     
-                participant.set_loc(location)
-                        
-                        
-                        
-                prob = -1
-                add=None
-                optimal_action = -1
-                optimal_reward = -100
-                if time in participant.decision_times:
-            
-            
-            
+                    participant.set_loc(location)
+                    
+                    
+                    prob = -1
+                    add=None
+                    optimal_action = -1
+                    optimal_reward = -100
+                    if time in participant.decision_times:
+                    #print(personal_policy_params.batch_index[participant.pid])
+                    
+                    
+                    ##if we have made no global updates
+                    
+
+                    
+                    
                     dt=True
                     action=0
                     
+                    
+                    
+                    
                     if policy==None:
                         action = sf.get_action(policy)
-            
-            
-            
-                    elif policy=='TS':
                     
                     
-                        if 'pretreatment' in global_policy_params.baseline_keys:
-                                to_call = sf.get_pretreatment(steps_last_time_period)
-                        else:
-                                to_call = steps_last_time_period
-                
-                    ##want this to be a function
-                        z=np.array([1,tod,dow,to_call,location])
-                        prob = TS.prob_cal_ts(z,0,global_policy_params.mus2,global_policy_params.sigmas2,global_policy_params,seed = experiment.algo_rando_gen)
-                        #if participant.pid==1:
-                        
-                        #print('prob _ {}'.format(prob))
-                        #print(type(prob))
-                        
-                        action = int(experiment.algo_rando_gen.uniform() < prob)
-                    
-                    
-                    
-                    if availability:
-                        
-                        
-                        
-                                tod_check.add(tod)
-                        
-                        
-                        
-                        context = [action,participant.gid,tod,dow,sf.get_pretreatment(steps_last_time_period),location,\
-                                   0,0,0]
-                            
-                                   #participant.steps_last_time_period = participant.steps
-                                   #print(sf.get_pretreatment(participant.steps))
-                                   
-                        steps = tf.get_steps_action(context,seed = participant.rando_gen)
-                                   
-                                   #add = sf.get_add_two(action,z,experiment.beta,participant.Z)
-                        add = action*(sf.get_add_no_action(z,experiment.beta,participant.Z))
-                        additives.append([action,add,prob])
-                        participant.steps = steps+add
-                                   
-                                   ##calculate optimal
-                        optimal_reward = get_optimal_reward(experiment.beta,z)
-                        optimal_action = int(optimal_reward>=0)
-        
-                    else:
-                        #participant.steps_last_time_period = participant.steps
-                        steps = tf.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(steps_last_time_period),seed = participant.rando_gen)
-                        participant.steps = steps
-        
-        
-        
-                    global_policy_params.decision_times =   global_policy_params.decision_times+1
-                                
-                                
-                else:
-                                    #participant.steps_last_time_period = participant.steps
-                    steps = tf.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(steps_last_time_period),seed = participant.rando_gen)
-                    participant.steps = steps
-                                        
-                                        ##history:
-                context_dict =  {'steps':participant.steps,'add':add,'action':action,'location':location,'location_1':int(location==1),\
-                                            'ltps':steps_last_time_period,'location_2':int(location==2),'location_3':int(location==3),\
-                                                'study_day':participant.current_day_counter,\
-                                                    'decision_time':dt,\
-                                                        'time':time,'avail':availability,'prob':prob,\
-                                                            'dow':dow,'tod':tod,\
-                                                                'pretreatment':sf.get_pretreatment(steps_last_time_period),\
-                                                                    'optimal_reward':optimal_reward,'optimal_action':optimal_action,\
-                                                                        'mu2':global_policy_params.mus2,'gid':participant.gid}
-                participant.history[time]=context_dict
-                if participant.pid==0 and time in participant.decision_times:
-                    print(participant.rando_gen.rand())
-                    print(context_dict)
 
+                    elif policy=='TS':
+                        
+                        #,int(location==1),int(location==2),int(location==3)
+                        #temperature,
+                        #sf.get_pretreatment()
+                        z=np.array([1,tod,dow,sf.get_pretreatment(participant.steps),location])
+                        
+                        
+                        prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
+                        
+                        #print('prob {}'.format(prob))
+                        #random.seed(participant.pid)
+                        action = int(experiment.algo_rando_gen.uniform() <prob)
+                        #int(experiment.rando_gen.uniform() < prob)
+                        
+                        
+                        
+                        if availability:
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            context = [action,participant.gid,tod,dow,sf.get_pretreatment(steps_last_time_period),location,\
+                                       0,0,0]
+                                
+                                
+                                       steps = tf.get_steps_action(context,seed=participant.rando_gen)
+                                       
+                                       
+                                       add = action*sf.get_add_no_action(z,experiment.beta,participant.Z)
+                                       
+                                       
+                                       participant.steps =  steps+add
+                                       
+                                       optimal_reward = get_optimal_reward(experiment.beta,z)
+                                       optimal_action = int(optimal_reward>=0)
+
+                        else:
+                        
+                            steps = tf.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(steps_last_time_period),seed=participant.rando_gen)
+                            participant.steps = steps
+                    
+                    
+                    
+                        global_policy_params.decision_times =   global_policy_params.decision_times+1
+                                               
+                                               
+                                               
+                    else:
+                                                   #participant.steps_last_time_period = participant.steps
+                        steps = tf.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(steps_last_time_period),seed=participant.rando_gen)
+                        participant.steps = steps
+                                                       
+                                                       ##history:
+                                                       
+                                                       ##history:
+                        context_dict =  {'steps':participant.steps,'add':add,'action':action,'weather':None,'location':location,'location_1':int(location==1),\
+                                                           'ltps':steps_last_time_period,'location_2':int(location==2),'location_3':int(location==3),\
+                                                               'study_day':participant.current_day_counter,\
+                                                                   'temperature':None,'decision_time':dt,\
+                                                                       'time':time,'avail':availability,'prob':prob,\
+                                                                           'dow':dow,'tod':tod,\
+                                                                               'pretreatment':sf.get_pretreatment(steps_last_time_period),\
+                                                                                   'optimal_reward':optimal_reward,'optimal_action':optimal_action}
+                        participant.history[time]=context_dict
+                        if participant.pid==0 and time in participant.decision_times:
+                            print(participant.rando_gen.rand())
+                            print(context_dict)
 
 
 def make_to_save(exp):
@@ -357,7 +339,7 @@ if __name__=="__main__":
             gids = make_to_groupids(experiment)
             actions,rewards = get_regret(experiment)
 
-            filename = '{}/results/population_size_batch_no_tuning_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_personalized_no_tuning_weighted_poolednewbigtest_{}_update_days_{}_{}_p_{}_{}_new_params_six_weeks.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
 #'likelis':glob.to_save_params,
             with open(filename,'wb') as f:
                 pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
