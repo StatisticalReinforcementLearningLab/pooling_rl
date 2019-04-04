@@ -112,7 +112,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 ##CHANGE THIS
                 try:
                     temp_params = run_gpy.run(history[0], history[1],y_adjusted,global_policy_params)
-
+                    print(temp_params)
                 except Exception as e:
                     print(e)
                     print('was error')
