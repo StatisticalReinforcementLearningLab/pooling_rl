@@ -125,6 +125,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #print(temp_params)
                 cov = get_cov(history[0],global_policy_params.sigma_theta)
                 temp_params['cov'] = cov
+                print(cov)
                 #temp_params['cov']
                 inv_term = pb.get_inv_term(cov,history[0].shape[0],temp_params['noise'])
                 #if to_save_params not None:
