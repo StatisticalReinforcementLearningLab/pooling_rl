@@ -203,7 +203,9 @@ def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta,inv_term):
     middle_term = np.matmul(M.T,inv_term)
     #print(middle_term)
     middle_term = np.matmul(middle_term,adjusted_rewards)
-    #print(middle_term)
+    print('middles')
+    print(middle_term)
+    print(mu_theta)
     return np.add(mu_theta,middle_term)
 
 def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta,inv_term):
