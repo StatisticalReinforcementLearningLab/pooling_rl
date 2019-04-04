@@ -317,7 +317,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 context_dict =  {'steps':participant.steps,'add':add,'action':action,'location':location,'location_1':int(location==1),\
                     'ltps':steps_last_time_period,'location_2':int(location==2),'location_3':int(location==3),\
                         'study_day':participant.current_day_counter,\
-                            'decision_time':dt,\
+                            'decision_time':dt,'gid':participant.gid,\
                                 'time':time,'avail':availability,'prob':prob,\
                                     'dow':dow,'tod':tod,\
                                         'pretreatment':sf.get_pretreatment(steps_last_time_period),\
