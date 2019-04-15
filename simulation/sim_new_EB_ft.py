@@ -308,7 +308,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             
                     if availability:
                   
-                        context = [action,participant.gid,tod,dow,sf.get_pretreatment(participant.steps),location,\
+                        context = [action,participant.gid,tod,dow,weather,sf.get_pretreatment(participant.steps),location,\
                               0,0,0]
                     
                         #participant.steps_last_time_period = participant.steps
@@ -322,7 +322,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                     else:
                         #participant.steps_last_time_period = participant.steps
-                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(participant.steps),weather,seed=participant.rando_gen)
                         participant.steps = steps
 
                 
@@ -333,7 +333,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     
                 else:
                     #participant.steps_last_time_period = participant.steps
-                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(participant.steps),seed=participant.rando_gen)
+                        steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,sf.get_pretreatment(participant.steps),weather,seed=participant.rando_gen)
                         participant.steps = steps     
                 
                 ##history:

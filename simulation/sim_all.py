@@ -310,7 +310,7 @@ def get_regret(experiment):
     return optimal_actions,rewards
 
 def run_many(algo_type):
-    for case in ['case_one','case_two','case_three']:
+    for case in ['case_three']:
         #,'case_two','case_three'
         #case = 'case_one'
         
@@ -349,10 +349,10 @@ def run_many(algo_type):
                         all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}_preloc.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short',sim)
+                filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump(to_Save,f)
-            filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_preloc.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
+            filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
             with open(filename,'wb') as f:
                 pickle.dump({'actions':all_actions,'regrets':all_rewards},f)
 
