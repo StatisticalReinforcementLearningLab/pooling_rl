@@ -56,12 +56,38 @@ class feature_transformation:
             with open('{}temperature_conditiononed_on_last_temperature_tref_3_1.pkl'.format(root),'rb') as f:
                 self.temperature_lookup_transition = pickle.load(f)
 
+            with open('{}hour_to_id.pkl'.format(root),'rb') as f:
+                        self.hour_lookup = pickle.load(f)
+
+            with open('{}day_to_id.pkl'.format(root),'rb') as f:
+                        self.day_lookup = pickle.load(f)
+
+
+        
                     
         ##difficult to write this generally
         ##this should not call standardize
         def history_to_matrix_for_gp(self,which_history = None):
             pass
+        
+        def get_time_of_day(self,an_index):
+            
+            return self.hour_lookup[an_index.hour]
 
+        def get_day_of_week(self,an_index):
+            
+            return self.day_lookup[an_index.dayofweek]
+    
+        def get_pretreatment(self,steps):
+            #steps = math.log(steps+.5)
+            return int(steps>4.83)
+        
+        def get_add_no_action(self,state_vector,beta,Z):
+            if Z is None:
+                Z=0
+            return np.dot(beta,state_vector)+Z
+        
+    
         def add_intercept(self,data):
             return [[1]+x for x in data]
         
@@ -95,7 +121,7 @@ class feature_transformation:
             for user_id,history in history_dict.items():
 
                 for hk,h in history.items():
-                    base_line = [h[b] for b in glob.baseline_keys]
+                    base_line = [h[b] for b in glob.baseline_features]
                     responsivity_vec =[h[b] for b in glob.responsivity_keys]
                     ##transform weather before this
                     baseline_data[history_count]=base_line

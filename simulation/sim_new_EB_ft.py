@@ -75,8 +75,11 @@ def initialize_policy_params_TS(experiment,update_period,root,standardize=False)
         
     return global_p ,personal_p
 
-def get_optimal_reward(beta,states):
-    return np.dot(beta,states)
+def get_optimal_reward(beta,states,Z):
+    if Z is None:
+        
+        return np.dot(beta,states)
+    return np.dot(beta,states)+Z
 
 def get_cov(history,sigma_theta):
     tr = np.dot(history,sigma_theta)

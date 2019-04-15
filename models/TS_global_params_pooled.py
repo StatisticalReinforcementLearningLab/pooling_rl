@@ -12,17 +12,17 @@ class TS_global_params:
     Keeps track of hyper-parameters for any TS procedure. 
     '''
     
-    def __init__(self,xi=10,baseline_keys=None,psi_features=None,responsivity_keys=None):
+    def __init__(self,xi=10,baseline_features=None,psi_features=None,responsivity_keys=None):
         self.nums = set([np.float64,int,float])
         self.pi_max = 0.8
         self.pi_min = 0.1
         self.sigma =1.15            #6**.5
-        self.baseline_keys=baseline_keys
+        self.baseline_features=baseline_features
         
         #self.baseline_features = baseline_keys
         #self.responsivity_features = responsivity_keys
         self.responsivity_keys = responsivity_keys
-        self.num_baseline_features = len(baseline_keys)
+        self.num_baseline_features = len(baseline_features)
         self.psi_features = psi_features
         self.num_responsivity_features = len(responsivity_keys)
         #self.baseline_indices = [i for i in range(self.num_baseline_features)]
@@ -51,7 +51,7 @@ class TS_global_params:
         #2 has to do with random effects, not likely to change soon
         self.theta_dim =1+self.num_baseline_features + 2*(1+self.num_responsivity_features)
         self.baseline_indices =  [i for i in range(self.theta_dim)]
-        print(self.theta_dim)
+        #print(self.theta_dim)
         self.mu_theta =np.zeros(self.theta_dim)
         self.mu_theta[0]=4.8
         self.sigma_theta =self.get_theta(self.theta_dim)

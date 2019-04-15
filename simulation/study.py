@@ -84,7 +84,13 @@ class study:
           #independent only
            #np.array([0.0977, 0.0858,0.111,0.181,-0.217,0.255])
            #  real weather 0.24941052, real location 0.22540878
-        self.beta =np.array([ 0.05,  0.25,  0.25,  0.25, -0.3 ])
+           
+           
+        ##real current agreed upon beta
+        #self.beta =np.array([ 0.05,  0.25,  0.25,  0.25, -0.3 ])
+        
+        
+        
             #np.array([ 0.05,  0.25, -0.3 ,  0.25,  0.25, -0.3 ])
             #np.array([0.05,  0.25,  0.25,  0.25, -0.3])
 #np.array([0.13747917218640332, -0.08988142,   0.11982505, -0.16109622, 0.10403158])
@@ -125,6 +131,13 @@ class study:
         #return 2
          return int(random.random()>=.5)+1
     
+    def update_beta(self,features):
+        self.beta =np.array([ 0.05,  0.25,  0.25,  0.25, -0.3 ])
+        potential_features = ['intercept','tod','dow','pretreatment','location']
+        new = np.array([self.beta[0]]+[self.beta[i] for i in range(len(self.beta)) if potential_features[i] in features])
+        self.beta = new
+    
+    
     def init_population(self,which_gen):
          
         for k,v in self.person_to_time.items():
@@ -158,3 +171,6 @@ class study:
             person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg)
             #print(person.rando_gen.uniform())
             self.population[k]=person
+
+
+
