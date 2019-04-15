@@ -29,7 +29,7 @@ import simple_bandits
 
 def initialize_policy_params_TS(experiment,update_period,root,standardize=False):
     
-    global_p =gtp.TS_global_params(21,baseline_keys=['tod','dow','pretreatment','location'],psi_features=[0,5], responsivity_keys= ['tod','dow','pretreatment','location'])
+    global_p =gtp.TS_global_params(21,baseline_features=['tod','dow','pretreatment','location'],psi_features=[0,5], responsivity_keys= ['tod','dow','pretreatment','location'])
     personal_p = pp.TS_personal_params()
     
     
@@ -287,7 +287,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         
                         
                     elif policy=='TS':
-                        if 'pretreatment' in global_policy_params.baseline_keys:
+                        if 'pretreatment' in global_policy_params.baseline_features:
                             to_call = sf.get_pretreatment(steps_last_time_period)
                         else:
                             to_call = steps_last_time_period
