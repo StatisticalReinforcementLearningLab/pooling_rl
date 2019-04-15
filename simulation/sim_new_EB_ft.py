@@ -177,11 +177,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             ##global context shared across all participants
         tod = sf.get_time_of_day(time)
         dow = sf.get_day_of_week(time)
-            #if time==experiment.study_days[0]:
+            if time==experiment.study_days[0]:
             #print('init weather')
-            #weather = feat_trans.get_weather_prior(tod,time.month,seed = experiment.rando_gen)
-            #elif time.hour in experiment.weather_update_hours and time.minute==0:
-            #weather = feat_trans.get_next_weather(str(tod),str(time.month),weather,seed = experiment.rando_gen)
+                weather = feat_trans.get_weather_prior(tod,time.month,seed = experiment.weather_gen)
+            elif time.hour in experiment.weather_update_hours and time.minute==0:
+                weather = feat_trans.get_next_weather(str(tod),str(time.month),weather,seed = experiment.weather_gen)
             ##location depends on person 
             
         for person in experiment.dates_to_people[time]:
