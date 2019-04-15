@@ -408,7 +408,7 @@ if __name__=="__main__":
         #for case in ['case_one','case_two','case_three']:
             root = 'pooling/distributions/'
             pop_size=population
-            experiment = study.study('pooling/distributions/',pop_size,'short',which_gen=case,sim_number=int(start_index))
+            experiment = study.study('pooling/distributions/',pop_size,'short_unstaggered_6',which_gen=case,sim_number=int(start_index))
             glob,personal = initialize_policy_params_TS(experiment,int(update_time),standardize=False,root=root)
             ft = feature_transformations.feature_transformation('pooling/distributions/')
           
