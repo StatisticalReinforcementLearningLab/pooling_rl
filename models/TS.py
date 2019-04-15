@@ -153,7 +153,7 @@ def txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
         
         
         
-        temp = post_cal_ts(X_trn, Y_trn, global_params.sigma, mu_tmp, Sigma_tmp)
+        temp = post_cal_ts(X_trn, Y_trn, global_params.noise_term, mu_tmp, Sigma_tmp)
         
         #print(len(temp))
         #print(len(f_two))

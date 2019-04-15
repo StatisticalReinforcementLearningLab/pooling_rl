@@ -19,15 +19,17 @@ class study:
             #'../../murphy_lab/lab/pooling/distributions/'
         self.study_seed = sim_number+30000000
         self.sim_number = sim_number
-        self.algo_rando_gen =np.random.RandomState(seed=8000000)
+        self.algo_rando_gen = np.random.RandomState(seed=8000000)
+        self.weather_gen = np.random.RandomState(seed=9000000)
+        
         #self.rando_gen = np.random.RandomState(seed=sim_number+2000)
-        with open('{}person_to_time_indices_pop_{}_{}_unstaggered_6.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}person_to_time_indices_pop_{}{}.pkl'.format(root,population_size,study_length),'rb') as f:
             pse=pickle.load(f)
-        with open('{}person_to_decision_times_pop_{}_{}_unstaggered_6.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}person_to_decision_times_pop_{}{}.pkl'.format(root,population_size,study_length),'rb') as f:
             dts=pickle.load(f)
-        with open('{}time_to_active_participants_pop_{}_{}_unstaggered_6.pkl'.format(root,population_size,study_length),'rb') as f:
+        with open('{}time_to_active_participants_pop_{}{}.pkl'.format(root,population_size,study_length),'rb') as f:
             dates_to_people=pickle.load(f)
-        with open('{}all_ordered_times_{}_unstaggered_6.pkl'.format(root,study_length),'rb') as f:
+        with open('{}all_ordered_times{}.pkl'.format(root,study_length),'rb') as f:
             study_days=pickle.load(f)
         
         self.person_to_time = pse 
@@ -53,9 +55,9 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
-        self.Z_one =0.00405055
+        self.Z_one =0.0
             #-0.10736186999999998
-        self.Z_two =0.49381715000000004
+        self.Z_two =-0.5
             #0.10736186999999998
             #0.5922135199999999
             #1.5265399999999998
@@ -82,7 +84,11 @@ class study:
           #independent only
            #np.array([0.0977, 0.0858,0.111,0.181,-0.217,0.255])
            #  real weather 0.24941052, real location 0.22540878
-        self.beta =np.array([0.0912183, -0.11717383,  0.15143829, -0.1007128,  0.3115448])
+        self.beta =np.array([ 0.05,  0.25,  0.25,  0.25, -0.3 ])
+            #np.array([ 0.05,  0.25, -0.3 ,  0.25,  0.25, -0.3 ])
+            #np.array([0.05,  0.25,  0.25,  0.25, -0.3])
+#np.array([0.13747917218640332, -0.08988142,   0.11982505, -0.16109622, 0.10403158])
+            #np.array([0.0912183, -0.11717383,  0.15143829, -0.1007128,  0.3115448])
             #np.array([ 0.05, -0.1 ,  0.1 , -0.15,  0.2 ])
         #these are redone without weather and then always good to send....
             #np.array([0.07912183,  0.11717383,  0.12143829, -0.07507128,  0.25115448])
@@ -106,7 +112,10 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =0.12244165000000001
+        self.sigma =0.125
+            #.325**.5
+            #0.125
+            #0.12244165000000001
             #0.6304924999999999
     
         self.init_population(which_gen)
@@ -124,20 +133,24 @@ class study:
             
             #gid = self.get_gid()
             
-            Z=None
-            if which_gen=='case_two':
-                Z = self.Z_one
-                if gid==2:
-                    Z=self.Z_two
-            if which_gen=='case_three':
-                #**2
-                Z=np.random.normal(loc=0,scale=self.sigma)
+
 
             person_seed = k+self.sim_number*1000
             rg=np.random.RandomState(seed=person_seed)
             
             gid = int(rg.uniform()>=.5)+1
             #print('init')
+            
+            Z=None
+            if which_gen=='case_two':
+                Z = self.Z_one
+                if gid==2:
+                    Z=self.Z_two
+            if which_gen=='case_three':
+                                        #**2
+                                        #
+                Z=rg.normal(loc=0,scale=self.sigma)
+            
             
             #print(k)
             #print(self.sim_number)
