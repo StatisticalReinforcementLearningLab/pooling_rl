@@ -247,8 +247,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         z.append(tod)
                     if 'dow' in global_policy_params.baseline_features:
                         z.append(dow)
-                    if 'preatment' in global_policy_params.baseline_features:
-                        z.append(preatment)
+                    if 'pretreatment' in global_policy_params.baseline_features:
+                        z.append(pretreatment)
                     if 'location' in global_policy_params.baseline_features:
                         z.append(location)
 
@@ -315,7 +315,7 @@ def run_many(algo_type):
         #case = 'case_one'
         
         
-        baseline = ['location']
+        baseline = ['pretreatment','location']
         
         
         
@@ -331,7 +331,7 @@ def run_many(algo_type):
                 experiment.update_beta(set(baseline))
                 #print('beta')
                 #print(experiment.beta)
-                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=['location'],responsivity_keys=baseline,algo_type =algo_type)
+                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=['pretreatment','location'],responsivity_keys=baseline,algo_type =algo_type)
                 
                 hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type)
                 to_Save = make_to_save(experiment)
@@ -349,10 +349,10 @@ def run_many(algo_type):
                         all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}_locationonly.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short',sim)
+                filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}_preloc.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump(to_Save,f)
-            filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_locationonly.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
+            filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_preloc.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
             with open(filename,'wb') as f:
                 pickle.dump({'actions':all_actions,'regrets':all_rewards},f)
 
