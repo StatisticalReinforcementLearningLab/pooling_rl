@@ -37,14 +37,14 @@ def run(X,users,y,global_params):
     #print(first_mat.shape)
     
     kernel = GPy.kern.CustomKernel(len(global_params.baseline_indices),baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_index=global_params.user_id_index,initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term,user_mat=user_mat,first_mat = first_mat)
-    #print('initialized kernel')
+    print('initialized kernel')
     m = GPy.models.GPRegression(X,y,kernel)
-    #print('got m')
+    print('got m')
 
     m.Gaussian_noise.variance=global_params.noise_term
 
     m.optimize(max_iters=100)
-    #print('optimization worked')
+    print('optimization worked')
     #sigma_u = get_sigma_u(m.kern.u1.values[0],m.kern.u2.values[0],m.kern.rho.values[0])
     #print('sigma u ')
     #print(sigma_u)

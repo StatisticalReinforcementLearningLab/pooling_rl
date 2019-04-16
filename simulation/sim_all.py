@@ -55,7 +55,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     global_p.psi_indices = [0] + [1+baseline_features.index(j) for j in psi_features] \
     + [len(baseline_features)+1] + [(2+len(baseline_features))+baseline_features.index(j) for j in psi_features]
     #[0,64]
-    global_p.user_id_index =21
+    global_p.user_id_index =0
     
     global_p.psi_features =psi_features
     #[0,64]
