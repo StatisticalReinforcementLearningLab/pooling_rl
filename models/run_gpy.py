@@ -38,6 +38,9 @@ def run(X,users,y,global_params):
     
     kernel = GPy.kern.CustomKernel(len(global_params.baseline_indices),baseline_indices=global_params.baseline_indices,psi_indices=global_params.psi_indices,user_index=global_params.user_id_index,initial_u1=global_params.sigma_u[0][0],initial_u2=global_params.sigma_u[1][1],initial_rho=global_params.rho_term,initial_noise=global_params.noise_term,user_mat=user_mat,first_mat = first_mat)
     print('initialized kernel')
+    print(X.shape)
+    print(y.shape)
+    print(y[0])
     m = GPy.models.GPRegression(X,y,kernel)
     print('got m')
 
