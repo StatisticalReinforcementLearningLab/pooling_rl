@@ -135,7 +135,7 @@ def make_to_save(exp):
                 to_save[key]=context
         return to_save
 
-def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,generative_functions=None,which_gen=None,feat_trans = None,algo_type = None,case=None):
+def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,generative_functions=None,which_gen=None,feat_trans = None,algo_type = None,case=None,sim_num=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     tod_check = set([])
@@ -180,7 +180,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             temp_params = run_gpy.run(history[0], history[1],steps,global_policy_params)
                         except Exception as e:
                             print('was error')
-                            print('global_info', time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                            print('global_info',e, time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                         temp_params={'cov':global_policy_params.cov,'noise':global_policy_params.noise_term,'like':-100333}
                         inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
                         global_policy_params.update_params(temp_params)
@@ -369,7 +369,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 #print(experiment.beta)
                 glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=['pretreatment','location'],responsivity_keys=baseline,algo_type =algo_type)
                 
-                hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type,case=case)
+                hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type,case=case,sim_num=sim)
                 to_save = make_to_save(experiment)
                 actions,rewards = get_regret(experiment)
                 gids = make_to_groupids(experiment)
