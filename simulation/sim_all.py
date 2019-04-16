@@ -350,7 +350,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
         #case = 'case_one'
         
         
-        baseline = ['pretreatment','location']
+        baseline = ['tod','dow','pretreatment','location']
         
         
         
@@ -367,7 +367,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 experiment.update_beta(set(baseline))
                 #print('beta')
                 #print(experiment.beta)
-                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=['pretreatment','location'],responsivity_keys=baseline,algo_type =algo_type)
+                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=['tod','dow','pretreatment','location'],responsivity_keys=baseline,algo_type =algo_type)
                 
                 hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type,case=case,sim_num=sim)
                 to_save = make_to_save(experiment)
