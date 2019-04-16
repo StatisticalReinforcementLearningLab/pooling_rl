@@ -49,7 +49,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     
     global_p.kdim =24
     #194
-    global_p.baseline_indices = [i for i in range(24)]
+    global_p.baseline_indices = [i for i in range(3+ 3*len(baseline_features))]
     #[i for i in range(192)]
     #[0,1,2,3,4,5,6]
     global_p.psi_indices = [0] + [1+baseline_features.index(j) for j in psi_features] \
@@ -177,6 +177,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         global_posterior = mu_beta
                         global_posterior_sigma = Sigma_beta
                         try:
+                            print(temp_data[0].shape)
+                            print(baseline_features)
                             temp_params = run_gpy.run(temp_data[0], temp_data[1],steps,global_policy_params)
                         except Exception as e:
                             print(e)
