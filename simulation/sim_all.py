@@ -177,9 +177,10 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         global_posterior = mu_beta
                         global_posterior_sigma = Sigma_beta
                         try:
-                            print(temp_data[0].shape)
+                            
                             #print(baseline_features)
                             temp_params = run_gpy.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                            print(temp_data[0].shape)
                         except Exception as e:
                             print(e)
                             print('was error')
