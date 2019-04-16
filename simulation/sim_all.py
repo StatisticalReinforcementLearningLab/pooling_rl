@@ -177,7 +177,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         global_posterior = mu_beta
                         global_posterior_sigma = Sigma_beta
                         try:
-                            temp_params = run_gpy.run(history[0], history[1],steps,global_policy_params)
+                            temp_params = run_gpy.run(temp_data[0], temp_data[1],steps,global_policy_params)
                         except Exception as e:
                             print('was error')
                             print('global_info',e, time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
