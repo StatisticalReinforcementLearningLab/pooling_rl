@@ -49,7 +49,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     
     global_p.kdim =24
     #194
-    global_p.baseline_indices = [i for i in range(3+ 3*len(self.baseline_features))]
+    global_p.baseline_indices = [i for i in range(3+ 3*len(baseline_features))]
     #[i for i in range(192)]
     #[0,1,2,3,4,5,6]
     global_p.psi_indices = [0] + [1+baseline_features.index(j) for j in psi_features] \
