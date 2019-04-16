@@ -135,7 +135,7 @@ def make_to_save(exp):
                 to_save[key]=context
         return to_save
 
-def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,generative_functions=None,which_gen=None,feat_trans = None,algo_type = None):
+def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,generative_functions=None,which_gen=None,feat_trans = None,algo_type = None,case=None):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     tod_check = set([])
@@ -188,7 +188,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                     #print(temp_params)
                         global_policy_params.history = temp_data
                         
-                    
+
 
         tod = feat_trans.get_time_of_day(time)
         dow = feat_trans.get_day_of_week(time)
@@ -369,7 +369,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 #print(experiment.beta)
                 glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=['pretreatment','location'],responsivity_keys=baseline,algo_type =algo_type)
                 
-                hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type)
+                hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type,case=case)
                 to_save = make_to_save(experiment)
                 actions,rewards = get_regret(experiment)
                 gids = make_to_groupids(experiment)
