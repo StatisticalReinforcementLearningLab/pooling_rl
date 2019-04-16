@@ -173,9 +173,23 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     if algo_type=='batch':
                         global_policy_params.update_mus(None,mu_beta,2)
                         global_policy_params.update_sigmas(None,Sigma_beta,2)
-                    elif algo_type == 'pooling':
+                    else :
                         global_posterior = mu_beta
                         global_posterior_sigma = Sigma_beta
+                        try:
+                            temp_params = run_gpy.run(history[0], history[1],steps,global_policy_params)
+                        except Exception as e:
+                            print('was error')
+                            print('global_info', time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                        temp_params={'cov':global_policy_params.cov,'noise':global_policy_params.noise_term,'like':-100333}
+                        inv_term = pb.get_inv_term(temp_params['cov'],history[0].shape[0],temp_params['noise'])
+                        global_policy_params.update_params(temp_params)
+                        global_policy_params.inv_term=inv_term
+                                    #print(temp_params)
+                        global_policy_params.history = temp_data
+                        
+                    
+
         tod = feat_trans.get_time_of_day(time)
         dow = feat_trans.get_day_of_week(time)
 
@@ -193,7 +207,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             prob=0
 
 
-            if algo_type=='personalized' and time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
+            if algo_type=='personalized' and dt and time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
                 temp_hist = feat_trans.get_history_decision_time_avail_single({participant.pid:participant.history},time)
                 temp_hist= feat_trans.history_semi_continuous(temp_hist,global_policy_params)
                 context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
@@ -215,7 +229,17 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 personal_policy_params.update_mus(participant.pid,mu_beta,2)
                 personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
                 participant.last_update_day=time
-
+            elif algo_type=='pooling' and dt and global_policy_params.decision_times>2 and global_policy_params.history!=None and  time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
+                history = global_policy_params.history
+                temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
+                                                         participant.pid,participant.current_day_counter,\
+                                                         history[0], history[1],history[2] )
+            
+                                                         #global_posterior = mu_beta
+                                                         #global_posterior_sigma = Sigma_beta
+                personal_policy_params.update_mus(participant.pid,mu_beta,2)
+                personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
+                participant.last_update_day=time
             participant.set_tod(tod)
             participant.set_dow(dow)
 
@@ -232,6 +256,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             if time <= participant.times[0]:
                         steps_last_time_period = 0
             else:
+                if time.hour==0 and time.minute==0:
+                    participant.current_day_counter=participant.current_day_counter+1
+
                 steps_last_time_period = participant.steps
 
             prob = -1
@@ -309,8 +336,16 @@ def get_regret(experiment):
                     actions[key].append(data['action'])
     return optimal_actions,rewards
 
-def run_many(algo_type):
-    for case in ['case_three']:
+def make_to_groupids(exp):
+    to_save  = {}
+    for pid,pdata in exp.population.items():
+        gid  = pdata.gid
+        key = 'participant-{}'.format(pid)
+        to_save[key]=gid
+    return to_save
+
+def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_directory):
+    for case in cases:
         #,'case_two','case_three'
         #case = 'case_one'
         
@@ -319,42 +354,43 @@ def run_many(algo_type):
         
         
         
-        for u in [7,1]:
+        for u in [update_time]:
             
             all_actions = {}
             all_rewards = {}
-            feat_trans = ft.feature_transformation('../../Downloads/distributions/')
+            #'../../Downloads/distributions/'
+            feat_trans = ft.feature_transformation(dist_root)
             
-            for sim in range(50):
+            for sim in range(sim_start,sim_end):
                 pop_size=32
-                experiment = study.study('../../Downloads/distributions/',pop_size,'_short_unstaggered_6',which_gen=case,sim_number=sim)
+                experiment = study.study(dist_root,pop_size,'_short_unstaggered_6',which_gen=case,sim_number=sim)
                 experiment.update_beta(set(baseline))
                 #print('beta')
                 #print(experiment.beta)
                 glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=['pretreatment','location'],responsivity_keys=baseline,algo_type =algo_type)
                 
                 hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type)
-                to_Save = make_to_save(experiment)
+                to_save = make_to_save(experiment)
                 actions,rewards = get_regret(experiment)
-        
-                for i,a in actions.items():
-                    if i not in all_actions:
-                        all_actions[i]=a
-                    else:
-                        all_actions[i].extend(a)
-                for i,a in rewards.items():
-                    if i not in all_rewards:
-                        all_rewards[i]=a
-                    else:
-                        all_rewards[i].extend(a)
+                gids = make_to_groupids(experiment)
+                    #for i,a in actions.items():
+                    #if i not in all_actions:
+                    #all_actions[i]=a
+                    #else:
+                    #all_actions[i].extend(a)
+                    #for i,a in rewards.items():
+                    # if i not in all_rewards:
+                    #all_rewards[i]=a
+                    #else:
+                    #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short',sim)
+                filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}_prelocm.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
-                    pickle.dump(to_Save,f)
-            filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
-            with open(filename,'wb') as f:
-                pickle.dump({'actions':all_actions,'regrets':all_rewards},f)
+                    pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
+        #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
+        #with open(filename,'wb') as f:
+# pickle.dump({'actions':all_actions,'regrets':all_rewards},f)
 
 
 
