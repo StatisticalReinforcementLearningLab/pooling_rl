@@ -179,7 +179,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         try:
                             
                             #print(baseline_features)
-                            temp_params = run_gpy.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                            temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
                             print(temp_data[0].shape)
                         except Exception as e:
                             print(e)
