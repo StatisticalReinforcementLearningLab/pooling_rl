@@ -22,6 +22,6 @@ if __name__=="__main__":
     case =sys.argv[6]
     root = 'pooling/distributions/'
     write_directory = 'pooling/results/'
-    sim_all.run_many('pooling',[case],start_index,end_index,update_time,root,write_directory)
+    sim_all.run_many('pooling',[case],int(start_index),int(end_index),int(update_time),root,write_directory)
 
 
