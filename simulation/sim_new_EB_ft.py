@@ -315,7 +315,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         steps = feat_trans.get_steps_action(context,seed=participant.rando_gen)
                         add = action*(sf.get_add_no_action(z,experiment.beta,participant.Z))
                         participant.steps = steps+add
-                        optimal_reward = get_optimal_reward(experiment.beta,z)
+                        optimal_reward = get_optimal_reward(experiment.beta,z,participant.Z)
                         optimal_action = int(optimal_reward>=0)
 
                         print('p_info', time,global_policy_params.decision_times,optimal_reward,optimal_action,time_module.strftime('%l:%M%p %Z on %b %d, %Y'),participant.pid,action,'final',participant.steps,participant.gid,add,'dist',steps,file=open('pooling/{}/updates_participant_newbigtest_{}_{}_{}_six_weeks_onoise_sigmauagain.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
