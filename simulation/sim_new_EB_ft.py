@@ -412,6 +412,7 @@ if __name__=="__main__":
             root = 'pooling/distributions/'
             pop_size=population
             experiment = study.study('pooling/distributions/',pop_size,'_short_unstaggered_6',which_gen=case,sim_number=int(start_index))
+            experiment.update_beta(set(['tod','dow','pretreatment','location']))
             glob,personal = initialize_policy_params_TS(experiment,int(update_time),standardize=False,root=root)
             ft = feature_transformations.feature_transformation('pooling/distributions/')
           
