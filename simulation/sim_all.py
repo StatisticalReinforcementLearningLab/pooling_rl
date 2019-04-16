@@ -19,7 +19,7 @@ import time as time_module
 import TS_personal_params_pooled as pp
 import TS_global_params_pooled as gtp
 from numpy.random import uniform
-
+import run_gpy
 #sys.path.append('../simulation')
 import TS_fancy_pooled
 import TS
@@ -386,7 +386,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                     #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_{}_prelocm.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_prelocm.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
