@@ -11,7 +11,7 @@ import pickle
 import random
 import os
 import math
-
+import run_gpytorchkernel
 import operator
 import study
 import time as time_module
@@ -82,7 +82,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     global_p.sigmas2= global_p.get_asigma( global_p.num_responsivity_features+1)
     
     #4.83
-    global_p.mu2_knot = np.array([0]+[0 for i in range(global_p.num_responsivity_features)])
+    global_p.mu2_knot = np.array([4.83]+[0 for i in range(global_p.num_responsivity_features)])
     global_p.mu1_knot = np.zeros(global_p.num_baseline_features+1)
     global_p.sigma1_knot = np.eye(global_p.num_baseline_features+1)
     global_p.sigma2_knot = np.eye(global_p.num_responsivity_features+1)
@@ -179,7 +179,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         try:
                             
                             #print(baseline_features)
-                            temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
+                            #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
+                            temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                            
                             print(temp_data[0].shape)
                         except Exception as e:
                             print(e)
@@ -211,7 +213,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             prob=0
 
 
-            if algo_type=='personalized' and dt and time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
+            if algo_type=='personalized'  and time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
+                #('made update')
                 temp_hist = feat_trans.get_history_decision_time_avail_single({participant.pid:participant.history},time)
                 temp_hist= feat_trans.history_semi_continuous(temp_hist,global_policy_params)
                 context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
@@ -273,7 +276,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 if policy=='TS':
                     pretreatment = feat_trans.get_pretreatment(steps_last_time_period)
                     z = [1]
-
+                    calc = [1,tod,dow,pretreatment,location]
                     if 'tod' in global_policy_params.baseline_features:
                         z.append(tod)
                     if 'dow' in global_policy_params.baseline_features:
@@ -292,9 +295,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         context = [action,participant.gid,tod,dow,weather,pretreatment,location,\
                                        0,0,0]
                         steps = feat_trans.get_steps_action(context,seed = participant.rando_gen)
-                        add = action*(feat_trans.get_add_no_action(z,experiment.beta,participant.Z))
+                        add = action*(feat_trans.get_add_no_action(calc,participant.beta,participant.Z))
                         participant.steps = steps+add
-                        optimal_reward = get_optimal_reward(experiment.beta,z,participant.Z)
+                        optimal_reward = get_optimal_reward(participant.beta,calc,participant.Z)
                         optimal_action = int(optimal_reward>=0)
                     else:
                         steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,\
@@ -353,7 +356,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
         #,'case_two','case_three'
         #case = 'case_one'
         
-        
+        #'dow','pretreatment',
         baseline = ['tod','dow','pretreatment','location']
         
         
@@ -389,7 +392,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                     #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_prelocm.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_4_16all.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')

@@ -27,6 +27,7 @@ import tensorflow as tf
 import feature_transformations
 import simple_bandits
 
+
 def initialize_policy_params_TS(experiment,update_period,root,standardize=False):
     
     global_p =gtp.TS_global_params(21,baseline_features=['tod','dow','pretreatment','location'],psi_features=[0,5], responsivity_keys= ['tod','dow','pretreatment','location'])

@@ -118,7 +118,7 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =0.265
+        self.sigma =0.325
             #.325**.5
             #0.125
             #0.12244165000000001
@@ -135,7 +135,10 @@ class study:
         self.beta =np.array([ 0.05,  0.25,  0.25,  0.25, -0.3 ])
         potential_features = ['intercept','tod','dow','pretreatment','location']
         new = np.array([self.beta[0]]+[self.beta[i] for i in range(len(self.beta)) if potential_features[i] in features])
-        self.beta = new
+        #self.beta = beta
+        self.regret_beta = new
+    
+    
     
     
     def init_population(self,which_gen):
@@ -167,8 +170,14 @@ class study:
             
             #print(k)
             #print(self.sim_number)
-            
-            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg)
+            this_beta = [i for i in [ 0.05,  0.25,  0.25,  0.25, -0.3 ]]
+            #if Z is not None:
+                #this_beta[-1]=this_beta[-1]+Z/2
+                #this_beta[2]=this_beta[2]+Z/2
+                #this_beta[3]=this_beta[3]+Z/2
+                        
+                    
+            person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg,beta=np.array(this_beta))
             #print(person.rando_gen.uniform())
             self.population[k]=person
 
