@@ -236,7 +236,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 personal_policy_params.update_mus(participant.pid,mu_beta,2)
                 personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
                 participant.last_update_day=time
-            elif algo_type=='pooling' and dt and global_policy_params.decision_times>2 and global_policy_params.history!=None and  time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
+            elif algo_type=='pooling'  and global_policy_params.decision_times>2 and global_policy_params.history!=None and  time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
                 history = global_policy_params.history
                 temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
                                                          participant.pid,participant.current_day_counter,\

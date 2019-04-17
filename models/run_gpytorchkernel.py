@@ -44,19 +44,26 @@ class MyKernel(Kernel):
        
         self.psi_dim_one = gparams.psi_indices[0]
         self.psi_dim_two = gparams.psi_indices[1]
-        
+        self.psi_indices =gparams.psi_indices
         #print(self.psi_dim_one)
         #print(self.psi_dim_two)
         
-        self.register_parameter(name="u1", parameter=torch.nn.Parameter(gparams.sigma_u[0][0]*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(1.0*torch.tensor(1.0)))
+        init_u1 = gparams.sigma_u[0][0]
+        init_u1 = gparams.u1
         
-        self.register_parameter(name="u2", parameter=torch.nn.Parameter(gparams.sigma_u[1][1]*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(1.0*torch.tensor(1.0)))
-        t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
-        r = (gparams.sigma_u[0][1]+t)/t
+        init_u2 = gparams.sigma_u[1][1]
+        init_u2 = gparams.u2
+        
+        self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
+        
+        self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
+        #t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
+        #r = (gparams.sigma_u[0][1]+t)/t
+        r = gparams.rho_term
         self.register_parameter(name="rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(1.0*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
         
         
         
@@ -75,15 +82,20 @@ class MyKernel(Kernel):
         #print(x1[0,:,0:2].size())
         # print(x1.size())
         #print(us.size())
-        x1_ = torch.stack((x1[:,self.psi_dim_one],x1[:,self.psi_dim_two]),dim=1)
-        x2_ = torch.stack((x2[:,self.psi_dim_one],x2[:,self.psi_dim_two]),dim=1)
+        #x1_ =torch.stack((x1[:,self.psi_dim_one],x1[:,self.psi_dim_two]),dim=1)
+        x1_ = torch.stack([x1[:,i] for  i in self.psi_indices],dim=1)
+        #x1_ =    torch.stack((x1[:,self.psi_dim_one],x1[:,self.psi_dim_two]),dim=1)
+        #x2_ =torch.stack((x2[:,self.psi_dim_one],x2[:,self.psi_dim_two]),dim=1)
+        x2_ =    torch.stack([x2[:,i] for  i in self.psi_indices],dim=1)
+        #print(x1_)
+        #print(x2_)
         #u2_= self.u2
         #u1_ =self.u1
         #print(self.u1)
         #print(x1_)
         #print(x2_)
         if batch_dims == (0, 2):
-            print('here')
+            print('batch bims here')
         #pass
         #print(x1_.size())
         
@@ -194,11 +206,11 @@ def run(X,users,y,global_params):
     #print(first_mat.shape)
     
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    likelihood.noise_covar.initialize(noise=global_params.noise_term*torch.ones(1))
+    likelihood.noise_covar.initialize(noise=(global_params.o_noise_term**2)*torch.ones(1))
     
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
-    print(X.size())
+    #print(X.size())
     first_mat = torch.from_numpy(first_mat).float()
     user_mat = torch.from_numpy(user_mat).float()
     
@@ -212,11 +224,11 @@ def run(X,users,y,global_params):
     
     optimizer = torch.optim.Adam([
                                   {'params': model.parameters()},  # Includes GaussianLikelihood parameters
-                                  ], lr=0.1)
+                                  ], lr=0.05)
                                   
     mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
-    num_iter=50
+    num_iter=10
     with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
@@ -227,12 +239,16 @@ def run(X,users,y,global_params):
                     loss.backward()
                     print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
-                    sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
-                    noise = likelihood.noise_covar.noise
+                    sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+                    
+                    if np.isreal(sigma_temp).all():
+                        sigma_u = sigma_temp
+                        f_preds = model(X)
+                        f_covar = f_preds.covariance_matrix
+                        cov = f_covar.detach().numpy()
+                        noise = likelihood.noise_covar.noise.item()
 
-                    f_preds = model(X)
-                    f_covar = f_preds.covariance_matrix
-                    cov = f_covar.detach().numpy()
+
                 except Exception as e:
                     print(e)
                     print('here')
