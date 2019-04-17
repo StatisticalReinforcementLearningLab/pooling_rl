@@ -19,7 +19,11 @@ sys.path.append('pooling_rl/simulation')
 import sim_functions_cleaner as sf
 
 
-
+def get_inv_term(cov,X_dim,noise_term):
+    noise = noise_term * np.eye(X_dim)
+    middle_term = np.add(cov,noise)
+    #inv_term = np.linalg.inv(middle_term)
+    return np.linalg.inv(middle_term)
 
 
 
@@ -191,11 +195,7 @@ def calculate_posterior(global_params,user_id,user_study_day,X,y):
 
     return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
 
-def get_inv_term(cov,X_dim,noise_term):
-    noise = noise_term * np.eye(X_dim)
-    middle_term = np.add(cov,noise)
-    #inv_term = np.linalg.inv(middle_term)
-    return np.linalg.inv(middle_term)
+
 
 
 def get_middle_term(X_dim,cov,noise_term,M,adjusted_rewards,mu_theta,inv_term):
