@@ -171,10 +171,10 @@ class study:
             #print(k)
             #print(self.sim_number)
             this_beta = [i for i in [ 0.05,  0.25,  0.25,  0.25, -0.3 ]]
-            #if Z is not None:
-                #this_beta[-1]=this_beta[-1]+Z/2
-                #this_beta[2]=this_beta[2]+Z/2
-                #this_beta[3]=this_beta[3]+Z/2
+            if Z is not None:
+                this_beta[-1]=this_beta[-1]+Z/2
+                this_beta[2]=this_beta[2]+Z/2
+                this_beta[3]=this_beta[3]+Z/2
                         
                     
             person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg,beta=np.array(this_beta))

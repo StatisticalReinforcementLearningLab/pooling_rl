@@ -290,6 +290,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         prob = TS.prob_cal_ts(z,0,global_policy_params.mus2,global_policy_params.sigmas2,global_policy_params,seed = experiment.algo_rando_gen)
                     elif algo_type=='personalized':
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
+                    elif algo_type=='pooling':
+                                prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
+                                    
                     action = int(experiment.algo_rando_gen.uniform() < prob)
                     if availability:
                         context = [action,participant.gid,tod,dow,weather,pretreatment,location,\

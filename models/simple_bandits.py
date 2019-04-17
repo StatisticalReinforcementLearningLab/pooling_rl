@@ -42,7 +42,7 @@ def get_sigma_u(u1,u2,rho):
 
 
 ##make function of pZ, not too hard
-def create_H(num_baseline_features,num_responsivity_features):
+def create_H(num_baseline_features,num_responsivity_features,psi_indices):
     ##for now have fixed random effects size one
     
     random_effect_one = [1]
@@ -58,10 +58,8 @@ def create_H(num_baseline_features,num_responsivity_features):
     
     column_two = [0]
     column_two = column_two+[0]*num_baseline_features
-    column_two = column_two+[1]
-    column_two = column_two+[0]*num_responsivity_features
-    column_two = column_two+[1]
-    column_two = column_two+[0]*num_responsivity_features
+    column_two = column_two+[int(i in psi_indices) for i in range(2*num_responsivity_features+2)]
+
     
     return np.transpose(np.array([column_one,column_two]))
 
@@ -78,7 +76,7 @@ def get_M(global_params,user_id,user_study_day,history):
     #print(history)
     M = [[] for i in range(history.shape[0])]
 
-    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
     #inv_term = global_params.inv_term
     for x_old_i in range(history.shape[0]):
         x_old = history[x_old_i]
@@ -130,7 +128,7 @@ def get_M_faster(global_params,user_id,user_study_day,history,users):
     #print(history)
     M = [[] for i in range(history.shape[0])]
     
-    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
     
     phi = history[:,global_params.baseline_indices]
     ##should be fine
@@ -165,7 +163,8 @@ def get_M_faster(global_params,user_id,user_study_day,history,users):
 
 
 def calculate_posterior_faster(global_params,user_id,user_study_day,X,users,y):
-    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
+    
     M = get_M_faster(global_params,user_id,user_study_day,X,users)
     ##change this to be mu_theta
     ##is it updated?  the current mu_theta?
@@ -181,7 +180,8 @@ def calculate_posterior_faster(global_params,user_id,user_study_day,X,users,y):
 
 
 def calculate_posterior(global_params,user_id,user_study_day,X,y):
-    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features)
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
+   
     M = get_M(global_params,user_id,user_study_day,X)
     ##change this to be mu_theta
     ##is it updated?  the current mu_theta?
