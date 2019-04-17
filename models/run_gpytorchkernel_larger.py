@@ -159,15 +159,30 @@ class MyKernel(Kernel):
         
         
         diagone = MatmulLazyTensor(x1_[:,0:1], x2_[:,1:2].transpose(-1, -2))
-        
-        
         diagtwo = MatmulLazyTensor(x1_[:,1:2], x2_[:,0:1].transpose(-1, -2))
+        cov_12 = (diagone+diagtwo)*((self.rho_12-1)*(self.u1)**.5*(self.u2)**.5)
         
-        tthree = (diagone+diagtwo)*((self.rho-1)*(self.u1)**.5*(self.u2)**.5)
+        diagone = MatmulLazyTensor(x1_[:,0:1], x2_[:,2:3].transpose(-1, -2))
+        diagtwo = MatmulLazyTensor(x1_[:,2:3], x2_[:,0:1].transpose(-1, -2))
+        cov_13 = (diagone+diagtwo)*((self.rho_13-1)*(self.u1)**.5*(self.u3)**.5)
+
+        diagone = MatmulLazyTensor(x1_[:,0:1], x2_[:,3:4].transpose(-1, -2))
+        diagtwo = MatmulLazyTensor(x1_[:,3:4], x2_[:,0:1].transpose(-1, -2))
+        cov_14 = (diagone+diagtwo)*((self.rho_14-1)*(self.u1)**.5*(self.u4)**.5)
+
+        diagone = MatmulLazyTensor(x1_[:,1:2], x2_[:,2:3].transpose(-1, -2))
+        diagtwo = MatmulLazyTensor(x1_[:,2:3], x2_[:,1:2].transpose(-1, -2))
+        cov_23 = (diagone+diagtwo)*((self.rho_23-1)*(self.u2)**.5*(self.u3)**.5)
+
+        diagone = MatmulLazyTensor(x1_[:,1:2], x2_[:,3:4].transpose(-1, -2))
+        diagtwo = MatmulLazyTensor(x1_[:,3:4], x2_[:,1:2].transpose(-1, -2))
+        cov_24 = (diagone+diagtwo)*((self.rho_24-1)*(self.u2)**.5*(self.u4)**.5)
+
+        diagone = MatmulLazyTensor(x1_[:,2:3], x2_[:,3:4].transpose(-1, -2))
+        diagtwo = MatmulLazyTensor(x1_[:,3:4], x2_[:,2:3].transpose(-1, -2))
+        cov_34 = (diagone+diagtwo)*((self.rho_34-1)*(self.u3)**.5*(self.u4)**.5)
         
-        
-        
-        random_effects = tone+ttwo+tthree+tfour
+        random_effects = tone+ttwo+tthree+tfour+cov_12+cov_13+cov_14+cov_23+cov_24+cov_34
         
         #print(random_effects.evaluate())
         
