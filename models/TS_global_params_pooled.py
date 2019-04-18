@@ -149,7 +149,8 @@ class TS_global_params:
         
         self.mus2 = None
         self.sigmas2 = None
-        self.init_u_params(uparams)
+        if uparams is not None:
+            self.init_u_params(uparams)
     
     def init_u_params(self,uparams):
         self.u1 = uparams[0]
