@@ -83,8 +83,8 @@ def create_H(num_baseline_features,num_responsivity_features,psi_indices):
 def create_H_four(num_baseline_features,num_responsivity_features,psi_indices):
             ##for now have fixed random effects size one
 
-random_effect_one = [1]
-random_effect_two = [1]
+    random_effect_one = [1]
+    random_effect_two = [1]
 
     column_one = [1]
     column_one = column_one+[0]*num_baseline_features
