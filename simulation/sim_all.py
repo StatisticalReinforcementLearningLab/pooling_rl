@@ -360,7 +360,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
         #case = 'case_one'
         
         #'dow','pretreatment',
-        baseline = ['tod','dow','pretreatment','location']
+        baseline = ['dow','pretreatment','location']
         
         
         
@@ -395,7 +395,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                     #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_4_16all.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_dowpreloc_4_18.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
