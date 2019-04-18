@@ -244,9 +244,11 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
             
                                                          #global_posterior = mu_beta
                                                          #global_posterior_sigma = Sigma_beta
+                mu_beta = temp[0]
+                Sigma_beta = temp[1]
                 personal_policy_params.update_mus(participant.pid,mu_beta,2)
                 personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
-                print('here',e, time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_herecurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                print('here',e, time,global_policy_params.decision_times,'here here',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_herecurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 participant.last_update_day=time
             participant.set_tod(tod)
             participant.set_dow(dow)
@@ -396,7 +398,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                     #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_loc_4_18t.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_loc_4_18tt.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
