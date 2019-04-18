@@ -48,11 +48,22 @@ class MyKernel(Kernel):
         #print(self.psi_dim_one)
         #print(self.psi_dim_two)
         
-        init_u1 = gparams.sigma_u[0][0]
-        init_u1 = gparams.u1
+        #init_u1 = gparams.sigma_u[0][0]
+        init_u1 = gparams.init_u1
         
-        init_u2 = gparams.sigma_u[1][1]
-        init_u2 = gparams.u2
+        #init_u2 = gparams.sigma_u[1][1]
+        init_u2 = gparams.init_u2
+        init_u3 = gparams.init_u3
+        init_u4 = gparams.init_u4
+        
+        r12 = gparams.init_r12
+        r13 = gparams.init_r13
+        r14 = gparams.init_r14
+        
+        r23 = gparams.init_r23
+        r24 = gparams.init_r24
+        
+        r34 = gparams.init_r34
         
         self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
         self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
@@ -70,23 +81,23 @@ class MyKernel(Kernel):
         #t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
         #r = (gparams.sigma_u[0][1]+t)/t
         r = gparams.rho_term
-        self.register_parameter(name="rho_12", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_12", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        self.register_parameter(name="rho_12", parameter=torch.nn.Parameter(r12*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_12", parameter=torch.nn.Parameter(r12*torch.tensor(1.0)))
         
-        self.register_parameter(name="rho_13", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_13", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        self.register_parameter(name="rho_13", parameter=torch.nn.Parameter(r13*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_13", parameter=torch.nn.Parameter(r13*torch.tensor(1.0)))
         
-        self.register_parameter(name="rho_14", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_14", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        self.register_parameter(name="rho_14", parameter=torch.nn.Parameter(r14*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_14", parameter=torch.nn.Parameter(r14*torch.tensor(1.0)))
 
-        self.register_parameter(name="rho_23", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_23", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        self.register_parameter(name="rho_23", parameter=torch.nn.Parameter(r23*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_23", parameter=torch.nn.Parameter(r23*torch.tensor(1.0)))
 
-        self.register_parameter(name="rho_24", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_24", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        self.register_parameter(name="rho_24", parameter=torch.nn.Parameter(r24*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_24", parameter=torch.nn.Parameter(r24*torch.tensor(1.0)))
 
-        self.register_parameter(name="rho_34", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_34", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        self.register_parameter(name="rho_34", parameter=torch.nn.Parameter(r34*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_34", parameter=torch.nn.Parameter(r34*torch.tensor(1.0)))
         
         self.register_constraint("raw_u1",constraint= constraints.Positive())
         self.register_constraint("raw_u2",constraint= constraints.Positive())
@@ -289,13 +300,16 @@ def run(X,users,y,global_params):
                     loss.backward()
                     print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
-                    sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
-                    
-                    if np.isreal(sigma_temp).all():
+                    #sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+                    sigma_temp = [model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.u3.item(),model.covar_module.u4.item(),model.covar_module.rho_12.item(),model.covar_module.rho_13.item(),model.covar_module.rho_14.item(),model.covar_module.rho_23.item(),model.covar_module.rho_24.item(),model.covar_module.rho_34.item()]
+                    f_preds = model(X)
+                    f_covar = f_preds.covariance_matrix
+                    covtemp = f_covar.detach().numpy()
+                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all():
                         sigma_u = sigma_temp
-                        f_preds = model(X)
-                        f_covar = f_preds.covariance_matrix
-                        cov = f_covar.detach().numpy()
+                        cov=covtemp
+                        #print(np.isreal( covtemp))
+                        #print(cov)
                         noise = likelihood.noise_covar.noise.item()
 
 
@@ -309,6 +323,6 @@ def run(X,users,y,global_params):
 
     #print('cov')
     #print(cov)
-    return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':0}
+    return {'uparams':sigma_u,'cov':cov,'noise':noise,'like':0}
 
 

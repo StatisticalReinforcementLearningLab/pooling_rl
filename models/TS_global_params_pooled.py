@@ -12,7 +12,7 @@ class TS_global_params:
     Keeps track of hyper-parameters for any TS procedure. 
     '''
     
-    def __init__(self,xi=10,baseline_features=None,psi_features=None,responsivity_keys=None):
+    def __init__(self,xi=10,baseline_features=None,psi_features=None,responsivity_keys=None,uparams = None):
         self.nums = set([np.float64,int,float])
         self.pi_max = 0.8
         self.pi_min = 0.1
@@ -149,7 +149,45 @@ class TS_global_params:
         
         self.mus2 = None
         self.sigmas2 = None
+        self.init_u_params(uparams)
     
+    def init_u_params(self,uparams):
+        self.u1 = uparams[0]
+        self.u2 = uparams[1]
+        self.u3 = uparams[2]
+        self.u4 = uparams[3]
+    
+        self.r12 = uparams[4]
+        self.r13 = uparams[5]
+        self.r14 = uparams[6]
+        self.r23 = uparams[7]
+        self.r24 = uparams[8]
+        self.r34 = uparams[9]
+        
+        self.init_u1 = uparams[0]
+        self.init_u2 = uparams[1]
+        self.init_u3 = uparams[2]
+        self.init_u4 = uparams[3]
+        
+        self.init_r12 = uparams[4]
+        self.init_r13 = uparams[5]
+        self.init_r14 = uparams[6]
+        self.init_r23 = uparams[7]
+        self.init_r24 = uparams[8]
+        self.init_r34 = uparams[9]
+    
+    def update_uparams(self,uparams):
+        self.u1 = uparams[0]
+        self.u2 = uparams[1]
+        self.u3 = uparams[2]
+        self.u4 = uparams[3]
+        
+        self.r12 = uparams[4]
+        self.r13 = uparams[5]
+        self.r14 = uparams[6]
+        self.r23 = uparams[7]
+        self.r24 = uparams[8]
+        self.r34 = uparams[9]
     
     def feat0_function(self,z,x):
         
@@ -210,6 +248,17 @@ class TS_global_params:
         self.rho_term = self.comput_rho(pdict['sigma_u'])
         self.cov = pdict['cov']
         self.updated_cov=True
+    
+    def update_params_more(self,pdict):
+        self.noise_term=pdict['noise']
+        
+        #self.sigma_v = pdict['sigma_v']
+        #save rho term too
+        
+        self.cov = pdict['cov']
+        self.update_uparams(pdict['uparams'])
+        self.updated_cov=True
+    
 
     def get_theta(self,dim_baseline):
         m = 1*np.eye(dim_baseline)

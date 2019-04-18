@@ -39,6 +39,22 @@ def get_sigma_u(u1,u2,rho):
     off_diagaonal_term = u1**.5*u2**.5*(rho-1)
     return np.array([[u1,off_diagaonal_term],[off_diagaonal_term,u2]])
 
+def get_sigma_umore(gparams):
+    cov_12 = (gparams.r12-1)*(gparams.u1**.5)*(gparams.u2**.5)
+    cov_13 = (gparams.r13-1)*(gparams.u1**.5)*(gparams.u3**.5)
+    cov_14 = (gparams.r14-1)*(gparams.u1**.5)*(gparams.u4**.5)
+    cov_23 =(gparams.r23-1)*(gparams.u2**.5)*(gparams.u3**.5)
+    cov_24 =(gparams.r24-1)*(gparams.u2**.5)*(gparams.u4**.5)
+    cov_34 =(gparams.r34-1)*(gparams.u3**.5)*(gparams.u4**.5)
+    
+    row_one = [gparams.u1,cov_12,cov_13,cov_14]
+    row_two = [cov_12,gparams.u2,cov_23,cov_24]
+    row_three = [cov_12,cov_23,gparams.u3,cov_34]
+    row_four = [cov_12,cov_23,cov_34,gparams.u4]
+    
+    
+    return np.array([row_one,row_two,row_three,row_four])
+
 
 
 ##make function of pZ, not too hard
@@ -64,7 +80,28 @@ def create_H(num_baseline_features,num_responsivity_features,psi_indices):
     return np.transpose(np.array([column_one,column_two]))
 
 
+def create_H_four(num_baseline_features,num_responsivity_features,psi_indices):
+            ##for now have fixed random effects size one
+
+random_effect_one = [1]
+random_effect_two = [1]
+
+    column_one = [1]
+    column_one = column_one+[0]*num_baseline_features
+    column_one = column_one+[0]
+    column_one = column_one+[0]*num_responsivity_features
+    column_one = column_one+[0]
+    column_one = column_one+[0]*num_responsivity_features
     
+    
+    column_two = [0]
+    column_two = column_two+[0]*num_baseline_features
+    column_two = column_two+[int(i in psi_indices) for i in range(2*num_responsivity_features+2)]
+    
+    
+    return np.transpose(np.array([column_one,column_two]))
+
+
 
 
 
@@ -121,7 +158,7 @@ def get_RT(y,X,sigma_theta,x_dim):
 
 
 
-def get_M_faster(global_params,user_id,user_study_day,history,users):
+def get_M_faster(global_params,user_id,user_study_day,history,users,sigma_u):
     
     
     day_id =user_study_day
@@ -165,7 +202,7 @@ def get_M_faster(global_params,user_id,user_study_day,history,users):
 def calculate_posterior_faster(global_params,user_id,user_study_day,X,users,y):
     H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
     
-    M = get_M_faster(global_params,user_id,user_study_day,X,users)
+    M = get_M_faster(global_params,user_id,user_study_day,X,users,global_params.sigma_u)
     ##change this to be mu_theta
     ##is it updated?  the current mu_theta?
     adjusted_rewards =get_RT(y,X,global_params.mu_theta,global_params.theta_dim)
@@ -175,6 +212,25 @@ def calculate_posterior_faster(global_params,user_id,user_study_day,X,users,y):
     mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta,global_params.inv_term)
     #.reshape(X.shape[0],X.shape[0])
     sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),None,global_params.noise_term,M,X.shape[0],global_params.sigma_theta,global_params.inv_term)
+    
+    return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
+
+
+def calculate_posterior_current(global_params,user_id,user_study_day,X,users,y):
+    sigma_u =get_sigma_umore(global_params)
+    
+    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
+    
+    M = get_M_faster(global_params,user_id,user_study_day,X,users,sigma_u)
+    ##change this to be mu_theta
+    ##is it updated?  the current mu_theta?
+    adjusted_rewards =get_RT(y,X,global_params.mu_theta,global_params.theta_dim)
+    #print('current global cov')
+    #print(global_params.cov)
+    #.reshape(X.shape[0],X.shape[0])
+    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta,global_params.inv_term)
+    #.reshape(X.shape[0],X.shape[0])
+    sigma = get_post_sigma(H,global_params.cov,sigma_u,None,global_params.noise_term,M,X.shape[0],global_params.sigma_theta,global_params.inv_term)
     
     return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
 
