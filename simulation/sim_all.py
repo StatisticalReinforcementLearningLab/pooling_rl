@@ -182,8 +182,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
                             temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
                             
-                            print(temp_data[0].shape)
-                            print('temp params one {}'.format(temp_params))
+                            #print(temp_data[0].shape)
+                        #print('temp params one {}'.format(temp_params))
                         except Exception as e:
                             print(e)
                             print('was error')
@@ -192,7 +192,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                     'noise':global_policy_params.noise_term,\
                                             'like':-100333,'sigma_u':global_policy_params.sigma_u}
 
-                        print('temp params {}'.format(temp_params))
+                        #print('temp params {}'.format(temp_params))
                         inv_term = simple_bandits.get_inv_term(temp_params['cov'],temp_data[0].shape[0],temp_params['noise'])
                         global_policy_params.update_params(temp_params)
                         global_policy_params.inv_term=inv_term
