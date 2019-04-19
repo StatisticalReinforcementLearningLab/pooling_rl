@@ -188,8 +188,9 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             print(e)
                             print('was error')
                             print('global_info',e, time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
-
-                        temp_params={'cov':global_policy_params.cov,'noise':global_policy_params.noise_term,'like':-100333,'sigma_u':global_policy_params.sigma_u}
+                            temp_params={'cov':global_policy_params.cov,\
+                                    'noise':global_policy_params.noise_term,\
+                                            'like':-100333,'sigma_u':global_policy_params.sigma_u}
 
                         print('temp params {}'.format(temp_params))
                         inv_term = simple_bandits.get_inv_term(temp_params['cov'],temp_data[0].shape[0],temp_params['noise'])
