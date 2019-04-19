@@ -117,7 +117,7 @@ class TS_global_params:
         #continuous
         #self.noise_term=6.32098482
         self.noise_term =1.15**2
-        self.o_noise_term = 1.15**2
+        self.o_noise_term = 5.7
             #1.15
         #most recent learned
         #7.61294834
