@@ -133,7 +133,7 @@ def make_to_save(exp):
             for time,context in pdata.history.items():
             
                 key = '{}-{}-{}'.format(pid,time,pdata.gid)
-                to_save[key]=context
+                to_save[key]={k:v for k,v in context.items() if k in ['steps','decision_time','avail']}
         return to_save
 
 def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,generative_functions=None,which_gen=None,feat_trans = None,algo_type = None,case=None,sim_num=None):
@@ -429,7 +429,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                     #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_preloc_4_18difstarts.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_preloc_4_18difstartssm.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
