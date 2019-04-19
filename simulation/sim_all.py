@@ -174,8 +174,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         global_policy_params.update_mus(None,mu_beta,2)
                         global_policy_params.update_sigmas(None,Sigma_beta,2)
                     else :
-                        global_posterior = mu_beta
-                        global_posterior_sigma = Sigma_beta
+                        #global_posterior = mu_beta
+                        #global_posterior_sigma = Sigma_beta
                         try:
                             
                             #print(baseline_features)
