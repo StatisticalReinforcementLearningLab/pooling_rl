@@ -59,8 +59,8 @@ class MyKernel(Kernel):
         
         self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
-        #t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
-        #r = (gparams.sigma_u[0][1]+t)/t
+        t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
+        r = (gparams.sigma_u[0][1]+t)/t
         r = gparams.rho_term
         self.register_parameter(name="rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
         self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
@@ -228,7 +228,7 @@ def run(X,users,y,global_params):
                                   
     mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
-    num_iter=10
+    num_iter=50
     with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
@@ -240,18 +240,19 @@ def run(X,users,y,global_params):
                     #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
-                    
-                    if np.isreal(sigma_temp).all():
+                    f_preds = model(X)
+                    f_covar = f_preds.covariance_matrix
+                    covtemp = f_covar.detach().numpy()
+                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all():
                         sigma_u = sigma_temp
-                        f_preds = model(X)
-                        f_covar = f_preds.covariance_matrix
-                        cov = f_covar.detach().numpy()
-                        noise = likelihood.noise_covar.noise.item()
-
+                        cov=covtemp
+                        #print(np.isreal( covtemp))
+                        #print(cov)
+                        noise = likelihood.noise_covar.noise.item()**.5
 
                 except Exception as e:
-                    print(e)
-                    print('here')
+                    #print(e)
+                    #print('here')
                     break
 #train(50)
     

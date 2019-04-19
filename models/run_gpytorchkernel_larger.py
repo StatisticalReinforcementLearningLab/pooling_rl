@@ -267,7 +267,7 @@ def run(X,users,y,global_params):
     #print(first_mat.shape)
     
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    likelihood.noise_covar.initialize(noise=(global_params.o_noise_term**2)*torch.ones(1))
+    likelihood.noise_covar.initialize(noise=(global_params.o_noise_term)*torch.ones(1))
     
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
@@ -298,7 +298,7 @@ def run(X,users,y,global_params):
                 #print(type(output))
                     loss = -mll(output, y)
                     loss.backward()
-                    print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
+                    #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     #sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     sigma_temp = [model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.u3.item(),model.covar_module.u4.item(),model.covar_module.rho_12.item(),model.covar_module.rho_13.item(),model.covar_module.rho_14.item(),model.covar_module.rho_23.item(),model.covar_module.rho_24.item(),model.covar_module.rho_34.item()]
@@ -314,8 +314,8 @@ def run(X,users,y,global_params):
 
 
                 except Exception as e:
-                    print(e)
-                    print('here')
+                    #print(e)
+                    #print('here')
                     break
 #train(50)
     

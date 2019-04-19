@@ -77,7 +77,8 @@ class TS_global_params:
         #self.sigma_u =np.array([[2.17412222, 0.61305586],
         #  [0.61305586, 1.39429461]])
           
-        self.sigma_u =np.array([[0.4227,-0.2606, ],[-0.2606,   0.5397]])
+          #self.sigma_u =np.array([[0.4227,-0.2606, ],[-0.2606,   0.5397]])
+        self.sigma_u =np.array([[0.4319,-0.22, ],[-0.22,   0.36]])
             #np.array([[0.28613145, 0.0636587 ],[0.0636587 , 0.02591053]])
             #np.array([[0.33,0.0486 ],[0.0486 , 0.1]])
             #np.array([[0.28613145, 0.0636587 ],[0.0636587 , 0.02591053]])
@@ -93,7 +94,7 @@ class TS_global_params:
         #continuous
         #self.rho_term =0.5575684246756394
         #non continuous
-        self.rho_term =0.4544
+        self.rho_term =0.436
             #1.5
         #1.07393274299268683
             #1.7393274299268683
@@ -108,14 +109,15 @@ class TS_global_params:
         #continuous
         #self.u2 = 0.5466027
         #self.u2 =1.15894301
-        self.u2 =0.5397
+        self.u2 =0.36
+            #0.5397
             #0.02591053
             #0.02591053
         #90800.30211642
         #continuous
         #self.noise_term=6.32098482
-        self.noise_term =1.15
-        self.o_noise_term = 1.15
+        self.noise_term =1.15**2
+        self.o_noise_term = 6
             #1.15
         #most recent learned
         #7.61294834
@@ -238,7 +240,9 @@ class TS_global_params:
     
     
     def comput_rho(self,sigma_u):
-        return (sigma_u[0][1]/( sigma_u[0][0]**.5*sigma_u[1][1]**.5))+1
+        t =sigma_u[0][0]**.5 * sigma_u[1][1]**.5
+        r = (sigma_u[0][1]+t)/t
+        return r
     
     
     def update_params(self,pdict):

@@ -95,11 +95,20 @@ def create_H_four(num_baseline_features,num_responsivity_features,psi_indices):
     
     
     column_two = [0]
-    column_two = column_two+[0]*num_baseline_features
-    column_two = column_two+[int(i in psi_indices) for i in range(2*num_responsivity_features+2)]
+    column_two =column_two+[int(i==psi_indices[1]) for i in range(num_baseline_features)]
+    column_two =column_two+[0]*(2*num_responsivity_features+2)
     
     
-    return np.transpose(np.array([column_one,column_two]))
+    column_three = [0]+[0]*num_baseline_features
+    column_three = column_three+[int(i==psi_indices[0]) for i in range(num_responsivity_features+1)]
+    column_three= column_three+[int(i==psi_indices[0]) for i in range(num_responsivity_features+1)]
+    
+    column_four = [0]+[0]*num_baseline_features
+    column_four = column_four+[int(i==psi_indices[1]) for i in range(num_responsivity_features+1)]
+    column_four= column_four+[int(i==psi_indices[1]) for i in range(num_responsivity_features+1)]
+    
+    
+    return np.transpose(np.array([column_one,column_two,column_three,column_four]))
 
 
 
@@ -195,7 +204,41 @@ def get_M_faster(global_params,user_id,user_study_day,history,users,sigma_u):
     return term
 
 
+def get_M_faster_four(global_params,user_id,user_study_day,history,users,sigma_u):
+    
+    
+    day_id =user_study_day
+    #print(history)
+    M = [[] for i in range(history.shape[0])]
+    
+    H = create_H_four(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
+    
+    phi = history[:,global_params.baseline_indices]
+    ##should be fine
+    #print(global_params.sigma_theta)
+    t_one = np.dot(phi,global_params.sigma_theta)
+    #print(t_one.shape)
+    temp = np.dot(H,sigma_u)
+    #print(temp.shape)
+    #print(global_params.sigma_u)
+    temp = np.dot(temp,H.T)
+    temp = np.dot(phi,temp)
+    
+    user_ids =users
+    #history[:,global_params.user_id_index]
+    
+    my_days = np.ma.masked_where(user_ids==user_id, user_ids).mask.astype(float)
+    
+    if type(my_days)!=np.ndarray:
+        my_days = np.zeros(history.shape[0])
+    user_matrix = np.diag(my_days)
 
+    t_two = np.matmul(user_matrix,temp)
+
+    term = np.add(t_one,t_two)
+    
+    
+    return term
 
 
 
@@ -218,10 +261,10 @@ def calculate_posterior_faster(global_params,user_id,user_study_day,X,users,y):
 
 def calculate_posterior_current(global_params,user_id,user_study_day,X,users,y):
     sigma_u =get_sigma_umore(global_params)
+    #print(sigma_u)
+    H = create_H_four(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
     
-    H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
-    
-    M = get_M_faster(global_params,user_id,user_study_day,X,users,sigma_u)
+    M = get_M_faster_four(global_params,user_id,user_study_day,X,users,sigma_u)
     ##change this to be mu_theta
     ##is it updated?  the current mu_theta?
     adjusted_rewards =get_RT(y,X,global_params.mu_theta,global_params.theta_dim)

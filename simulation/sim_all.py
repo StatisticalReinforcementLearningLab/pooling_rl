@@ -6,6 +6,7 @@ import sys
 import pandas as pd
 sys.path
 sys.path.append('../models')
+sys.path.append('models')
 import numpy as np
 import pickle
 import random
@@ -152,14 +153,14 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 global_policy_params.last_global_update_time=time
 
 
-                if algo_type=='batch' or algo_type=='pooling':
+                if algo_type=='batch' or algo_type=='pooling' or algo_type=='pooling_four':
 
                     temp_hist = feat_trans.get_history_decision_time_avail(experiment,time)
                     temp_hist= feat_trans.history_semi_continuous(temp_hist,global_policy_params)
                     context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
                     temp_data = feat_trans.get_phi_from_history_lookups(temp_hist)
 
-                    steps = feat_trans.get_RT_o(steps,temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
+                    steps = feat_trans.get_RT(temp_data[2],temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
 
                     temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.noise_term,\
                                                        global_policy_params.mu1_knot,\
@@ -176,28 +177,47 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     else :
                         #global_posterior = mu_beta
                         #global_posterior_sigma = Sigma_beta
-                        try:
+                        if algo_type=='pooling':
+                            try:
                             
                             #print(baseline_features)
                             #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
-                            temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                            #print('steps {}'.format(steps.std()**2))
+                                temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
                             
                             #print(temp_data[0].shape)
-                        #print('temp params one {}'.format(temp_params))
-                        except Exception as e:
-                            print(e)
-                            print('was error')
-                            print('global_info',e, time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
-                            temp_params={'cov':global_policy_params.cov,\
+                            #print('temp params one {}'.format(temp_params))
+                                if temp_params['cov'] is not None:
+                                    global_policy_params.update_params(temp_params)
+                            except Exception as e:
+                            #print(e)
+                            #print('was error')
+                            #print('global_info',e, time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                                temp_params={'cov':global_policy_params.cov,\
                                     'noise':global_policy_params.noise_term,\
                                             'like':-100333,'sigma_u':global_policy_params.sigma_u}
+                        else:
+                            try:
+                                
+                                #print(baseline_features)
+                                #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
+                                #print('steps {}'.format(steps.std()**2))
+                                temp_params = run_gpytorchkernel_larger.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                
+                                #print(temp_data[0].shape)
+                                #print('temp params one {}'.format(temp_params))
+                                if temp_params['cov'] is not None:
+                                    global_policy_params.update_params_more(temp_params)
+                            except Exception as e:
+                                pass
 
-                        #print('temp params {}'.format(temp_params))
-                        inv_term = simple_bandits.get_inv_term(temp_params['cov'],temp_data[0].shape[0],temp_params['noise'])
-                        global_policy_params.update_params(temp_params)
+#print('temp params {}'.format(temp_params))
+                        inv_term = simple_bandits.get_inv_term(global_policy_params.cov,temp_data[0].shape[0],global_policy_params.noise_term)
+
                         global_policy_params.inv_term=inv_term
                                     #print(temp_params)
-                        global_policy_params.history = temp_data
+                        global_policy_params.history =temp_data
+                            #[temp_data[0], temp_data[1],steps]
                         
 
 
@@ -241,19 +261,25 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 personal_policy_params.update_mus(participant.pid,mu_beta,2)
                 personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
                 participant.last_update_day=time
-            elif algo_type=='pooling'  and global_policy_params.decision_times>2 and global_policy_params.history!=None and  time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
+            elif (algo_type=='pooling' or algo_type=='pooling_four')  and global_policy_params.decision_times>2 and global_policy_params.history is not None and  time==participant.last_update_day+pd.DateOffset(days=global_policy_params.update_period):
                 history = global_policy_params.history
-                temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
+                #print(history)
+                if algo_type=='pooling':
+                    temp = simple_bandits.calculate_posterior_faster(global_policy_params,\
                                                          participant.pid,participant.current_day_counter,\
                                                          history[0], history[1],history[2] )
             
                                                          #global_posterior = mu_beta
-                                                         #global_posterior_sigma = Sigma_beta
+                                            #global_posterior_sigma = Sigma_beta
+                else:
+                    temp = simple_bandits.calculate_posterior_current(global_policy_params,\
+                                                                     participant.pid,participant.current_day_counter,\
+                                                                     history[0], history[1],history[2] )
                 mu_beta = temp[0]
                 Sigma_beta = temp[1]
                 personal_policy_params.update_mus(participant.pid,mu_beta,2)
                 personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
-                print('here', time,global_policy_params.decision_times,'here here',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_herecurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
+                #``ere', time,global_policy_params.decision_times,'here here',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_herecurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
                 participant.last_update_day=time
             participant.set_tod(tod)
             participant.set_dow(dow)
@@ -276,7 +302,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                 steps_last_time_period = participant.steps
 
-            prob = -1
+            prob = .6
             add=None
             optimal_action = -1
             optimal_reward = -100
@@ -368,7 +394,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
         #case = 'case_one'
         
         #'dow','pretreatment',
-        baseline = ['location']
+        baseline = ['pretreatment','location']
         
         
         
@@ -403,7 +429,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                     #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_loc_4_18ttns.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_preloc_4_18difstarts.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
