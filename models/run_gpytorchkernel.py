@@ -206,7 +206,7 @@ def run(X,users,y,global_params):
     #print(first_mat.shape)
     
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    likelihood.noise_covar.initialize(noise=(global_params.o_noise_term)*torch.ones(1))
+    likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
     
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
@@ -248,7 +248,8 @@ def run(X,users,y,global_params):
                         cov=covtemp
                         #print(np.isreal( covtemp))
                         #print(cov)
-                        noise = likelihood.noise_covar.noise.item()**.5
+                        noise = likelihood.noise_covar.noise.item()
+                            #**.5
 
                 except Exception as e:
                     #print(e)
