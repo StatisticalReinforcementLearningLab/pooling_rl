@@ -198,7 +198,7 @@ class GPRegressionModel(gpytorch.models.ExactGP):
 def run(X,users,y,global_params):
     #initial_u1,initial_u2,initial_rho,initial_noise,baseline_indices,psi_indices,user_index
     torch.manual_seed(1e6)
-    np.random.seed(1e6)
+    np.random.seed(4)
     user_mat= get_users(users,users)
     #print(user_mat.shape)
     #print(X.shape)
