@@ -175,7 +175,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
 
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
-                    #print(mu_beta)
+                    print(mu_beta)
                     if algo_type=='batch':
                         global_policy_params.update_mus(None,mu_beta,2)
                         global_policy_params.update_sigmas(None,Sigma_beta,2)
@@ -189,7 +189,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
                             #print('steps {}'.format(steps.std()**2))
                                 temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
-                            
+                                print(temp_params)
                             #print(temp_data[0].shape)
                             #print('temp params one {}'.format(temp_params))
                                 if temp_params['cov'] is not None:
@@ -438,7 +438,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                     #all_rewards[i].extend(a)
             
                 #return experiment,personal
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_4_18scaledall_betstarts.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_4_18scaledall_testone.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
