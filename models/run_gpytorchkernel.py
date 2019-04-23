@@ -237,7 +237,7 @@ def run(X,users,y,global_params):
                 #print(type(output))
                     loss = -mll(output, y)
                     loss.backward()
-                    #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
+                    print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     f_preds = model(X)
