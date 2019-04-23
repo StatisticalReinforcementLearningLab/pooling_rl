@@ -287,6 +287,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 mu_beta = temp[0]
                 Sigma_beta = temp[1]
                 if participant.pid==2:
+                    print(history[2])
                     print('after posterior')
                     print(mu_beta)
                 personal_policy_params.update_mus(participant.pid,mu_beta,2)
