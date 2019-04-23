@@ -42,7 +42,8 @@ def initialize_policy_params_TS(experiment,update_period,\
     #'continuous_temp',
     u_params=None
     if algo_type=='pooling_four':
-        u_params =[0.3167,0.4156,0.1055,0.1776,1.0605,0.4591,1.0597,1.0604,0.7273,1.0590]
+        u_params =[0.1081,0.2735,0.0178,0.0655,0.9567,0.8582,0.9528,0.9531,0.8941,0.9495]
+#[0.3167,0.4156,0.1055,0.1776,1.0605,0.4591,1.0597,1.0604,0.7273,1.0590]
     
     global_p =gtp.TS_global_params(21,baseline_features=baseline_features,psi_features=psi_features, responsivity_keys= responsivity_keys,uparams = u_params)
     personal_p = pp.TS_personal_params()
@@ -415,7 +416,11 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 experiment.update_beta(set(baseline))
                 #print('beta')
                 #print(experiment.beta)
-                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=[],responsivity_keys=baseline,algo_type =algo_type)
+                psi = []
+                if algo_type=='pooling_four':
+                    psi = ['location']
+                
+                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=psi,responsivity_keys=baseline,algo_type =algo_type)
                 
                 hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type,case=case,sim_num=sim)
                 to_save = make_to_save(experiment)

@@ -49,8 +49,8 @@ def get_sigma_umore(gparams):
     
     row_one = [gparams.u1,cov_12,cov_13,cov_14]
     row_two = [cov_12,gparams.u2,cov_23,cov_24]
-    row_three = [cov_12,cov_23,gparams.u3,cov_34]
-    row_four = [cov_12,cov_23,cov_34,gparams.u4]
+    row_three = [cov_13,cov_23,gparams.u3,cov_34]
+    row_four = [cov_14,cov_24,cov_34,gparams.u4]
     
     
     return np.array([row_one,row_two,row_three,row_four])
