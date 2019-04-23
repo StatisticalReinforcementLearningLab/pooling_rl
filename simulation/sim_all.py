@@ -422,8 +422,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 pop_size=32
                 experiment = study.study(dist_root,pop_size,'_short_unstaggered',which_gen=case,sim_number=sim)
                 experiment.update_beta(set(baseline))
-                print('beta')
-                print(experiment.beta)
+               
                 psi = []
                 if algo_type=='pooling_four':
                     psi = ['location']
@@ -434,18 +433,9 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 to_save = make_to_save(experiment)
                 actions,rewards = get_regret(experiment)
                 gids = make_to_groupids(experiment)
-                    #for i,a in actions.items():
-                    #if i not in all_actions:
-                    #all_actions[i]=a
-                    #else:
-                    #all_actions[i].extend(a)
-                    #for i,a in rewards.items():
-                    # if i not in all_rewards:
-                    #all_rewards[i]=a
-                    #else:
-                    #all_rewards[i].extend(a)
+                
             
-                #return experiment,personal
+            
                 filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_4_18scaledall_thome.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
