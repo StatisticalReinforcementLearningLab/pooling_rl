@@ -40,7 +40,11 @@ def initialize_policy_params_TS(experiment,update_period,\
                                 responsivity_keys=None,algo_type=None):
     #,'location_1','location_2','location_3'
     #'continuous_temp',
-    global_p =gtp.TS_global_params(21,baseline_features=baseline_features,psi_features=psi_features, responsivity_keys= responsivity_keys)
+    u_params=None
+    if algo_type=='pooling_four':
+        u_params =[0.3167,0.4156,0.1055,0.1776,1.0605,0.4591,1.0597,1.0604,0.7273,1.0590]
+    
+    global_p =gtp.TS_global_params(21,baseline_features=baseline_features,psi_features=psi_features, responsivity_keys= responsivity_keys,u_params = u_params)
     personal_p = pp.TS_personal_params()
     #global_p =gtp.TS_global_params(10,context_dimension)
     
