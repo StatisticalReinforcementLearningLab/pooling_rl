@@ -267,7 +267,7 @@ def run(X,users,y,global_params):
 
     if i<2:
         print('1 test')
-        t =gparams.sigma_u[0][0]**.5 * global_params.sigma_u[1][1]**.5
+        t =global_params.sigma_u[0][0]**.5 * global_params.sigma_u[1][1]**.5
         r = (global_params.sigma_u[0][1]+t)/t
         
         model.covar_module.u1 =global_params.sigma_u[0][0]*torch.tensor(1.0)
