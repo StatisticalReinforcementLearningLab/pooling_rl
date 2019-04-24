@@ -49,10 +49,10 @@ class MyKernel(Kernel):
         #print(self.psi_dim_two)
         
         init_u1 = gparams.sigma_u[0][0]
-        init_u1 = gparams.u1
+        #init_u1 = gparams.u1
         
         init_u2 = gparams.sigma_u[1][1]
-        init_u2 = gparams.u2
+        #init_u2 = gparams.u2
         
         self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
         self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
@@ -60,8 +60,8 @@ class MyKernel(Kernel):
         self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
-        #r = (gparams.sigma_u[0][1]+t)/t
-        r = gparams.rho_term
+        r = (gparams.sigma_u[0][1]+t)/t
+        #r = gparams.rho_term
         self.register_parameter(name="rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
         self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
         
@@ -207,7 +207,7 @@ def run(X,users,y,global_params):
     #print(first_mat.shape)
     
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    likelihood.noise_covar.initialize(noise=(global_params.o_noise_term)*torch.ones(1))
+    likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
     
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
@@ -225,7 +225,7 @@ def run(X,users,y,global_params):
     
     optimizer = torch.optim.Adam([
                                   {'params': model.parameters()},  # Includes GaussianLikelihood parameters
-                                  ], lr=0.05)
+                                  ], lr=0.005)
                                   
     mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):

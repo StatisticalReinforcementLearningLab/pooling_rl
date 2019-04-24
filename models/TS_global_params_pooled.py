@@ -97,7 +97,9 @@ class TS_global_params:
         #continuous
         #self.rho_term =0.5575684246756394
         #non continuous
-        self.rho_term =-0.21614189352340551
+        self.rho_term =1.7838581064765946
+            #0.2250
+            #-0.21614189352340551
             #0.2250
             #0.2838
             #0.436
@@ -111,6 +113,8 @@ class TS_global_params:
         #self.u1 =1.47652434
         self.u1 =0.04970398
             #0.0984
+            #0.04970398
+            #0.0984
             #0.1800
             #0.4227
             #0.28613145
@@ -120,6 +124,8 @@ class TS_global_params:
         #self.u2 =1.15894301
         self.u2 =0.0042747
             #0.4013
+            #0.0042747
+            #0.4013
             #0.4234
             #0.36
             #0.5397
@@ -128,7 +134,8 @@ class TS_global_params:
         #90800.30211642
         #continuous
         #self.noise_term=6.32098482
-        self.noise_term =1.3305
+        self.noise_term = 1.3305
+            #1.3305
             #1.5652649189490888
             #5.7
             #1.15
