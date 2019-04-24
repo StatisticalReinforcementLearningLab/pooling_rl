@@ -78,7 +78,8 @@ class TS_global_params:
         #  [0.61305586, 1.39429461]])
           
           #self.sigma_u =np.array([[0.4227,-0.1540 ],[-0.1540,   0.5397]])
-        self.sigma_u =np.array([[0.04970398,   0.01142578 ],[   0.01142578,   0.0042747]])
+        self.sigma_u =np.array([[0.0984,-0.1540 ],[-0.1540,   0.40]])
+            #np.array([[0.04970398,   0.01142578 ],[   0.01142578,   0.0042747]])
      
             #np.array([[0.0984,-0.1540 ],[-0.1540,   0.40]])
             #np.array([[0.1800,-0.1977, ],[-0.1977,   0.4234]])
@@ -97,7 +98,8 @@ class TS_global_params:
         #continuous
         #self.rho_term =0.5575684246756394
         #non continuous
-        self.rho_term =1.7838581064765946
+        self.rho_term =0.2250
+            #1.7838581064765946
             #0.2250
             #-0.21614189352340551
             #0.2250
@@ -111,7 +113,8 @@ class TS_global_params:
         #continuous
         #self.u1 = 0.28800755
         #self.u1 =1.47652434
-        self.u1 =0.04970398
+        self.u1 =0.0984
+            #0.04970398
             #0.0984
             #0.04970398
             #0.0984
@@ -122,7 +125,8 @@ class TS_global_params:
         #continuous
         #self.u2 = 0.5466027
         #self.u2 =1.15894301
-        self.u2 =0.0042747
+        self.u2 =0.4013
+            #0.0042747
             #0.4013
             #0.0042747
             #0.4013
@@ -134,13 +138,15 @@ class TS_global_params:
         #90800.30211642
         #continuous
         #self.noise_term=6.32098482
-        self.noise_term = 1.3305
+        self.noise_term =1.3305
+            #1.3305
             #1.3305
             #1.5652649189490888
             #5.7
             #1.15
             #**2
         self.o_noise_term =1.3305
+            #1.3305
             #3
             #1.3040
             #1.15
