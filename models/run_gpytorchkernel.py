@@ -243,13 +243,14 @@ def run(X,users,y,global_params):
                     optimizer.step()
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     print('linalg {}'.format(np.linalg.eig(sigma_temp)))
-                    print(sigma_temp)
                     
+                    print(sigma_temp)
+                    eigs = np.linalg.eig(sigma_temp)
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
                     covtemp = f_covar.detach().numpy()
 
-                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all():
+                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all() and eigs[0][0]>0 and eigs[0][1]>0:
                         sigma_u = sigma_temp
                         cov=covtemp
                         #print(np.isreal( covtemp))
