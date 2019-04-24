@@ -225,7 +225,7 @@ def run(X,users,y,global_params):
     
     optimizer = torch.optim.Adam([
                                   {'params': model.parameters()},  # Includes GaussianLikelihood parameters
-                                  ], lr=0.005)
+                                  ], lr=0.05)
                                   
     mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
