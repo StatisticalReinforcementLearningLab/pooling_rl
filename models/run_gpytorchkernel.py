@@ -67,10 +67,10 @@ class MyKernel(Kernel):
         
         
         
-        self.register_constraint("raw_u1",constraint= constraints.Positive())
-        self.register_constraint("raw_u2",constraint= constraints.Positive())
+        self.register_constraint("raw_u1",constraint= constraints.Positive(initial_value=init_u1*torch.tensor(1.0)))
+        self.register_constraint("raw_u2",constraint= constraints.Positive(initial_value=init_u2*torch.tensor(1.0)))
         
-        self.register_constraint("raw_rho",constraint= constraints.Interval(0,2))
+        self.register_constraint("raw_rho",constraint= constraints.Interval(0,2,initial_value=r*torch.tensor(1.0)))
     
     #self.register_prior("u1_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u1")
     #self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u2")
