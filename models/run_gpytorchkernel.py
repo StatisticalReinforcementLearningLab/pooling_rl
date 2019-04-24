@@ -286,8 +286,8 @@ def run(X,users,y,global_params):
         print('ok 2')
         noise =global_params.noise_term
         print('ok 3')
-        model.eval()
-        likelihood.eval()
+        #model.eval()
+        #likelihood.eval()
         print('ok 4')
         f_preds = model(X)
         print('ok 5')
