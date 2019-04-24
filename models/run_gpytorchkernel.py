@@ -239,12 +239,12 @@ def run(X,users,y,global_params):
                     loss = -mll(output, y)
                     loss.backward()
                     
-                    print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
+                    ##print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
-                    print('linalg {}'.format(np.linalg.eig(sigma_temp)))
+                    ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
                     
-                    print(sigma_temp)
+                    ##print(sigma_temp)
                     eigs = np.linalg.eig(sigma_temp)
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
@@ -275,26 +275,26 @@ def run(X,users,y,global_params):
         #r = (global_params.sigma_u[0][1]+t)/t
         
         #model.covar_module.u1 =global_params.sigma_u[0][0]*torch.tensor(1.0)
-        print('ok 1')
+        ##print('ok 1')
         #model.covar_module.u2 =global_params.sigma_u[1][1]*torch.tensor(1.0)
         #model.covar_module.rho =r*torch.tensor(1.0)
-        print('ok 1')
-        print(model.covar_module.u1.item())
-        print(model.covar_module.u2.item())
-        print(model.covar_module.rho.item())
+        ##print('ok 1')
+        ##print(model.covar_module.u1.item())
+        ##print(model.covar_module.u2.item())
+        ##print(model.covar_module.rho.item())
         sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
-        print('ok 2')
+        ##print('ok 2')
         noise =global_params.noise_term
-        print('ok 3')
+        ##print('ok 3')
         #model.eval()
         #likelihood.eval()
-        print('ok 4')
+        ##print('ok 4')
         f_preds = model(X)
-        print('ok 5')
+        ##print('ok 5')
         f_covar = f_preds.covariance_matrix
         cov = f_covar.detach().numpy()
-        print('ok 6')
-        print(cov.shape)
+        ##print('ok 6')
+        ##print(cov.shape)
 
 #train(50)
 #model.eval()
