@@ -281,6 +281,7 @@ def run(X,users,y,global_params):
         f_preds = model(X)
         f_covar = f_preds.covariance_matrix
         cov = f_covar.detach().numpy()
+        print(cov.shape)
 
 #train(50)
 #model.eval()
