@@ -229,7 +229,7 @@ def run(X,users,y,global_params):
                                   
     mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
-    num_iter=15
+    num_iter=25
     with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
@@ -238,13 +238,14 @@ def run(X,users,y,global_params):
                 #print(type(output))
                     loss = -mll(output, y)
                     loss.backward()
-                    print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
+                    #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     #print(sigma_temp)
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
                     covtemp = f_covar.detach().numpy()
+
                     if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all():
                         sigma_u = sigma_temp
                         cov=covtemp
@@ -258,8 +259,12 @@ def run(X,users,y,global_params):
                     #print('here')
                     break
 #train(50)
-    
-    
+#model.eval()
+# likelihood.eval()
+#observed_pred = likelihood(model(X))
+    #print('o')
+    #print(likelihood(model(X)))
+    #print(likelihood(model(X)).mean.numpy())
 
     #print('cov')
     #print(cov)
