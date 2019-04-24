@@ -265,7 +265,7 @@ def run(X,users,y,global_params):
                     print('here')
                     break
 
-    if i==1:
+    if i<2:
         print('1 test')
         t =gparams.sigma_u[0][0]**.5 * global_params.sigma_u[1][1]**.5
         r = (global_params.sigma_u[0][1]+t)/t
@@ -273,14 +273,19 @@ def run(X,users,y,global_params):
         model.covar_module.u1 =global_params.sigma_u[0][0]*torch.tensor(1.0)
         model.covar_module.u2 =global_params.sigma_u[1][1]*torch.tensor(1.0)
         model.covar_module.rho =r*torch.tensor(1.0)
+        print('ok 1')
         sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
-        
+        print('ok 2')
         noise =global_params.noise_term
+        print('ok 3')
         model.eval()
         likelihood.eval()
+        print('ok 4')
         f_preds = model(X)
+        print('ok 5')
         f_covar = f_preds.covariance_matrix
         cov = f_covar.detach().numpy()
+        print('ok 6')
         print(cov.shape)
 
 #train(50)
