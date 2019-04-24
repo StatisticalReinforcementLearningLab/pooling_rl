@@ -250,7 +250,7 @@ def run(X,users,y,global_params):
                     f_covar = f_preds.covariance_matrix
                     covtemp = f_covar.detach().numpy()
 
-                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all() and eigs[0][0]>0.01 and eigs[0][1]>0.01:
+                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all() and eigs[0][0]>0.005 and eigs[0][1]>0.005:
                         sigma_u = sigma_temp
                         cov=covtemp
                         #print(np.isreal( covtemp))
@@ -264,6 +264,24 @@ def run(X,users,y,global_params):
                     print(e)
                     print('here')
                     break
+
+    if i==1:
+        print('1 test')
+        t =gparams.sigma_u[0][0]**.5 * global_params.sigma_u[1][1]**.5
+        r = (global_params.sigma_u[0][1]+t)/t
+        
+        model.covar_module.u1 =global_params.sigma_u[0][0]*torch.tensor(1.0)
+        model.covar_module.u2 =global_params.sigma_u[1][1]*torch.tensor(1.0)
+        model.covar_module.rho =r*torch.tensor(1.0)
+        sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+        
+        noise =global_params.noise_term
+        model.eval()
+        likelihood.eval()
+        f_preds = model(X)
+        f_covar = f_preds.covariance_matrix
+        cov = f_covar.detach().numpy()
+
 #train(50)
 #model.eval()
 # likelihood.eval()
