@@ -271,6 +271,7 @@ def run(X,users,y,global_params):
         r = (global_params.sigma_u[0][1]+t)/t
         
         model.covar_module.u1 =global_params.sigma_u[0][0]*torch.tensor(1.0)
+        print('ok 1')
         model.covar_module.u2 =global_params.sigma_u[1][1]*torch.tensor(1.0)
         model.covar_module.rho =r*torch.tensor(1.0)
         print('ok 1')
