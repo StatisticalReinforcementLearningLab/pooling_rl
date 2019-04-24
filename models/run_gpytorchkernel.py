@@ -266,14 +266,18 @@ def run(X,users,y,global_params):
                     break
 
     if i<2:
-        print('1 test')
-        t =global_params.sigma_u[0][0]**.5 * global_params.sigma_u[1][1]**.5
-        r = (global_params.sigma_u[0][1]+t)/t
+        likelihood = gpytorch.likelihoods.GaussianLikelihood()
+        likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
         
-        model.covar_module.u1 =global_params.sigma_u[0][0]*torch.tensor(1.0)
+        model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
+        print('1 test')
+        #t =global_params.sigma_u[0][0]**.5 * global_params.sigma_u[1][1]**.5
+        #r = (global_params.sigma_u[0][1]+t)/t
+        
+        #model.covar_module.u1 =global_params.sigma_u[0][0]*torch.tensor(1.0)
         print('ok 1')
-        model.covar_module.u2 =global_params.sigma_u[1][1]*torch.tensor(1.0)
-        model.covar_module.rho =r*torch.tensor(1.0)
+        #model.covar_module.u2 =global_params.sigma_u[1][1]*torch.tensor(1.0)
+        #model.covar_module.rho =r*torch.tensor(1.0)
         print('ok 1')
         sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
         print('ok 2')
