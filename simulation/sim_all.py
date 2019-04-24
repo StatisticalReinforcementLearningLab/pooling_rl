@@ -195,6 +195,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                 print('temp params one {}'.format(temp_params))
                                 if temp_params['cov'] is not None:
                                     global_policy_params.update_params(temp_params)
+                                    global_policy_params.lr = global_policy_params.lr/5
                             except Exception as e:
                                 #print('help')
                                 #if participant.pid==2:
