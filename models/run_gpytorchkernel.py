@@ -258,8 +258,8 @@ def run(X,users,y,global_params):
                             #**.5
 
                 except Exception as e:
-                    #print(e)
-                    #print('here')
+                    print(e)
+                    print('here')
                     break
 #train(50)
 #model.eval()
