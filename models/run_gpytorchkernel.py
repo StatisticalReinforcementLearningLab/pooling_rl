@@ -257,6 +257,8 @@ def run(X,users,y,global_params):
                         #print(cov)
                         noise = likelihood.noise_covar.noise.item()
                             #**.5
+                    else:
+                        break
 
                 except Exception as e:
                     print(e)
