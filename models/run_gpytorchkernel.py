@@ -279,6 +279,9 @@ def run(X,users,y,global_params):
         #model.covar_module.u2 =global_params.sigma_u[1][1]*torch.tensor(1.0)
         #model.covar_module.rho =r*torch.tensor(1.0)
         print('ok 1')
+        print(model.covar_module.u1.item())
+        print(model.covar_module.u2.item())
+        print(model.covar_module.rho.item())
         sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
         print('ok 2')
         noise =global_params.noise_term
