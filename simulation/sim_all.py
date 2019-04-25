@@ -88,7 +88,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     global_p.sigmas2= global_p.get_asigma( global_p.num_responsivity_features+1)
     
     #4.83
-    global_p.mu2_knot = np.array([4.6]+[0 for i in range(global_p.num_responsivity_features)])
+    global_p.mu2_knot = np.array([0]+[0 for i in range(global_p.num_responsivity_features)])
     global_p.mu1_knot = np.zeros(global_p.num_baseline_features+1)
     global_p.sigma1_knot = np.eye(global_p.num_baseline_features+1)
     global_p.sigma2_knot = np.eye(global_p.num_responsivity_features+1)
@@ -439,7 +439,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424qt.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424qt0.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
