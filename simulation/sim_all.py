@@ -88,7 +88,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     global_p.sigmas2= global_p.get_asigma( global_p.num_responsivity_features+1)
     
     #4.83
-    global_p.mu2_knot = np.array([0]+[0 for i in range(global_p.num_responsivity_features)])
+    global_p.mu2_knot = np.array([4.6]+[0 for i in range(global_p.num_responsivity_features)])
     global_p.mu1_knot = np.zeros(global_p.num_baseline_features+1)
     global_p.sigma1_knot = np.eye(global_p.num_baseline_features+1)
     global_p.sigma2_knot = np.eye(global_p.num_responsivity_features+1)
@@ -184,16 +184,16 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         #global_posterior_sigma = Sigma_beta
                         if algo_type=='pooling':
                             try:
-                                print('running gpytorch')
+                                #print('running gpytorch')
                             #print(baseline_features)
-                            #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
-                                print('steps {}'.format(steps.std()**2))
-                                print(steps.mean())
-                                temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
+                            #print('steps {}'.format(steps.std()**2))
+                            #print(steps.mean())
+                                #temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
                                     #if participant.pid==2:
                                     #print('global {}'.format(temp_params[0]))
                             #print(temp_data[0].shape)
-                                print('temp params one {}'.format(temp_params))
+                            #print('temp params one {}'.format(temp_params))
                                 if temp_params['cov'] is not None:
                                     global_policy_params.update_params(temp_params)
                                     global_policy_params.lr = global_policy_params.lr/2
@@ -439,7 +439,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424qt0.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424oldpack.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
