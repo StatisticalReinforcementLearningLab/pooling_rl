@@ -186,16 +186,17 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             try:
                                 print('running gpytorch')
                             #print(baseline_features)
-                            #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
-                            #print('steps {}'.format(steps.std()**2))
-                                temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
+                                print('steps {}'.format(steps.std()**2))
+                                print(steps.mean())
+                                #temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
                                     #if participant.pid==2:
                                     #print('global {}'.format(temp_params[0]))
                             #print(temp_data[0].shape)
                                 print('temp params one {}'.format(temp_params))
                                 if temp_params['cov'] is not None:
                                     global_policy_params.update_params(temp_params)
-                                    global_policy_params.lr = global_policy_params.lr/5
+                                    global_policy_params.lr = global_policy_params.lr/2
                             except Exception as e:
                                 #print('help')
                                 #if participant.pid==2:
@@ -409,7 +410,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
         
         #'dow','pretreatment',
         #'tod','dow',
-        baseline = ['pretreatment','location']
+        baseline = ['tod','dow','pretreatment','location']
         
         
         
@@ -438,7 +439,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_4_24pl.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424oldrun.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
