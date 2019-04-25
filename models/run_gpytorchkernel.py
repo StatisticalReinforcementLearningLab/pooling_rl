@@ -210,7 +210,7 @@ def run(X,users,y,global_params):
     #likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
     #print('going on')
     #print((global_params.noise_term)*torch.ones(X.shape[0]))
-    likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(.1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
+    likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
     print('like worked')
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
