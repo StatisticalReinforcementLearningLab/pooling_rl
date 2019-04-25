@@ -208,10 +208,10 @@ def run(X,users,y,global_params):
     
     #likelihood = gpytorch.likelihoods.GaussianLikelihood()
     #likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
-    print('going on')
-    print((global_params.noise_term)*torch.ones(X.shape[0]))
-    likelihood = FixedNoiseGaussianLikelihood(noise=(global_params.noise_term)*torch.ones(X.size()[0]), learn_additional_noise=True)
-    print('going on')
+    #print('going on')
+    #print((global_params.noise_term)*torch.ones(X.shape[0]))
+    likelihood = FixedNoiseGaussianLikelihood(noise=(global_params.noise_term)*torch.ones(X.shape[0]), learn_additional_noise=True)
+    #print('going on')
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
     #print(X.size())
@@ -252,7 +252,7 @@ def run(X,users,y,global_params):
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
                     covtemp = f_covar.detach().numpy()
-                    print(likelihood.second_noise_covar.noise.item())
+                    print('noise two {}'.format(likelihood.second_noise_covar.noise.item()))
                     if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all() and eigs[0][0]>0.005 and eigs[0][1]>0.005:
                         sigma_u = sigma_temp
                         cov=covtemp
