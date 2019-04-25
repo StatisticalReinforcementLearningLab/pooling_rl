@@ -211,7 +211,7 @@ def run(X,users,y,global_params):
     #print('going on')
     #print((global_params.noise_term)*torch.ones(X.shape[0]))
     likelihood = FixedNoiseGaussianLikelihood(noise=(global_params.noise_term)*torch.ones(X.shape[0]), learn_additional_noise=True)
-    #print('going on')
+    print('like worked')
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
     #print(X.size())
@@ -236,13 +236,14 @@ def run(X,users,y,global_params):
     with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
+                   
                     optimizer.zero_grad()
                     output = model(X)
                 #print(type(output))
                     loss = -mll(output, y)
                     loss.backward()
                     
-                    ##print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
+                    print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
