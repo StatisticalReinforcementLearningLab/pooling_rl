@@ -206,9 +206,9 @@ def run(X,users,y,global_params):
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
     #print(first_mat.shape)
     
-    likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
-    
+    #likelihood = gpytorch.likelihoods.GaussianLikelihood()
+    #likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
+    likelihood = FixedNoiseGaussianLikelihood(noise=(global_params.noise_term)*torch.ones(X.size[0]), learn_additional_noise=True)
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
     #print(X.size())
@@ -266,8 +266,10 @@ def run(X,users,y,global_params):
                     break
 
     if i<2:
-        likelihood = gpytorch.likelihoods.GaussianLikelihood()
-        likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
+        #likelihood = gpytorch.likelihoods.GaussianLikelihood()
+        likelihood = FixedNoiseGaussianLikelihood(noise=(global_params.noise_term)*torch.ones(X.size[0]), learn_additional_noise=True)
+
+        #likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
         
         model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
         print('1 test')

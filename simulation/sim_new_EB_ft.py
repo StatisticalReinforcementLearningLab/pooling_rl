@@ -425,7 +425,7 @@ if __name__=="__main__":
             actions,rewards = get_regret(experiment)
             
             print('done about to save')
-            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_onoise_sigmauagain.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
+            filename = '{}/results/population_size_EB_weighted_poolednewbigtest_{}_update_days_{}_{}_batch_{}_{}_new_params_six_weeks_onoise_difsigmadc.pkl'.format('pooling',pop_size,update_time,study_length,case,i)
             #'likelis':glob.to_save_params,
             with open(filename,'wb') as f:
                 pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save},f)
