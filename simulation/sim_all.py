@@ -190,6 +190,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             #print('steps {}'.format(steps.std()**2))
                                 print('steps {}'.format(steps.mean()))
                                 temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                experiment.iters.append(temp_params['iters'])
                                     #if participant.pid==2:
                                     #print('global {}'.format(temp_params[0]))
                             #print(temp_data[0].shape)
@@ -439,7 +440,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424testlocaln.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424testlocalnn.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')

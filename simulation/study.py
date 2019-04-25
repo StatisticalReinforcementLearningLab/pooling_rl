@@ -38,6 +38,7 @@ class study:
         
         self.dates_to_people = dates_to_people 
         
+        self.iters = []
         
         self.study_days = study_days 
         
