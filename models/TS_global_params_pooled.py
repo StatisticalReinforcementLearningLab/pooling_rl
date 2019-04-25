@@ -139,7 +139,8 @@ class TS_global_params:
         #90800.30211642
         #continuous
         #self.noise_term=6.32098482
-        self.noise_term =2
+        self.noise_term =1.3305
+            #2
             #1.3305
             #1.3305
             #1.3305
@@ -147,7 +148,8 @@ class TS_global_params:
             #5.7
             #1.15
             #**2
-        self.o_noise_term =2
+        self.o_noise_term =1.3305
+    #2
             #1.3305
             #1.3305
             #3
