@@ -88,7 +88,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     global_p.sigmas2= global_p.get_asigma( global_p.num_responsivity_features+1)
     
     #4.83
-    global_p.mu2_knot = np.array([4.6]+[0 for i in range(global_p.num_responsivity_features)])
+    global_p.mu2_knot = np.array([2.6]+[0 for i in range(global_p.num_responsivity_features)])
     global_p.mu1_knot = np.zeros(global_p.num_baseline_features+1)
     global_p.sigma1_knot = np.eye(global_p.num_baseline_features+1)
     global_p.sigma2_knot = np.eye(global_p.num_responsivity_features+1)

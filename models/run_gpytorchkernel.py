@@ -206,11 +206,11 @@ def run(X,users,y,global_params):
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
     #print(first_mat.shape)
     
-    #likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    #likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
+    likelihood = gpytorch.likelihoods.GaussianLikelihood()
+    likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
     #print('going on')
     #print((global_params.noise_term)*torch.ones(X.shape[0]))
-    likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
+    # likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
     print('like worked')
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
@@ -260,7 +260,8 @@ def run(X,users,y,global_params):
                         cov=covtemp
                         #print(np.isreal( covtemp))
                         #print(cov)
-                        noise = likelihood.second_noise_covar.noise.item()+1.0
+                        noise = likelihood.noise_covar.noise.item()
+                    #noise = likelihood.second_noise_covar.noise.item()+1.0
                             #**.5
                     else:
                         break
@@ -271,10 +272,10 @@ def run(X,users,y,global_params):
                     break
 
     if i<2:
-        #likelihood = gpytorch.likelihoods.GaussianLikelihood()
-        likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
+        likelihood = gpytorch.likelihoods.GaussianLikelihood()
+        #likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
 
-        #likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
+        likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
         
         model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
         print('1 test')
