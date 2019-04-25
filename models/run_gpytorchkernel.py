@@ -260,7 +260,7 @@ def run(X,users,y,global_params):
                         cov=covtemp
                         #print(np.isreal( covtemp))
                         #print(cov)
-                        noise = likelihood.second_noise_covar.noise.item()+0.2
+                        noise = likelihood.second_noise_covar.noise.item()+1.0
                             #**.5
                     else:
                         break
