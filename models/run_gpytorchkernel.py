@@ -254,6 +254,7 @@ def run(X,users,y,global_params):
                     f_covar = f_preds.covariance_matrix
                     covtemp = f_covar.detach().numpy()
                     print('noise two {}'.format(likelihood.second_noise_covar.noise.item()))
+                    print('noise two {}'.format(likelihood.noise_covar.noise.item()))
                     if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all() and eigs[0][0]>0.005 and eigs[0][1]>0.005:
                         sigma_u = sigma_temp
                         cov=covtemp
@@ -298,7 +299,10 @@ def run(X,users,y,global_params):
         f_preds = model(X)
         ##print('ok 5')
         f_covar = f_preds.covariance_matrix
+        print('ok 6')
+        print(f_covar)
         cov = f_covar.detach().numpy()
+        print('ok 7')
         ##print('ok 6')
         ##print(cov.shape)
 
