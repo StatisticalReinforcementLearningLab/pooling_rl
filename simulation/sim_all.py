@@ -188,7 +188,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                             #print(baseline_features)
                             #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
                             #print('steps {}'.format(steps.std()**2))
-                            #print(steps.mean())
+                                print('steps {}'.format(steps.mean()))
                                 temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
                                     #if participant.pid==2:
                                     #print('global {}'.format(temp_params[0]))
