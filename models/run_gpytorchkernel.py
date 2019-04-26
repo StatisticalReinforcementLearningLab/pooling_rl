@@ -67,14 +67,14 @@ class MyKernel(Kernel):
         
         
         #initial_value=init_u2*torch.tensor(1.0)
-        #self.register_constraint("raw_u1",constraint= constraints.Positive())
-        #self.register_constraint("raw_u2",constraint= constraints.Positive())
+        self.register_constraint("raw_u1",constraint= constraints.Positive())
+        self.register_constraint("raw_u2",constraint= constraints.Positive())
         
-        #self.register_constraint("raw_rho",constraint= constraints.Interval(0,2))
+        self.register_constraint("raw_rho",constraint= constraints.Interval(0,2))
     
-        self.register_prior("u1_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=3,sigma=.5), "u1")
-        self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=3,sigma=.5), "u2")
-        self.register_prior("rho_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=2,sigma=.5), "rho")
+    #self.register_prior("u1_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=3,sigma=.5), "u1")
+    #self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=3,sigma=.5), "u2")
+    #self.register_prior("rho_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=2,sigma=.5), "rho")
     
     def forward(self, x1, x2, batch_dims=None, **params):
         
