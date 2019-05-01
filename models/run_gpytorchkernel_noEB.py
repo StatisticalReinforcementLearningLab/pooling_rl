@@ -230,7 +230,7 @@ def run(X,users,y,global_params):
 #if i<2:
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
 
-     likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
+    likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
         
     model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
 
