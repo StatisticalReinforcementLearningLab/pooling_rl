@@ -13,6 +13,7 @@ import random
 import os
 import math
 import run_gpytorchkernel
+import run_simple
 import operator
 import study
 import time as time_module
@@ -141,7 +142,7 @@ def make_to_save(exp):
                 to_save[key]={k:v for k,v in context.items() if k in ['steps','decision_time','avail','action']}
         return to_save
 
-def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,generative_functions=None,which_gen=None,feat_trans = None,algo_type = None,case=None,sim_num=None):
+def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,global_policy_params=None,generative_functions=None,which_gen=None,feat_trans = None,algo_type = None,case=None,sim_num=None,train_type='None'):
     #write_directory = '../../murphy_lab/lab/pooling/temp'
     experiment.last_update_day=experiment.study_days[0]
     tod_check = set([])
@@ -179,49 +180,51 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     if algo_type=='batch':
                         global_policy_params.update_mus(None,mu_beta,2)
                         global_policy_params.update_sigmas(None,Sigma_beta,2)
+                    
+                    ##train the noise
+                    
+                    
                     else :
                         #global_posterior = mu_beta
                         #global_posterior_sigma = Sigma_beta
-                        if algo_type=='pooling':
-                            try:
-                                print('running gpytorch')
-                            #print(baseline_features)
-                            #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
-                            #print('steps {}'.format(steps.std()**2))
-                                print('steps {}'.format(steps.mean()))
-                                temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
-                                experiment.iters.append(temp_params['iters'])
-                                    #if participant.pid==2:
-                                    #print('global {}'.format(temp_params[0]))
-                            #print(temp_data[0].shape)
-                            #print('temp params one {}'.format(temp_params))
-                                if temp_params['cov'] is not None:
-                                    global_policy_params.update_params(temp_params)
-                                    global_policy_params.lr = global_policy_params.lr/2
-                            except Exception as e:
-                                #print('help')
-                                #if participant.pid==2:
-                                #print('global e {}'.format(temp_params[0]))
-                            #print(e)
-                            #print('was error')
-                            #print('global_info',e, time,global_policy_params.decision_times,'error in running gp',file=open('pooling/{}/updates_global_newbigtest_{}_{}_{}six_weeks_only_onoise_errorscurrent.txt'.format(case,len(experiment.population),global_policy_params.update_period,sim_num), 'a'))
-                                temp_params={'cov':global_policy_params.cov,\
+                        if train_type=='EB':
+                            if algo_type=='pooling':
+                            
+                                try:
+                              
+                                    # print('steps {}'.format(steps.mean()))
+                                    temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                    experiment.iters.append(temp_params['iters'])
+                                  
+                                    if temp_params['cov'] is not None:
+                                        global_policy_params.update_params(temp_params)
+                                        global_policy_params.lr = global_policy_params.lr/2
+                                except Exception as e:
+                               
+                                    temp_params={'cov':global_policy_params.cov,\
                                     'noise':global_policy_params.noise_term,\
                                             'like':-100333,'sigma_u':global_policy_params.sigma_u}
-                        else:
-                            try:
+                            else:
+                                try:
                                 
                                 #print(baseline_features)
                                 #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
                                 #print('steps {}'.format(steps.std()**2))
-                                temp_params = run_gpytorchkernel_larger.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                    temp_params = run_gpytorchkernel_larger.run(temp_data[0], temp_data[1],steps,global_policy_params)
                                 
                                 #print(temp_data[0].shape)
                                 #print('temp params one {}'.format(temp_params))
-                                if temp_params['cov'] is not None:
-                                    global_policy_params.update_params_more(temp_params)
-                            except Exception as e:
-                                pass
+                                    if temp_params['cov'] is not None:
+                                        global_policy_params.update_params_more(temp_params)
+                                except Exception as e:
+                                    pass
+                        ### don't update tuning parameters
+                        ###do get everything else
+                        else:
+                            if algo_type=='pooling':
+                                temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                global_policy_params.cov =temp_params['cov']
+                        
 
 #print('temp params {}'.format(temp_params))
                         inv_term = simple_bandits.get_inv_term(global_policy_params.cov,temp_data[0].shape[0],global_policy_params.noise_term)
@@ -404,7 +407,7 @@ def make_to_groupids(exp):
         to_save[key]=gid
     return to_save
 
-def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_directory):
+def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_directory,train_type):
     for case in cases:
         #,'case_two','case_three'
         #case = 'case_one'
@@ -431,7 +434,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 if algo_type=='pooling_four':
                     psi = ['location']
                 
-                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=psi,responsivity_keys=baseline,algo_type =algo_type)
+                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=psi,responsivity_keys=baseline,algo_type =algo_type,train_type=train_type)
                 
                 hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type,case=case,sim_num=sim)
                 to_save = make_to_save(experiment)
