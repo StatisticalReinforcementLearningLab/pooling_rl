@@ -223,7 +223,7 @@ def run(X,users,y,global_params):
     cov=None
     noise=None
     
-    mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
+   # mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
 
 
