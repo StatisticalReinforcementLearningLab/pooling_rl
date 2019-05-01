@@ -13,7 +13,8 @@ import random
 import os
 import math
 import run_gpytorchkernel
-import run_simple
+import run_gpytorchkernel_simple
+import run_gpytorchkernel_noEB
 import operator
 import study
 import time as time_module
@@ -222,7 +223,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         ###do get everything else
                         else:
                             if algo_type=='pooling':
-                                temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                temp_params = run_gpytorchkernel_noEB.run(temp_data[0], temp_data[1],steps,global_policy_params)
                                 global_policy_params.cov =temp_params['cov']
                         
 
