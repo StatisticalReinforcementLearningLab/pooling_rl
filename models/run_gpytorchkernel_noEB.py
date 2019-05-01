@@ -247,6 +247,6 @@ def run(X,users,y,global_params):
         #print(f_covar)
     cov = f_covar.detach().numpy()
 
-    return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':0,'iters':i}
+    return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':0,'iters':0}
 
 
