@@ -188,6 +188,46 @@ class GPRegressionModel(gpytorch.models.ExactGP):
         return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
 
 
+    
+    @property
+    def u2(self):
+        return self.raw_u2_constraint.transform(self.raw_u2)
+    
+    @u2.setter
+    def u2(self, value):
+        self._set_u2(value)
+    
+    def _set_u2(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u2)
+            self.initialize(raw_outputscale=self.raw_u2_constraint.inverse_transform(value))
+
+    @property
+    def u1(self):
+        return self.raw_u1_constraint.transform(self.raw_u1)
+    
+    @u1.setter
+    def u1(self, value):
+        self._set_u1(value)
+    
+    def _set_u1(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u1)
+            self.initialize(raw_outputscale=self.raw_u1_constraint.inverse_transform(value))
+
+    @property
+    def rho(self):
+        return self.raw_rho_constraint.transform(self.raw_rho)
+    
+    @rho.setter
+    def rho(self, value):
+        self._set_rho(value)
+    
+    def _set_rho(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho)
+            self.initialize(raw_outputscale=self.raw_rho_constraint.inverse_transform(value))
+
 
 
 

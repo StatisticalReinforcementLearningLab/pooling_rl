@@ -76,6 +76,51 @@ class MyKernel(Kernel):
     #self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=3,sigma=.5), "u2")
     #self.register_prior("rho_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=2,sigma=.5), "rho")
     
+    
+    
+    @property
+    def u2(self):
+        return self.raw_u2_constraint.transform(self.raw_u2)
+    
+    @u2.setter
+    def u2(self, value):
+        self._set_u2(value)
+    
+    def _set_u2(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u2)
+            self.initialize(raw_outputscale=self.raw_u2_constraint.inverse_transform(value))
+
+    @property
+    def u1(self):
+        return self.raw_u1_constraint.transform(self.raw_u1)
+    
+    @u1.setter
+    def u1(self, value):
+        self._set_u1(value)
+    
+    def _set_u1(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u1)
+            self.initialize(raw_outputscale=self.raw_u1_constraint.inverse_transform(value))
+
+    @property
+    def rho(self):
+        return self.raw_rho_constraint.transform(self.raw_rho)
+    
+    @rho.setter
+    def rho(self, value):
+        self._set_rho(value)
+    
+    def _set_rho(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho)
+            self.initialize(raw_outputscale=self.raw_rho_constraint.inverse_transform(value))
+
+
+    
+    
+    
     def forward(self, x1, x2, batch_dims=None, **params):
         
         #us = torch.cat([self.u1, self.u2], 0) # us is a vector of size 2
