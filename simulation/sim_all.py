@@ -45,6 +45,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     u_params=None
     if algo_type=='pooling_four':
         u_params =[0.1081,0.2735,0.0178,0.0655,0.9567,0.8582,0.9528,0.9531,0.8941,0.9495]
+        u_params = [0.06451840481880405,0.01370354099136279,0.010851198582671185,0.015391588363759446,0.725637691598818,1.227441604469287,0.9107303216615658,0.9863941781916185,1.3498034928863532,0.5768819568022332]
 #[0.3167,0.4156,0.1055,0.1776,1.0605,0.4591,1.0597,1.0604,0.7273,1.0590]
     
     global_p =gtp.TS_global_params(21,baseline_features=baseline_features,psi_features=psi_features, responsivity_keys= responsivity_keys,uparams = u_params)
@@ -428,7 +429,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
             
             for sim in range(sim_start,sim_end):
                 pop_size=32
-                experiment = study.study(dist_root,pop_size,'_short_unstaggered_6',which_gen=case,sim_number=sim)
+                experiment = study.study(dist_root,pop_size,'_short_unstaggered',which_gen=case,sim_number=sim)
                 experiment.update_beta(set(baseline))
                
                 psi = []
@@ -444,7 +445,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424_testnoEB.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_424_oldpacktrain.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
