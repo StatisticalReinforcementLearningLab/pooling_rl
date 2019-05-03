@@ -275,7 +275,7 @@ def run(X,users,y,global_params):
                                   {'params': model.parameters()},  # Includes GaussianLikelihood parameters
                                   ], lr=global_params.lr)
                                   
-                                  mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
+        mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
         num_iter=25
         with gpytorch.settings.use_toeplitz(False):
