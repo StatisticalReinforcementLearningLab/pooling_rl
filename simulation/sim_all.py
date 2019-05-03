@@ -169,7 +169,12 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     temp_data = feat_trans.get_phi_from_history_lookups(temp_hist)
 
                     steps = feat_trans.get_RT(temp_data[2],temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
-
+                    
+                    
+                    #####HERE GET NEW NOISE TERM
+                    if train_type=='EB':
+                        temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params
+                        global_policy_params.noise_term = temp_params['noise']
                     temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.noise_term,\
                                                        global_policy_params.mu1_knot,\
                                                        global_policy_params.sigma1_knot,\
@@ -262,6 +267,13 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
                 temp_data = feat_trans.get_phi_from_history_lookups(temp_hist)
                 steps = feat_trans.get_RT_o(steps,temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
+                
+                
+                #####HERE GET NEW NOISE TERM
+                if train_type=='EB':
+                    temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params
+                    global_policy_params.noise_term = temp_params['noise']
+                
                 temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.noise_term,\
                                                            global_policy_params.mu1_knot,\
                                                            global_policy_params.sigma1_knot,\
