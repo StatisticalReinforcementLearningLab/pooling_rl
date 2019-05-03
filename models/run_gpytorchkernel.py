@@ -288,7 +288,7 @@ def run(X,users,y,global_params):
                     loss = -mll(output, y)
                     loss.backward()
                     
-                    print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
+                    #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
