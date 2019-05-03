@@ -21,9 +21,10 @@ if __name__=="__main__":
     end_index = sys.argv[5]
     case =sys.argv[6]
     train_type =sys.argv[7]
+    algtype =sys.argv[8]
     
     root = 'pooling/distributions/'
     write_directory = 'pooling/results/'
-    sim_all.run_many('pooling',[case],int(start_index),int(end_index),int(update_time),root,write_directory,train_type)
+    sim_all.run_many(algtype,[case],int(start_index),int(end_index),int(update_time),root,write_directory,train_type)
 
 
