@@ -54,15 +54,15 @@ class MyKernel(Kernel):
         init_u2 = gparams.sigma_u[1][1]
         #init_u2 = gparams.u2
         
-        self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
+        #self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
         self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
         
-        self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
+        #self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
         r = (gparams.sigma_u[0][1]+t)/t
         #r = gparams.rho_term
-        self.register_parameter(name="rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        #self.register_parameter(name="rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
         self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
         
         
@@ -250,35 +250,35 @@ def run(X,users,y,global_params):
     #print(global_params.baseline_indices)
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
     #print(first_mat.shape)
-    
-    likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
+    with gpytorch.settings.fast_computations(log_prob=False, solves=False):
+        likelihood = gpytorch.likelihoods.GaussianLikelihood()
+        likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
     #print('going on')
     #print((global_params.noise_term)*torch.ones(X.shape[0]))
     # likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
-    print('like worked')
-    X = torch.from_numpy(np.array(X)).float()
-    y = torch.from_numpy(y).float()
+        print('like worked')
+        X = torch.from_numpy(np.array(X)).float()
+        y = torch.from_numpy(y).float()
     #print(X.size())
-    first_mat = torch.from_numpy(first_mat).float()
-    user_mat = torch.from_numpy(user_mat).float()
+        first_mat = torch.from_numpy(first_mat).float()
+        user_mat = torch.from_numpy(user_mat).float()
     
-    model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
+        model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
     
-    model.train()
-    likelihood.train()
-    sigma_u=None
-    cov=None
-    noise=None
+        model.train()
+        likelihood.train()
+        sigma_u=None
+        cov=None
+        noise=None
     
-    optimizer = torch.optim.Adam([
+        optimizer = torch.optim.Adam([
                                   {'params': model.parameters()},  # Includes GaussianLikelihood parameters
                                   ], lr=global_params.lr)
                                   
-    mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
+                                  mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
-    num_iter=25
-    with gpytorch.settings.use_toeplitz(False):
+        num_iter=25
+        with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
                    
@@ -316,14 +316,14 @@ def run(X,users,y,global_params):
                     print('here')
                     break
 
-    if i<2:
-        likelihood = gpytorch.likelihoods.GaussianLikelihood()
+        if i<2:
+            likelihood = gpytorch.likelihoods.GaussianLikelihood()
         #likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
 
-        likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
+            likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
         
-        model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
-        print('1 test')
+            model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
+            print('1 test')
         #t =global_params.sigma_u[0][0]**.5 * global_params.sigma_u[1][1]**.5
         #r = (global_params.sigma_u[0][1]+t)/t
         
@@ -335,19 +335,19 @@ def run(X,users,y,global_params):
         ##print(model.covar_module.u1.item())
         ##print(model.covar_module.u2.item())
         ##print(model.covar_module.rho.item())
-        sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+            sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
         ##print('ok 2')
-        noise =global_params.noise_term
+            noise =global_params.noise_term
         ##print('ok 3')
         #model.eval()
         #likelihood.eval()
         ##print('ok 4')
-        f_preds = model(X)
+            f_preds = model(X)
         ##print('ok 5')
-        f_covar = f_preds.covariance_matrix
+            f_covar = f_preds.covariance_matrix
         #print('ok 6')
         #print(f_covar)
-        cov = f_covar.detach().numpy()
+            cov = f_covar.detach().numpy()
 #print('ok 7')
         ##print('ok 6')
         ##print(cov.shape)
