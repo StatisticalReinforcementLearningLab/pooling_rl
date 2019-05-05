@@ -201,6 +201,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                               
                                     # print('steps {}'.format(steps.mean()))
                                     temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                    print(temp_params)
                                     experiment.iters.append(temp_params['iters'])
                                   
                                     if temp_params['cov'] is not None:
@@ -272,6 +273,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 #####HERE GET NEW NOISE TERM
                 if train_type=='EB':
                     temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                    
                     global_policy_params.noise_term = temp_params['noise']
                 
                 temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.noise_term,\
