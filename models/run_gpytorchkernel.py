@@ -264,7 +264,7 @@ def run(X,users,y,global_params):
         user_mat = torch.from_numpy(user_mat).float()
     
         model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
-    
+        print('first one {}'.format(model.covar_module.u1.item()))
         model.train()
         likelihood.train()
         sigma_u=None
