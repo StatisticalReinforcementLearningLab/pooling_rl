@@ -28,10 +28,17 @@ def get_first_mat(sigma_theta,data,baseline_indices):
     results = np.dot(result,new_data_two.T)
     return results
 
+def inv_softplus(val):
+
+    return np.log(np.exp(val)-1)
+
 def get_sigma_u(u1,u2,rho):
     off_diagaonal_term = u1**.5*u2**.5*(rho-1)
     return np.array([[u1,off_diagaonal_term],[off_diagaonal_term,u2]])
 
+def get_sigma_u_soft(u1,u2,rho):
+    off_diagaonal_term = inv_softplus(u1**.5*u2**.5*(rho-1))
+    return np.array([[inv_softplus(u1),off_diagaonal_term],[off_diagaonal_term,inv_softplus(u2)]])
 
 
 class MyKernel(Kernel):
@@ -93,8 +100,7 @@ class MyKernel(Kernel):
 
     @property
     def u1(self):
-        return self.raw_u1
-    #self.raw_u1_constraint.transform(self.raw_u1)
+        return self.raw_u1_constraint.transform(self.raw_u1)
     
     @u1.setter
     def u1(self, value):
@@ -104,7 +110,7 @@ class MyKernel(Kernel):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
             #self.raw_u1_constraint.inverse_transform(value)
-            self.initialize(raw_outputscale=value)
+            self.initialize(raw_outputscale=self.raw_u1_constraint.inverse_transform(value))
 
     @property
     def rho(self):
@@ -292,10 +298,10 @@ def run(X,users,y,global_params):
                     
                     #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
-                    sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+                    sigma_temp = get_sigma_u_soft(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
                     
-                    print(sigma_temp)
+                    #print(sigma_temp)
                     eigs = np.linalg.eig(sigma_temp)
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
