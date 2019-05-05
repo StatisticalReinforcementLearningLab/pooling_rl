@@ -277,7 +277,7 @@ def run(X,users,y,global_params):
                                   
         mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
-        num_iter=5  
+        num_iter=1
         with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
