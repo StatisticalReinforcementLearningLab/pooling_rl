@@ -93,7 +93,8 @@ class MyKernel(Kernel):
 
     @property
     def u1(self):
-        return self.raw_u1_constraint.transform(self.raw_u1)
+        return self.raw_u1
+    #self.raw_u1_constraint.transform(self.raw_u1)
     
     @u1.setter
     def u1(self, value):
@@ -103,7 +104,7 @@ class MyKernel(Kernel):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
             #self.raw_u1_constraint.inverse_transform(value)
-            self.initialize(raw_outputscale=self.raw_u1_constraint.inverse_transform(value))
+            self.initialize(raw_outputscale=value)
 
     @property
     def rho(self):
