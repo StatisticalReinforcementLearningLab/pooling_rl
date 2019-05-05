@@ -300,7 +300,7 @@ def run(X,users,y,global_params):
                     optimizer.step()
 
                     print(get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item()))
-                    sigma_temp = get_sigma_u_soft(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+                    sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
                     
                     print(sigma_temp)
@@ -325,8 +325,9 @@ def run(X,users,y,global_params):
                     print(e)
                     print('here')
                     break
-
+        one_test = True
         if i<2:
+            one_test=False
             likelihood = gpytorch.likelihoods.GaussianLikelihood()
         #likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
 
@@ -372,6 +373,8 @@ def run(X,users,y,global_params):
 
     #print('cov')
     #print(cov)
+    if one_test:
+        sigma_u = get_sigma_u_soft(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
     return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':0,'iters':i}
 
 
