@@ -101,7 +101,7 @@ class MyKernel(Kernel):
     def _set_u2(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u2)
-        self.initialize(raw_outputscale=self.raw_u2_constraint.inverse_transform(value))
+        self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
 
     @property
     def u1(self):
@@ -115,7 +115,7 @@ class MyKernel(Kernel):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
             #self.raw_u1_constraint.inverse_transform(value)
-        self.initialize(raw_outputscale=self.raw_u1_constraint.inverse_transform(value))
+        self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
 
     @property
     def rho(self):
@@ -128,7 +128,7 @@ class MyKernel(Kernel):
     def _set_rho(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho)
-        self.initialize(raw_outputscale=self.raw_rho_constraint.inverse_transform(value))
+        self.initialize(raw_rho=self.raw_rho_constraint.inverse_transform(value))
 
 
     
@@ -269,7 +269,7 @@ def run(X,users,y,global_params):
     #print('going on')
     #print((global_params.noise_term)*torch.ones(X.shape[0]))
     # likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=(1.0)*torch.ones(X.shape[0]), learn_additional_noise=True)
-        print('like worked')
+    #print('like worked')
         X = torch.from_numpy(np.array(X)).float()
         y = torch.from_numpy(y).float()
     #print(X.size())
@@ -290,7 +290,7 @@ def run(X,users,y,global_params):
                                   
         mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
-        num_iter=10
+        num_iter=20
         with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
@@ -304,11 +304,11 @@ def run(X,users,y,global_params):
                     #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
 
-                    print(get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item()))
+                    #print(get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item()))
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
                     
-                    print(sigma_temp)
+                    #print(sigma_temp)
                     eigs = np.linalg.eig(sigma_temp)
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
