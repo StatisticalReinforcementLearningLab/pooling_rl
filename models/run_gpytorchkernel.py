@@ -74,8 +74,10 @@ class MyKernel(Kernel):
         
         
         #initial_value=init_u2*torch.tensor(1.0)
-        self.register_constraint("raw_u1",constraint= constraints.Positive(initial_value=init_u1*torch.tensor(1.0)))
-        self.register_constraint("raw_u2",constraint= constraints.Positive(initial_value=init_u2*torch.tensor(1.0)))
+        #initial_value=init_u1*torch.tensor(1.0)
+        self.register_constraint("raw_u1",constraint= constraints.Positive())
+        #initial_value=init_u2*torch.tensor(1.0)
+        self.register_constraint("raw_u2",constraint= constraints.Positive())
         
         self.register_constraint("raw_rho",constraint= constraints.Interval(0.0,2.0))
         print(self.rho)
@@ -98,7 +100,7 @@ class MyKernel(Kernel):
     def _set_u2(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u2)
-            self.initialize(raw_outputscale=self.raw_u2_constraint.inverse_transform(value))
+        self.initialize(raw_outputscale=self.raw_u2_constraint.inverse_transform(value))
 
     @property
     def u1(self):
@@ -112,7 +114,7 @@ class MyKernel(Kernel):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
             #self.raw_u1_constraint.inverse_transform(value)
-            self.initialize(raw_outputscale=self.raw_u1_constraint.inverse_transform(value))
+        self.initialize(raw_outputscale=self.raw_u1_constraint.inverse_transform(value))
 
     @property
     def rho(self):
@@ -125,7 +127,7 @@ class MyKernel(Kernel):
     def _set_rho(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho)
-            self.initialize(raw_outputscale=self.raw_rho_constraint.inverse_transform(value))
+        self.initialize(raw_outputscale=self.raw_rho_constraint.inverse_transform(value))
 
 
     
