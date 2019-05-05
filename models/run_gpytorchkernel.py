@@ -75,9 +75,9 @@ class MyKernel(Kernel):
         
         #initial_value=init_u2*torch.tensor(1.0)
         #initial_value=init_u1*torch.tensor(1.0)
-        self.register_constraint("raw_u1",constraint= constraints.Positive())
+        self.register_constraint("raw_u1",constraint= constraints.Positive(init_u1*torch.tensor(1.0)))
         #initial_value=init_u2*torch.tensor(1.0)
-        self.register_constraint("raw_u2",constraint= constraints.Positive())
+        self.register_constraint("raw_u2",constraint= constraints.Positive(init_u2*torch.tensor(1.0)))
         
         self.register_constraint("raw_rho",constraint= constraints.Interval(0.0,2.0))
         print(self.rho)
