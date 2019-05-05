@@ -301,7 +301,7 @@ def run(X,users,y,global_params):
                     sigma_temp = get_sigma_u_soft(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
                     
-                    #print(sigma_temp)
+                    print(sigma_temp)
                     eigs = np.linalg.eig(sigma_temp)
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
