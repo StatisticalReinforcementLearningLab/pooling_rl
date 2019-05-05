@@ -55,7 +55,7 @@ class TS_global_params:
         self.mu_theta =np.zeros(self.theta_dim)
         self.mu_theta[0]=4.83
         self.sigma_theta =self.get_theta(self.theta_dim)
-        self.lr = 0.05
+        self.lr = 0.1
         #self.sigma_v=.5*np.eye(2)
         
         #self.sigma_v =np.array([[4492.02905157 ,   0.0        ],[   0.0 ,        2027.39758508]])

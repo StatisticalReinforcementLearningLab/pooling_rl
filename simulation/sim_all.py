@@ -206,7 +206,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                   
                                     if temp_params['cov'] is not None:
                                         global_policy_params.update_params(temp_params)
-                                        global_policy_params.lr = global_policy_params.lr/2
+                                #global_policy_params.lr = global_policy_params.lr/2
                                 except Exception as e:
                                
                                     temp_params={'cov':global_policy_params.cov,\
