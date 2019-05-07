@@ -264,6 +264,9 @@ def run(X,users,y,global_params):
     first_mat = get_first_mat(np.eye(len(global_params.baseline_indices)),X,global_params.baseline_indices)
     #print(first_mat.shape)
     with gpytorch.settings.fast_computations(log_prob=False, solves=False):
+        
+        test_constraint = constraints.Positive(initial_value=global_params.sigma_u[0][0]*torch.tensor(1.0))
+        
         likelihood = gpytorch.likelihoods.GaussianLikelihood()
         likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
     #print('going on')
@@ -304,7 +307,7 @@ def run(X,users,y,global_params):
                     #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     print(get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item()))
-                    print(model.raw_u1_constraint.inverse_transform(model.covar_module.u1.item()))
+                    print(test_constraint.inverse_transform(model.covar_module.u1.item()))
     
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
