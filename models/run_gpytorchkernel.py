@@ -92,7 +92,8 @@ class MyKernel(Kernel):
     
     @property
     def u2(self):
-        return self.raw_u2_constraint.transform(self.raw_u2)
+        return self.raw_u2
+    #self.raw_u2_constraint.transform(self.raw_u2)
     
     @u2.setter
     def u2(self, value):
@@ -105,7 +106,8 @@ class MyKernel(Kernel):
             #self.raw_u2_constraint.inverse_transform(value)
     @property
     def u1(self):
-        return self.raw_u1_constraint.transform(self.raw_u1)
+        return self.raw_u1
+#self.raw_u1_constraint.transform(self.raw_u1)
     
     @u1.setter
     def u1(self, value):
@@ -119,7 +121,8 @@ class MyKernel(Kernel):
 
     @property
     def rho(self):
-        return self.raw_rho_constraint.transform(self.raw_rho)
+        return self.raw_rho
+    #self.raw_rho_constraint.transform(self.raw_rho)
     
     @rho.setter
     def rho(self, value):
