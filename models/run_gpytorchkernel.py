@@ -93,7 +93,7 @@ class MyKernel(Kernel):
     @property
     def u2(self):
         if self.raw_u2<0.0001:
-            return self.init_u2
+            return self.init_u2+.1
         return self.raw_u2
         return self.raw_u2_constraint.transform(self.raw_u2)
     
@@ -108,11 +108,11 @@ class MyKernel(Kernel):
 
     @property
     def u1(self):
-        print('called function one')
-        print(self.raw_u1)
-        print(self.raw_u1_constraint.transform(self.raw_u1))
+        #print('called function one')
+        #print(self.raw_u1)
+        #print(self.raw_u1_constraint.transform(self.raw_u1))
         if self.raw_u1<0.0001:
-            return self.init_u1
+            return self.init_u1+.1
         return self.raw_u1
         
         return self.raw_u1_constraint.transform(self.raw_u1)
@@ -135,7 +135,7 @@ class MyKernel(Kernel):
     @property
     def rho(self):
         if self.raw_rho<0.0001:
-            return self.r
+            return self.r+.1
         return self.raw_rho
         return self.raw_rho_constraint.transform(self.raw_rho)
     
