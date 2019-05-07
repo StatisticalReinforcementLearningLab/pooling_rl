@@ -92,8 +92,7 @@ class MyKernel(Kernel):
     
     @property
     def u2(self):
-        return self.raw_u2
-    #self.raw_u2_constraint.transform(self.raw_u2)
+        return self.raw_u2_constraint.transform(self.raw_u2)
     
     @u2.setter
     def u2(self, value):
@@ -102,12 +101,11 @@ class MyKernel(Kernel):
     def _set_u2(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u2)
-        self.initialize(raw_u2=value)
-            #self.raw_u2_constraint.inverse_transform(value)
+        self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
+
     @property
     def u1(self):
-        return self.raw_u1
-#self.raw_u1_constraint.transform(self.raw_u1)
+        return self.raw_u1_constraint.transform(self.raw_u1)
     
     @u1.setter
     def u1(self, value):
@@ -117,12 +115,11 @@ class MyKernel(Kernel):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
             #self.raw_u1_constraint.inverse_transform(value)
-        self.initialize(raw_u1=value)
+        self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
 
     @property
     def rho(self):
-        return self.raw_rho
-    #self.raw_rho_constraint.transform(self.raw_rho)
+        return self.raw_rho_constraint.transform(self.raw_rho)
     
     @rho.setter
     def rho(self, value):
@@ -131,8 +128,7 @@ class MyKernel(Kernel):
     def _set_rho(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho)
-        self.initialize(raw_rho=value)
-            #self.raw_rho_constraint.inverse_transform(value)
+        self.initialize(raw_rho=self.raw_rho_constraint.inverse_transform(value))
 
 
     
@@ -307,7 +303,7 @@ def run(X,users,y,global_params):
                     
                     #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
-                    print(get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item()))
+                print(get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item()))
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
                     
@@ -382,7 +378,7 @@ def run(X,users,y,global_params):
     #print('cov')
     #print(cov)
     if one_test:
-        sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+        sigma_u = get_sigma_u_soft(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
     return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':0,'iters':i}
 
 
