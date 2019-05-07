@@ -337,7 +337,7 @@ def run(X,users,y,global_params):
                     covtemp = f_covar.detach().numpy()
                     #print('noise two {}'.format(likelihood.second_noise_covar.noise.item()))
                     #print('noise two {}'.format(likelihood.noise_covar.noise))
-                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all() and eigs[0][0]>0.005 and eigs[0][1]>0.005:
+                    if np.isreal(sigma_temp).all() and not np.isnan(covtemp).all() and eigs[0][0]>0.0005 and eigs[0][1]>0.0005:
                         
                         sigma_u = sigma_temp
                         cov=covtemp
