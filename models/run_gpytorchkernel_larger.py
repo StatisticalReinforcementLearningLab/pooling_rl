@@ -49,55 +49,55 @@ class MyKernel(Kernel):
         #print(self.psi_dim_two)
         
         #init_u1 = gparams.sigma_u[0][0]
-        init_u1 = gparams.init_u1
+        self.init_u1 = gparams.init_u1
         
         #init_u2 = gparams.sigma_u[1][1]
-        init_u2 = gparams.init_u2
-        init_u3 = gparams.init_u3
-        init_u4 = gparams.init_u4
+        self.init_u2 = gparams.init_u2
+        self.init_u3 = gparams.init_u3
+        self.init_u4 = gparams.init_u4
         
-        r12 = gparams.init_r12
-        r13 = gparams.init_r13
-        r14 = gparams.init_r14
+        self.r12 = gparams.init_r12
+        self.r13 = gparams.init_r13
+        self.r14 = gparams.init_r14
         
-        r23 = gparams.init_r23
-        r24 = gparams.init_r24
+        self.r23 = gparams.init_r23
+        self.r24 = gparams.init_r24
         
-        r34 = gparams.init_r34
+        self.r34 = gparams.init_r34
         
-        self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
+        #self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(self.init_u1*torch.tensor(1.0)))
         
-        self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
+        #self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(self.init_u2*torch.tensor(1.0)))
         
-        self.register_parameter(name="u3", parameter=torch.nn.Parameter(init_u3*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u3", parameter=torch.nn.Parameter(init_u3*torch.tensor(1.0)))
+        #self.register_parameter(name="u3", parameter=torch.nn.Parameter(init_u3*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u3", parameter=torch.nn.Parameter(self.init_u3*torch.tensor(1.0)))
         
-        self.register_parameter(name="u4", parameter=torch.nn.Parameter(init_u4*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u4", parameter=torch.nn.Parameter(init_u4*torch.tensor(1.0)))
+        #self.register_parameter(name="u4", parameter=torch.nn.Parameter(init_u4*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u4", parameter=torch.nn.Parameter(self.init_u4*torch.tensor(1.0)))
         
         
         #t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
         #r = (gparams.sigma_u[0][1]+t)/t
         r = gparams.rho_term
-        self.register_parameter(name="rho_12", parameter=torch.nn.Parameter(r12*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_12", parameter=torch.nn.Parameter(r12*torch.tensor(1.0)))
+        #self.register_parameter(name="rho_12", parameter=torch.nn.Parameter(r12*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_12", parameter=torch.nn.Parameter(self.r12*torch.tensor(1.0)))
         
-        self.register_parameter(name="rho_13", parameter=torch.nn.Parameter(r13*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_13", parameter=torch.nn.Parameter(r13*torch.tensor(1.0)))
+        #self.register_parameter(name="rho_13", parameter=torch.nn.Parameter(r13*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_13", parameter=torch.nn.Parameter(self.r13*torch.tensor(1.0)))
         
-        self.register_parameter(name="rho_14", parameter=torch.nn.Parameter(r14*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_14", parameter=torch.nn.Parameter(r14*torch.tensor(1.0)))
+        #self.register_parameter(name="rho_14", parameter=torch.nn.Parameter(r14*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_14", parameter=torch.nn.Parameter(self.r14*torch.tensor(1.0)))
 
-        self.register_parameter(name="rho_23", parameter=torch.nn.Parameter(r23*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_23", parameter=torch.nn.Parameter(r23*torch.tensor(1.0)))
+        #self.register_parameter(name="rho_23", parameter=torch.nn.Parameter(r23*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_23", parameter=torch.nn.Parameter(self.r23*torch.tensor(1.0)))
 
-        self.register_parameter(name="rho_24", parameter=torch.nn.Parameter(r24*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_24", parameter=torch.nn.Parameter(r24*torch.tensor(1.0)))
+        #self.register_parameter(name="rho_24", parameter=torch.nn.Parameter(r24*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_24", parameter=torch.nn.Parameter(self.r24*torch.tensor(1.0)))
 
-        self.register_parameter(name="rho_34", parameter=torch.nn.Parameter(r34*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho_34", parameter=torch.nn.Parameter(r34*torch.tensor(1.0)))
+        #self.register_parameter(name="rho_34", parameter=torch.nn.Parameter(r34*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho_34", parameter=torch.nn.Parameter(self.r34*torch.tensor(1.0)))
         
         self.register_constraint("raw_u1",constraint= constraints.Positive())
         self.register_constraint("raw_u2",constraint= constraints.Positive())
@@ -228,6 +228,163 @@ class MyKernel(Kernel):
         #print(final.evaluate())
         return final
 
+    @property
+    def u2(self):
+        if self.raw_u2<0.0001:
+            return self.init_u2+.1
+            return self.raw_u2
+    return self.raw_u2_constraint.transform(self.raw_u2)
+
+    @u2.setter
+    def u2(self, value):
+        self._set_u2(value)
+    
+    def _set_u2(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u2)
+        self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
+    
+    @property
+    def u1(self):
+        if self.raw_u1<0.0001:
+            return self.init_u1+.1
+        return self.raw_u1
+        
+
+    @u1.setter
+    def u1(self, value):
+        self._set_u1(value)
+    
+    def _set_u1(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u1)
+        #self.raw_u1_constraint.inverse_transform(value)
+        self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
+
+    @property
+    def u3(self):
+        if self.raw_u3<0.0001:
+            return self.init_u3+.1
+        return self.raw_u3
+    
+    
+    @u3.setter
+    def u3(self, value):
+        self._set_u3(value)
+    
+    def _set_u3(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u3)
+        #self.raw_u1_constraint.inverse_transform(value)
+        self.initialize(raw_u3=self.raw_u3_constraint.inverse_transform(value))
+   
+    @property
+    def u4(self):
+        if self.raw_u4<0.0001:
+            return self.init_u4+.1
+        return self.raw_u4
+    
+    
+    @u4.setter
+    def u4(self, value):
+        self._set_u4(value)
+    
+    def _set_u4(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_u4)
+        #self.raw_u1_constraint.inverse_transform(value)
+        self.initialize(raw_u4=self.raw_u4_constraint.inverse_transform(value))
+
+    
+    @property
+    def rho_12(self):
+        if self.raw_rho_12<0.0001:
+            return self.r12+.1
+        return self.raw_rho_12
+
+    @rho_12.setter
+    def rho_12(self, value):
+        self._set_rho_12(value)
+    
+    def _set_rho_12(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho_12)
+        self.initialize(raw_rho_12=self.raw_rho_12_constraint.inverse_transform(value))
+
+    @property
+    def rho_13(self):
+        if self.raw_rho_13<0.0001:
+            return self.r13+.1
+        return self.raw_rho_13
+    
+    @rho_13.setter
+    def rho_13(self, value):
+        self._set_rho_13(value)
+    
+    def _set_rho_13(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho_13)
+        self.initialize(raw_rho_13=self.raw_rho_13_constraint.inverse_transform(value))
+
+    @property
+    def rho_14(self):
+        if self.raw_rho_14<0.0001:
+            return self.r14+.1
+        return self.raw_rho_14
+    
+    @rho_14.setter
+    def rho_14(self, value):
+        self._set_rho_14(value)
+    
+    def _set_rho_14(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho_14)
+        self.initialize(raw_rho_14=self.raw_rho_14_constraint.inverse_transform(value))
+
+    @property
+    def rho_23(self):
+        if self.raw_rho_23<0.0001:
+            return self.r23+.1
+        return self.raw_rho_23
+    
+    @rho_23.setter
+    def rho_23(self, value):
+        self._set_rho_23(value)
+    
+    def _set_rho_23(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho_23)
+        self.initialize(raw_rho_23=self.raw_rho_23_constraint.inverse_transform(value))
+    
+    @property
+    def rho_24(self):
+        if self.raw_rho_24<0.0001:
+            return self.r24+.1
+        return self.raw_rho_24
+    
+    @rho_24.setter
+    def rho_24(self, value):
+        self._set_rho_24(value)
+    
+    def _set_rho_24(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho_24)
+        self.initialize(raw_rho_24=self.raw_rho_24_constraint.inverse_transform(value))
+    
+    @property
+    def rho_34(self):
+        if self.raw_rho_34<0.0001:
+            return self.r34+.1
+        return self.raw_rho_34
+    
+    @rho_34.setter
+    def rho_34(self, value):
+        self._set_rho_34(value)
+    
+    def _set_rho_34(self, value):
+        if not torch.is_tensor(value):
+            value = torch.as_tensor(value).to(self.raw_rho_34)
+        self.initialize(raw_rho_34=self.raw_rho_34_constraint.inverse_transform(value))
 
 
 
