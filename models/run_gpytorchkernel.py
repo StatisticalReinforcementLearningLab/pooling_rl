@@ -266,7 +266,7 @@ def run(X,users,y,global_params):
     with gpytorch.settings.fast_computations(log_prob=False, solves=False):
         
         test_constraint = constraints.Positive(initial_value=global_params.sigma_u[0][0]*torch.tensor(1.0))
-        
+        print('upper bound {}'.format(test_constraint.upper_bound))
         likelihood = gpytorch.likelihoods.GaussianLikelihood()
         likelihood.noise_covar.initialize(noise=(global_params.noise_term)*torch.ones(1))
     #print('going on')
