@@ -106,6 +106,8 @@ class MyKernel(Kernel):
     @property
     def u1(self):
         print('called function one')
+        print(self.raw_u1)
+        print(self.raw_u1_constraint.transform(self.raw_u1))
         return self.raw_u1_constraint.transform(self.raw_u1)
     
     @u1.setter
