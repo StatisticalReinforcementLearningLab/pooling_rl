@@ -401,7 +401,7 @@ def run(X,users,y,global_params):
     #print('cov')
     #print(cov)
     if one_test:
-        sigma_u = get_sigma_u_soft(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
+        sigma_u = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
     return {'sigma_u':sigma_u,'cov':cov,'noise':noise,'like':0,'iters':i}
 
 
