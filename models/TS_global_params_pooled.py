@@ -53,7 +53,7 @@ class TS_global_params:
         self.baseline_indices =  [i for i in range(self.theta_dim)]
         #print(self.theta_dim)
         self.mu_theta =np.zeros(self.theta_dim)
-        self.mu_theta[0]=4.83
+        self.mu_theta[0]=4.6
         self.sigma_theta =self.get_theta(self.theta_dim)
         self.lr = 0.0001
         #self.sigma_v=.5*np.eye(2)
