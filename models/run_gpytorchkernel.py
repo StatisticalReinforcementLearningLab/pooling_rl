@@ -307,7 +307,7 @@ def run(X,users,y,global_params):
                     #print('Iter %d/%d - Loss: %.3f' % (i + 1, num_iter, loss.item()))
                     optimizer.step()
                     print(get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item()))
-                    print(test_constraint.inverse_transform(model.covar_module.u1.item()*torch.tensor(1.0)))
+                    print(test_constraint.transform(model.covar_module.u1.item()*torch.tensor(1.0)))
     
                     sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     ##print('linalg {}'.format(np.linalg.eig(sigma_temp)))
