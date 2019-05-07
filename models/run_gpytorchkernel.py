@@ -115,7 +115,7 @@ class MyKernel(Kernel):
         self._set_u1(value)
     
     def _set_u1(self, value):
-        print('called function three)
+        print('called function three')
         print(value)
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
