@@ -55,10 +55,10 @@ class MyKernel(Kernel):
         #print(self.psi_dim_one)
         #print(self.psi_dim_two)
         
-        init_u1 = gparams.sigma_u[0][0]
+        self.init_u1 = gparams.sigma_u[0][0]
         #init_u1 = gparams.u1
         
-        init_u2 = gparams.sigma_u[1][1]
+        self.init_u2 = gparams.sigma_u[1][1]
         #init_u2 = gparams.u2
         
         #self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
@@ -67,7 +67,7 @@ class MyKernel(Kernel):
         #self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
-        r = (gparams.sigma_u[0][1]+t)/t
+        self.r = (gparams.sigma_u[0][1]+t)/t
         #r = gparams.rho_term
         #self.register_parameter(name="rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
         self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
@@ -92,6 +92,9 @@ class MyKernel(Kernel):
     
     @property
     def u2(self):
+        if self.raw_u2<0.0001:
+            return self.init_u2
+        return self.raw_u2
         return self.raw_u2_constraint.transform(self.raw_u2)
     
     @u2.setter
@@ -108,6 +111,10 @@ class MyKernel(Kernel):
         print('called function one')
         print(self.raw_u1)
         print(self.raw_u1_constraint.transform(self.raw_u1))
+        if self.raw_u1<0.0001:
+            return self.init_u1
+        return self.raw_u1
+        
         return self.raw_u1_constraint.transform(self.raw_u1)
     
     @u1.setter
@@ -127,6 +134,9 @@ class MyKernel(Kernel):
 
     @property
     def rho(self):
+        if self.raw_rho<0.0001:
+            return self.r
+        return self.raw_rho
         return self.raw_rho_constraint.transform(self.raw_rho)
     
     @rho.setter
