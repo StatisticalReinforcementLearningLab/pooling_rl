@@ -62,15 +62,15 @@ class MyKernel(Kernel):
         #init_u2 = gparams.u2
         
         #self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(self.init_u1*torch.tensor(1.0)))
         
         #self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
-        self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
+        self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(self.init_u2*torch.tensor(1.0)))
         t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
         self.r = (gparams.sigma_u[0][1]+t)/t
         #r = gparams.rho_term
         #self.register_parameter(name="rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
-        self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(r*torch.tensor(1.0)))
+        self.register_parameter(name="raw_rho", parameter=torch.nn.Parameter(self.r*torch.tensor(1.0)))
         
         
         #initial_value=init_u2*torch.tensor(1.0)
