@@ -49,21 +49,21 @@ class MyKernel(Kernel):
         #print(self.psi_dim_two)
         
         #init_u1 = gparams.sigma_u[0][0]
-        self.init_u1 = gparams.init_u1*torch.tensor(1.0)
+        self.init_u1 = gparams.u1*torch.tensor(1.0)
         
         #init_u2 = gparams.sigma_u[1][1]
-        self.init_u2 = gparams.init_u2*torch.tensor(1.0)
-        self.init_u3 = gparams.init_u3*torch.tensor(1.0)
-        self.init_u4 = gparams.init_u4*torch.tensor(1.0)
+        self.init_u2 = gparams.u2*torch.tensor(1.0)
+        self.init_u3 = gparams.u3*torch.tensor(1.0)
+        self.init_u4 = gparams.u4*torch.tensor(1.0)
         
-        self.r12 = gparams.init_r12*torch.tensor(1.0)
-        self.r13 = gparams.init_r13*torch.tensor(1.0)
+        self.r12 = gparams.r12*torch.tensor(1.0)
+        self.r13 = gparams.r13*torch.tensor(1.0)
         self.r14 = gparams.init_r14*torch.tensor(1.0)
         
-        self.r23 = gparams.init_r23*torch.tensor(1.0)
-        self.r24 = gparams.init_r24*torch.tensor(1.0)
+        self.r23 = gparams.r23*torch.tensor(1.0)
+        self.r24 = gparams.r24*torch.tensor(1.0)
         
-        self.r34 = gparams.init_r34*torch.tensor(1.0)
+        self.r34 = gparams.r34*torch.tensor(1.0)
         
         #self.register_parameter(name="u1", parameter=torch.nn.Parameter(init_u1*torch.tensor(1.0)))
         self.register_parameter(name="raw_u1", parameter=torch.nn.Parameter(self.init_u1*torch.tensor(1.0)))
