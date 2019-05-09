@@ -233,7 +233,7 @@ class MyKernel(Kernel):
         if self.raw_u2<0.0001:
             return self.init_u2+.1
             return self.raw_u2
-    return self.raw_u2_constraint.transform(self.raw_u2)
+        return self.raw_u2_constraint.transform(self.raw_u2)
 
     @u2.setter
     def u2(self, value):
