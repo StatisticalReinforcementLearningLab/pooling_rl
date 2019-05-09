@@ -471,8 +471,8 @@ def run(X,users,y,global_params):
 
 
                 except Exception as e:
-                    #print(e)
-                    #print('here')
+                    print(e)
+                    print('here')
                     break
 #train(50)
     
