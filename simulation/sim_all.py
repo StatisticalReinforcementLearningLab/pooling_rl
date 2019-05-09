@@ -226,6 +226,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                     if temp_params['cov'] is not None:
                                         global_policy_params.update_params_more(temp_params)
                                 except Exception as e:
+                                    print(e)
                                     pass
                         ### don't update tuning parameters
                         ###do get everything else
@@ -307,6 +308,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     temp = simple_bandits.calculate_posterior_current(global_policy_params,\
                                                                      participant.pid,participant.current_day_counter,\
                                                                      history[0], history[1],history[2] )
+                    print('posterior four{}'.format(temp))
                 mu_beta = temp[0]
                 Sigma_beta = temp[1]
                     #if participant.pid==2:
