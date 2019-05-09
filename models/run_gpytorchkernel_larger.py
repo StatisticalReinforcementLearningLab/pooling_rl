@@ -231,9 +231,9 @@ class MyKernel(Kernel):
     @property
     def u2(self):
         if self.raw_u2<0.0001:
-            return self.init_u2+.1
-            return self.raw_u2
-        return self.raw_u2_constraint.transform(self.raw_u2)
+            return self.init_u2+.001
+        return self.raw_u2
+            #return self.raw_u2_constraint.transform(self.raw_u2)
 
     @u2.setter
     def u2(self, value):
@@ -247,7 +247,7 @@ class MyKernel(Kernel):
     @property
     def u1(self):
         if self.raw_u1<0.0001:
-            return self.init_u1+.1
+            return self.init_u1+.001
         return self.raw_u1
         
 
@@ -264,7 +264,7 @@ class MyKernel(Kernel):
     @property
     def u3(self):
         if self.raw_u3<0.0001:
-            return self.init_u3+.1
+            return self.init_u3+.001
         return self.raw_u3
     
     
@@ -281,7 +281,7 @@ class MyKernel(Kernel):
     @property
     def u4(self):
         if self.raw_u4<0.0001:
-            return self.init_u4+.1
+            return self.init_u4+.001
         return self.raw_u4
     
     
@@ -299,7 +299,7 @@ class MyKernel(Kernel):
     @property
     def rho_12(self):
         if self.raw_rho_12<0.0001:
-            return self.r12+.1
+            return self.r12+.001
         return self.raw_rho_12
 
     @rho_12.setter
@@ -314,7 +314,7 @@ class MyKernel(Kernel):
     @property
     def rho_13(self):
         if self.raw_rho_13<0.0001:
-            return self.r13+.1
+            return self.r13+.001
         return self.raw_rho_13
     
     @rho_13.setter
@@ -329,7 +329,7 @@ class MyKernel(Kernel):
     @property
     def rho_14(self):
         if self.raw_rho_14<0.0001:
-            return self.r14+.1
+            return self.r14+.001
         return self.raw_rho_14
     
     @rho_14.setter
@@ -344,7 +344,7 @@ class MyKernel(Kernel):
     @property
     def rho_23(self):
         if self.raw_rho_23<0.0001:
-            return self.r23+.1
+            return self.r23+.001
         return self.raw_rho_23
     
     @rho_23.setter
@@ -359,7 +359,7 @@ class MyKernel(Kernel):
     @property
     def rho_24(self):
         if self.raw_rho_24<0.0001:
-            return self.r24+.1
+            return self.r24+.001
         return self.raw_rho_24
     
     @rho_24.setter
@@ -374,7 +374,7 @@ class MyKernel(Kernel):
     @property
     def rho_34(self):
         if self.raw_rho_34<0.0001:
-            return self.r34+.1
+            return self.r34+.001
         return self.raw_rho_34
     
     @rho_34.setter
