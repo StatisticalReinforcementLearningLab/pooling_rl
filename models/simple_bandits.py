@@ -172,11 +172,19 @@ def get_M_faster_time_effects(global_params,user_id,user_study_day,history,users
     M = [[] for i in range(history.shape[0])]
     
     H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
+    ##need to uncomment this is just for testing
+    #phi = history[:,global_params.baseline_indices]
     
-    phi = history[:,global_params.baseline_indices]
+    H = np.array([[1,0,0,0],[0,1,0,0]]).T
+    
+    phi = history
+    #print(phi.shape)
     ##should be fine
     #print(global_params.sigma_theta)
     t_one = np.dot(phi,global_params.sigma_theta)
+    
+    #print(t_one)
+    
     #print(t_one.shape)
     temp = np.dot(H,global_params.sigma_u)
     #print(temp.shape)
@@ -192,24 +200,31 @@ def get_M_faster_time_effects(global_params,user_id,user_study_day,history,users
     if type(my_days)!=np.ndarray:
         my_days = np.zeros(history.shape[0])
     user_matrix = np.diag(my_days)
-
+#print(user_matrix)
     t_two = np.matmul(user_matrix,temp)
 
-    term = np.add(t_one,t_two)
-    temp = np.dot(H,global_params.sigma_v.reshape(2,2))
+#print(t_two)
+    
+    temp = np.dot(H,global_params.sigma_v)
+    #print(temp.shape)
+    #print(global_params.sigma_u)
     temp = np.dot(temp,H.T)
-    temp = np.dot(np.transpose(phi),temp)
-    rbf_eval = np.array([np.exp(-(day-data[i])**2/100) for i in range(len(data)) ])
+    temp = np.dot(phi,temp)
+
+
+
+    rbf_eval = np.array([np.exp(-(user_study_day-days[i])**2/100) for i in range(len(days)) ])
         #if type(my_days)!=np.ndarray:
 #      my_days = np.zeros(history.shape[0])
     day_matrix = np.diag(rbf_eval)
     t_three  =  np.matmul(day_matrix,temp)
-
+#print(t_three)
+    term = np.add(t_one,t_two)
     term = np.add(term,t_three)
     ##time stuff
     
 
-    
+#print(term)
     return term
 
 
@@ -298,6 +313,7 @@ def calculate_posterior_faster(global_params,user_id,user_study_day,X,users,y):
     #print('current global cov')
     #print(global_params.cov)
     #.reshape(X.shape[0],X.shape[0])
+    print(M.shape)
     mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta,global_params.inv_term)
     #.reshape(X.shape[0],X.shape[0])
     sigma = get_post_sigma(H,global_params.cov,global_params.sigma_u.reshape(2,2),None,global_params.noise_term,M,X.shape[0],global_params.sigma_theta,global_params.inv_term)
@@ -324,8 +340,8 @@ def calculate_posterior_current(global_params,user_id,user_study_day,X,users,y):
     return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
 
 
-def calculate_posterior_time_effects(global_params,user_id,user_study_day,X,users,y):
-    sigma_u =get_sigma_umore(global_params)
+def calculate_posterior_time_effects(global_params,user_id,user_study_day,X,users,days,y):
+    #sigma_u =get_sigma_umore(global_params)
     H = create_H(global_params.num_baseline_features,global_params.num_responsivity_features,global_params.psi_indices)
     
     M = get_M_faster_time_effects(global_params,user_id,user_study_day,X,users,global_params.sigma_u,days,global_params.sigma_v)
@@ -335,11 +351,34 @@ def calculate_posterior_time_effects(global_params,user_id,user_study_day,X,user
     #print('current global cov')
     #print(global_params.cov)
     #.reshape(X.shape[0],X.shape[0])
+    
     mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta,global_params.inv_term)
     #.reshape(X.shape[0],X.shape[0])
-    sigma = get_post_sigma_time(H,global_params.cov,global_params.sigma_u.reshape(2,2),None,global_params.noise_term,M,X.shape[0],global_params.sigma_theta,global_params.inv_term,global_params.sigma_v)
+
+    sigma = get_post_sigma_time(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v,global_params.noise_term,M,X.shape[0],global_params.sigma_theta,global_params.inv_term)
     
     return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
+
+
+def calculate_posterior_time_effects_ft(global_params,user_id,user_study_day,X,users,days,y):
+    #sigma_u =get_sigma(global_params)
+    #H = create_H(num_baseline_features,num_responsivity_features,psi_indices)
+    H = np.array([[1,0,0,0],[0,1,0,0]]).T
+    M = get_M_faster_time_effects(global_params,user_id,user_study_day,X,users,global_params.sigma_u,days,global_params.sigma_v)
+    ##change this to be mu_theta
+    ##is it updated?  the current mu_theta?
+    adjusted_rewards =get_RT(y,X,global_params.mu_theta,global_params.theta_dim)
+    #print('current global cov')
+    #print(global_params.cov)
+    #.reshape(X.shape[0],X.shape[0])
+    #print(adjusted_rewards)
+    mu = get_middle_term(X.shape[0],global_params.cov,global_params.noise_term,M,adjusted_rewards,global_params.mu_theta,global_params.inv_term)
+    #print(mu)
+    #.reshape(X.shape[0],X.shape[0])
+    sigma = get_post_sigma_time(H,global_params.cov,global_params.sigma_u.reshape(2,2),global_params.sigma_v,global_params.noise_term,M,X.shape[0],global_params.sigma_theta,global_params.inv_term)
+    
+    return mu[-(global_params.num_responsivity_features+1):],[j[-(global_params.num_responsivity_features+1):] for j in sigma[-(global_params.num_responsivity_features+1):]]
+
 
 
 def calculate_posterior(global_params,user_id,user_study_day,X,y):
@@ -403,7 +442,7 @@ def get_post_sigma(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta,inv_term
     
     return last
 
-def get_post_sigma_time(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta,inv_term,sigma_v):
+def get_post_sigma_time(H,cov,sigma_u,sigma_v,noise_term,M,x_dim,sigma_theta,inv_term):
     #M = get_M(global_params,user_id,user_study_day,history[0])
     
     ##change this to be mu_theta
