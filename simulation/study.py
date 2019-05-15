@@ -173,7 +173,7 @@ class study:
             #print(self.sim_number)
             this_beta = [i for i in [ 0.05,  0.25,  0.25,  0.25, -0.3 ]]
                 #if Z is not None:
-            this_beta[-1]=this_beta[-1]+Z
+                #this_beta[-1]=this_beta[-1]+Z
                 #this_beta[2]=this_beta[2]+Z/2
                 #this_beta[3]=this_beta[3]+Z/2
                         
