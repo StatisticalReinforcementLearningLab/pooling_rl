@@ -439,8 +439,8 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
         
         #'dow','pretreatment',
         #'tod','dow',
-        baseline = ['dow','pretreatment','location']
-        
+        baseline = ['tod','dow','pretreatment','location']
+        responsivity_keys = ['dow','pretreatment','location']
         
         
         for u in [update_time]:
@@ -459,7 +459,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 if algo_type=='pooling_four':
                     psi = ['location']
                 
-                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=psi,responsivity_keys=baseline,algo_type =algo_type)
+                glob,personal = initialize_policy_params_TS(experiment,7,standardize=False,baseline_features=baseline,psi_features=psi,responsivity_keys=responsivity_keys,algo_type =algo_type)
                 
                 hist = new_kind_of_simulation(experiment,'TS',personal,glob,feat_trans=feat_trans,algo_type=algo_type,case=case,sim_num=sim,train_type=train_type)
                 to_save = make_to_save(experiment)
@@ -468,7 +468,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_515_long.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_515_longnew.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
