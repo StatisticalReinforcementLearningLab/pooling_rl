@@ -62,7 +62,7 @@ def initialize_policy_params_TS(experiment,update_period,\
     
     global_p.kdim =24
     #194
-    global_p.baseline_indices = [i for i in range(3+ 3*len(baseline_features))]
+    global_p.baseline_indices = [i for i in range(3+ len(baseline_features)+2*len(responsivity_keys))]
     #[i for i in range(192)]
     #[0,1,2,3,4,5,6]
     global_p.psi_indices = [0] + [1+baseline_features.index(j) for j in psi_features] \
@@ -275,6 +275,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                 temp_hist= feat_trans.history_semi_continuous(temp_hist,global_policy_params)
                 context,steps,probs,actions= feat_trans.get_form_TS(temp_hist)
                 temp_data = feat_trans.get_phi_from_history_lookups(temp_hist)
+                context = temp_data[0]
                 steps = feat_trans.get_RT_o(steps,temp_data[0],global_policy_params.mu_theta,global_policy_params.theta_dim)
                 
                 
@@ -297,6 +298,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                                            )
                 mu_beta = temp[0]
                 Sigma_beta = temp[1]
+                #print(mu_beta.shape)
                 personal_policy_params.update_mus(participant.pid,mu_beta,2)
                 personal_policy_params.update_sigmas(participant.pid,Sigma_beta,2)
                 participant.last_update_day=time
@@ -355,13 +357,13 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     pretreatment = feat_trans.get_pretreatment(steps_last_time_period)
                     z = [1]
                     calc = [1,tod,dow,pretreatment,location]
-                    if 'tod' in global_policy_params.baseline_features:
+                    if 'tod' in global_policy_params.responsivity_keys:
                         z.append(tod)
-                    if 'dow' in global_policy_params.baseline_features:
+                    if 'dow' in global_policy_params.responsivity_keys:
                         z.append(dow)
-                    if 'pretreatment' in global_policy_params.baseline_features:
+                    if 'pretreatment' in global_policy_params.responsivity_keys:
                         z.append(pretreatment)
-                    if 'location' in global_policy_params.baseline_features:
+                    if 'location' in global_policy_params.responsivity_keys:
                         z.append(location)
 
                     if algo_type=='batch':
@@ -453,7 +455,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
             for sim in range(sim_start,sim_end):
                 pop_size=32
                 experiment = study.study(dist_root,pop_size,'_short_unstaggered_24',which_gen=case,sim_number=sim)
-                experiment.update_beta(set(baseline))
+                experiment.update_beta(set(responsivity_keys))
                
                 psi = []
                 if algo_type=='pooling_four':

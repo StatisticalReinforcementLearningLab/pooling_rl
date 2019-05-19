@@ -85,7 +85,10 @@ def txt_effect_update_new(context,steps,probs,actions,o_sigma, mu_1,Sigma_1,mu_2
         f_one = transform_f1_new(context)
         f_two = transform_f2_new(context)
         
-        X_trn = get_X_trn_new(f_one,actions,f_two,probs)
+        #X_trn = get_X_trn_new(f_one,actions,f_two,probs)
+            #print(np.array(X_trn).shape)
+        X_trn = context
+        #print(np.array(X_trn).shape)
         Y_trn = steps
     #get_Y_trn(batch,global_params)
         
@@ -98,7 +101,7 @@ def txt_effect_update_new(context,steps,probs,actions,o_sigma, mu_1,Sigma_1,mu_2
         #print(len(f_two))
         #print(len(temp))
         #print(len(f_two))
-        nm,nS = clip_mean_sigma(temp[0],temp[1],len(f_two[0]))
+        nm,nS = clip_mean_sigma(temp[0],temp[1],len(mu_2))
         
         return [nm,nS]
 
@@ -148,6 +151,7 @@ def txt_effect_update(batch, global_params, mu_1,Sigma_1,mu_2,Sigma_2):
         f_two = transform_f2(xz)
         
         X_trn = get_X_trn(f_one,actions,f_two)
+       
         Y_trn = get_Y_trn(batch,global_params)
         
         
