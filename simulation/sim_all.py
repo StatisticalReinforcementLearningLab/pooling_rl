@@ -179,7 +179,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                     if train_type=='EB' and algo_type=='batch':
                         temp_params = run_gpytorchkernel.run(temp_data[0], temp_data[1],steps,global_policy_params)
                         global_policy_params.noise_term = temp_params['noise']
-                    temp = TS.policy_update_ts_new( context,steps,probs,actions,global_policy_params.noise_term,\
+                    temp = TS.policy_update_ts_new( temp_data[0],steps,probs,actions,global_policy_params.noise_term,\
                                                        global_policy_params.mu1_knot,\
                                                        global_policy_params.sigma1_knot,\
                                                        global_policy_params.mu2_knot,\
