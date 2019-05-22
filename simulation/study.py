@@ -56,9 +56,9 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
-        self.Z_one =0.0
+        self.Z_one =0.1
             #-0.10736186999999998
-        self.Z_two =-0.5
+        self.Z_two =-0.2
             #0.10736186999999998
             #0.5922135199999999
             #1.5265399999999998
@@ -119,7 +119,7 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =0.37
+        self.sigma =0.24
             #.325**.5
             #0.325
             #.325**.5
@@ -136,8 +136,8 @@ class study:
     
     def update_beta(self,features):
         #self.beta =np.array([ 0.05,  0.25,  0.25,  0.25, -0.3 ])
-        
-        self.beta =np.array([ 0.05,   0.25, -0.35,  0.3, 0.3 ])
+        #0.05,  0.3 ,  0.3 , -0.35
+        self.beta =np.array([  0.05,  0.25,  0.25,  0.25, -0.3 ])
         
         potential_features = ['intercept','tod','dow','pretreatment','location']
         new = np.array([self.beta[0]]+[self.beta[i] for i in range(len(self.beta)) if potential_features[i] in features])
@@ -176,7 +176,7 @@ class study:
             
             #print(k)
             #print(self.sim_number)
-            this_beta = [i for i in [ 0.05,  0.25,  -0.35,  0.3, 0.3 ]]
+            this_beta = [i for i in [  0.05,  0.25,  0.25,  0.25, -0.3]]
                 #if Z is not None:
                 #this_beta[-1]=this_beta[-1]+Z
                 #this_beta[2]=this_beta[2]+Z/2

@@ -87,6 +87,8 @@ def txt_effect_update_new(context,steps,probs,actions,o_sigma, mu_1,Sigma_1,mu_2
         
         #X_trn = get_X_trn_new(f_one,actions,f_two,probs)
             #print(np.array(X_trn).shape)
+            #print('old')
+        #print(X_trn[10])
         X_trn = context
         #print(np.array(X_trn).shape)
         Y_trn = steps

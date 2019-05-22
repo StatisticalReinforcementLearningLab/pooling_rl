@@ -184,7 +184,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                                        global_policy_params.sigma1_knot,\
                                                        global_policy_params.mu2_knot,\
                                                        global_policy_params.sigma2_knot)
-
+                                                       
+                                                       #print(temp_data[0][10])
                     mu_beta = temp[0]
                     Sigma_beta = temp[1]
                     #print(mu_beta)
@@ -381,7 +382,7 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         add = action*(feat_trans.get_add_no_action(calc,participant.beta,participant.Z))
                         participant.steps = steps+add
                         optimal_reward = get_optimal_reward(participant.beta,calc,participant.Z)
-                        optimal_action = int(optimal_reward>=0)
+                        optimal_action = int(optimal_reward>0)
                     else:
                         steps = feat_trans.get_steps_no_action(participant.gid,tod,dow,location,\
                         pretreatment,weather,seed = participant.rando_gen)
@@ -442,7 +443,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
         #'dow','pretreatment',
         #'tod','dow',
         baseline = ['tod','dow','pretreatment','location']
-        responsivity_keys = ['dow','pretreatment','location']
+        responsivity_keys = ['pretreatment','location']
         
         
         for u in [update_time]:
@@ -454,7 +455,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
             
             for sim in range(sim_start,sim_end):
                 pop_size=32
-                experiment = study.study(dist_root,pop_size,'_short_unstaggered_24',which_gen=case,sim_number=sim)
+                experiment = study.study(dist_root,pop_size,'_short_unstaggered',which_gen=case,sim_number=sim)
                 experiment.update_beta(set(responsivity_keys))
                
                 psi = []
@@ -470,7 +471,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_515_longnew.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_521_safety6.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
         #filename = '{}/results/{}/population_size_{}_update_days_{}_{}_static_sim_regrets_actions_l_prelocb.pkl'.format('../../Downloads/pooling_results/{}/'.format(algo_type),case,pop_size,u,'short')
