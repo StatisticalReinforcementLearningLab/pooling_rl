@@ -56,9 +56,9 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
-        self.Z_one =0.1
+        self.Z_one =0.0
             #-0.10736186999999998
-        self.Z_two =-0.2
+        self.Z_two =-0.5
             #0.10736186999999998
             #0.5922135199999999
             #1.5265399999999998
@@ -119,7 +119,7 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =0.25
+        self.sigma =0.38
             #.325**.5
             #0.325
             #.325**.5
