@@ -119,7 +119,7 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =0.35
+        self.sigma =0.38
             #.325**.5
             #0.325
             #.325**.5
