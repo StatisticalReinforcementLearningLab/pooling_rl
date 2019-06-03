@@ -19,7 +19,7 @@ class study:
             #'../../murphy_lab/lab/pooling/distributions/'
         self.study_seed = sim_number+30000000
         self.sim_number = sim_number
-        self.algo_rando_gen = np.random.RandomState(seed=8000000)
+        self.algo_rando_gen = np.random.RandomState(seed=sim_number+8000000)
         self.weather_gen = np.random.RandomState(seed=9000000)
         
         #self.rando_gen = np.random.RandomState(seed=sim_number+2000)
@@ -56,9 +56,9 @@ class study:
         self.update_minute = 30
         self.last_update_day = study_days[0]
         self.study_length=study_length
-        self.Z_one =0.1
+        self.Z_one =0.0
             #-0.10736186999999998
-        self.Z_two =-0.2
+        self.Z_two =-0.5
             #0.10736186999999998
             #0.5922135199999999
             #1.5265399999999998
@@ -119,7 +119,7 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma =.25
+        self.sigma =.38
             #.325**.5
             #0.325
             #.325**.5
