@@ -66,6 +66,9 @@ class MyKernel(Kernel):
         
         #self.register_parameter(name="u2", parameter=torch.nn.Parameter(init_u2*torch.tensor(1.0)))
         self.register_parameter(name="raw_u2", parameter=torch.nn.Parameter(self.init_u2*torch.tensor(1.0)))
+        ##set like that
+        
+        
         t =gparams.sigma_u[0][0]**.5 * gparams.sigma_u[1][1]**.5
         self.r = (gparams.sigma_u[0][1]+t)/t
         #r = gparams.rho_term
@@ -87,14 +90,16 @@ class MyKernel(Kernel):
     #self.register_prior("u1_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=3,sigma=.5), "u1")
     #self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=3,sigma=.5), "u2")
     #self.register_prior("rho_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=2,sigma=.5), "rho")
-    
+        self.u2=self.init_u2;
+        self.u1=self.init_u1;
+        self.rho=self.r;
     
     
     @property
     def u2(self):
         if self.raw_u2<0.0001:
             return self.init_u2+.1
-        return self.raw_u2
+        #return self.raw_u2
         return self.raw_u2_constraint.transform(self.raw_u2)
     
     @u2.setter
@@ -111,6 +116,7 @@ class MyKernel(Kernel):
         #print('called function one')
         #print(self.raw_u1)
         #print(self.raw_u1_constraint.transform(self.raw_u1))
+        return self.raw_u1_constraint.transform(self.raw_u1)
         if self.raw_u1<0.0001:
             return self.init_u1+.1
         return self.raw_u1
@@ -136,7 +142,8 @@ class MyKernel(Kernel):
     def rho(self):
         if self.raw_rho<0.0001:
             return self.r+.1
-        return self.raw_rho
+    #self._set_rho(value)
+        #return self.raw_rho
         return self.raw_rho_constraint.transform(self.raw_rho)
     
     @rho.setter
