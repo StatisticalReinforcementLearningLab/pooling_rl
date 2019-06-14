@@ -97,9 +97,7 @@ class MyKernel(Kernel):
     
     @property
     def u2(self):
-        if self.raw_u2<0.0001:
-            return self.init_u2+.1
-        #return self.raw_u2
+        
         return self.raw_u2_constraint.transform(self.raw_u2)
     
     @u2.setter
@@ -109,41 +107,29 @@ class MyKernel(Kernel):
     def _set_u2(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u2)
-        self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
-
+    self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
+    
     @property
     def u1(self):
-        #print('called function one')
-        #print(self.raw_u1)
-        #print(self.raw_u1_constraint.transform(self.raw_u1))
         return self.raw_u1_constraint.transform(self.raw_u1)
-        if self.raw_u1<0.0001:
-            return self.init_u1+.1
-        return self.raw_u1
-        
-        return self.raw_u1_constraint.transform(self.raw_u1)
+    
+    
     
     @u1.setter
     def u1(self, value):
-        print('called function two')
-        print(value)
+        
         self._set_u1(value)
     
     def _set_u1(self, value):
-        print('called function three')
-        print(value)
+        
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
-            #self.raw_u1_constraint.inverse_transform(value)
-        self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
-        print(self.raw_u1)
-
+    self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
+    
+    
     @property
     def rho(self):
-        if self.raw_rho<0.0001:
-            return self.r+.1
-    #self._set_rho(value)
-        #return self.raw_rho
+        
         return self.raw_rho_constraint.transform(self.raw_rho)
     
     @rho.setter
@@ -153,9 +139,9 @@ class MyKernel(Kernel):
     def _set_rho(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho)
-        self.initialize(raw_rho=self.raw_rho_constraint.inverse_transform(value))
-
-
+    self.initialize(raw_rho=self.raw_rho_constraint.inverse_transform(value))
+    
+    
     
     
     
