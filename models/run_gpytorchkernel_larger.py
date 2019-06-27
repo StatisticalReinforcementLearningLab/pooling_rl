@@ -476,8 +476,9 @@ def run(X,users,y,global_params):
     
     
 
-    #print('cov')
-    #print(cov)
+    print('cov')
+    print(cov)
+    print(sigma_u)
     return {'uparams':sigma_u,'cov':cov,'noise':noise,'like':0}
 
 
