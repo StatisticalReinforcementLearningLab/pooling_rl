@@ -107,12 +107,12 @@ class MyKernel(Kernel):
         self.register_constraint("raw_u3",constraint= constraints.Positive())
         self.register_constraint("raw_u4",constraint= constraints.Positive())
 
-        self.register_constraint("raw_rho_12",constraint= constraints.Interval(0,2))
-        self.register_constraint("raw_rho_13",constraint= constraints.Interval(0,2))
-        self.register_constraint("raw_rho_14",constraint= constraints.Interval(0,2))
-        self.register_constraint("raw_rho_23",constraint= constraints.Interval(0,2))
-        self.register_constraint("raw_rho_24",constraint= constraints.Interval(0,2))
-        self.register_constraint("raw_rho_34",constraint= constraints.Interval(0,2))
+        self.register_constraint("raw_rho_12",constraint= constraints.Interval(0.0,2.0))
+        self.register_constraint("raw_rho_13",constraint= constraints.Interval(0.0,2.0))
+        self.register_constraint("raw_rho_14",constraint= constraints.Interval(0.0,2.0))
+        self.register_constraint("raw_rho_23",constraint= constraints.Interval(0.0,2.0))
+        self.register_constraint("raw_rho_24",constraint= constraints.Interval(0.0,2.0))
+        self.register_constraint("raw_rho_34",constraint= constraints.Interval(0.0,2.0))
         print('got here')
     
     
