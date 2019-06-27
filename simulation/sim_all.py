@@ -219,17 +219,19 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                                             'like':-100333,'sigma_u':global_policy_params.sigma_u}
                             else:
                                 try:
-                                
+                                    print('calling four')
                                 #print(baseline_features)
                                 #temp_params = run_gpy.run(temp_data[0], temp_data[1],np.array([[i] for i in steps]),global_policy_params)
                                 #print('steps {}'.format(steps.std()**2))
                                     temp_params = run_gpytorchkernel_larger.run(temp_data[0], temp_data[1],steps,global_policy_params)
+                                    
                                     print(temp_params)
                                 #print(temp_data[0].shape)
                                 #print('temp params one {}'.format(temp_params))
                                     if temp_params['cov'] is not None:
                                         global_policy_params.update_params_more(temp_params)
                                 except Exception as e:
+                                    print('in error')
                                     print(e)
                                     pass
                         ### don't update tuning parameters
