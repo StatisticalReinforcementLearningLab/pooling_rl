@@ -324,7 +324,9 @@ class MyKernel(Kernel):
     def _set_rho_12(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_12)
+            print('ok')
         self.initialize(raw_rho_12=self.raw_rho_12_constraint.inverse_transform(value))
+        print('ok')
 
     @property
     def rho_13(self):
