@@ -117,19 +117,24 @@ class MyKernel(Kernel):
     
     
         self.u1 = gparams.u1
-        
+        print('initialized')
         #init_u2 = gparams.sigma_u[1][1]
         self.u2 = gparams.u2
+        print('initialized')
         self.u3 = gparams.u3
+        print('initialized')
         self.u4 = gparams.u4
-        
+        print('initialized')
         self.rho_12 = gparams.r12
+        print('initialized')
         self.rho_13 = gparams.r13
+        print('initialized')
         self.rho_14 = gparams.r14
-        
+        print('initialized')
         self.rho_23 = gparams.r23
+        print('initialized')
         self.rho_24 = gparams.r24
-        
+        print('initialized')
         self.rho_34 = gparams.r34
         print('initialized')
     
