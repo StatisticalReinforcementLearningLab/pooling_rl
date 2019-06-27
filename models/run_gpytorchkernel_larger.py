@@ -428,9 +428,9 @@ def run(X,users,y,global_params):
     y = torch.from_numpy(y).float()
     #print(X.size())
     first_mat = torch.from_numpy(first_mat).float()
-    print('probs')
+  
     user_mat = torch.from_numpy(user_mat).float()
-    print('probs')
+  
     model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
     
     model.train()
@@ -458,6 +458,9 @@ def run(X,users,y,global_params):
                     optimizer.step()
                     #sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     sigma_temp = [model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.u3.item(),model.covar_module.u4.item(),model.covar_module.rho_12.item(),model.covar_module.rho_13.item(),model.covar_module.rho_14.item(),model.covar_module.rho_23.item(),model.covar_module.rho_24.item(),model.covar_module.rho_34.item()]
+                    print(i)
+                    print('opt')
+                    print(sigma_temp)
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
                     covtemp = f_covar.detach().numpy()
