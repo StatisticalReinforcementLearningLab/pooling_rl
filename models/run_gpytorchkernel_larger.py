@@ -131,7 +131,7 @@ class MyKernel(Kernel):
         self.rho_24 = gparams.r24
         
         self.rho_34 = gparams.r34
-    
+        print('initialized')
     
     #self.register_prior("u1_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u1")
     #self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u2")
@@ -421,8 +421,9 @@ def run(X,users,y,global_params):
     #print(first_mat.shape)
     
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
+    print('noise one')
     likelihood.noise_covar.initialize(noise=(global_params.o_noise_term)*torch.ones(1))
-    
+    print('noise two')
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
     #print(X.size())
