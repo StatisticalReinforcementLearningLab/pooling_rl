@@ -110,6 +110,26 @@ class MyKernel(Kernel):
         self.register_constraint("raw_rho_23",constraint= constraints.Interval(0,2))
         self.register_constraint("raw_rho_24",constraint= constraints.Interval(0,2))
         self.register_constraint("raw_rho_34",constraint= constraints.Interval(0,2))
+    
+    
+    
+        self.u1 = gparams.u1
+        
+        #init_u2 = gparams.sigma_u[1][1]
+        self.u2 = gparams.u2
+        self.u3 = gparams.u3
+        self.u4 = gparams.u4
+        
+        self.rho_12 = gparams.r12
+        self.rho_13 = gparams.r13
+        self.rho_14 = gparams.r14
+        
+        self.rho_23 = gparams.r23
+        self.rho_24 = gparams.r24
+        
+        self.rho_34 = gparams.r34
+    
+    
     #self.register_prior("u1_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u1")
     #self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u2")
     #self.register_prior("rho_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=2,sigma=.5), "rho")
@@ -230,11 +250,8 @@ class MyKernel(Kernel):
 
     @property
     def u2(self):
-        if self.raw_u2<0.0001:
-            return self.init_u2+.001
-        return self.raw_u2
-            #return self.raw_u2_constraint.transform(self.raw_u2)
-
+        return self.raw_u2_constraint.transform(self.raw_u2)
+    
     @u2.setter
     def u2(self, value):
         self._set_u2(value)
@@ -242,15 +259,12 @@ class MyKernel(Kernel):
     def _set_u2(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u2)
-        self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
-    
+            self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
+
     @property
     def u1(self):
-        if self.raw_u1<0.0001:
-            return self.init_u1+.001
-        return self.raw_u1
-        
-
+        return self.raw_u1_constraint.transform(self.raw_u1)
+    
     @u1.setter
     def u1(self, value):
         self._set_u1(value)
@@ -258,15 +272,11 @@ class MyKernel(Kernel):
     def _set_u1(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
-        #self.raw_u1_constraint.inverse_transform(value)
-        self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
+            self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
 
     @property
     def u3(self):
-        if self.raw_u3<0.0001:
-            return self.init_u3+.001
-        return self.raw_u3
-    
+        return self.raw_u3_constraint.transform(self.raw_u3)
     
     @u3.setter
     def u3(self, value):
@@ -275,15 +285,11 @@ class MyKernel(Kernel):
     def _set_u3(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u3)
-        #self.raw_u1_constraint.inverse_transform(value)
-        self.initialize(raw_u3=self.raw_u3_constraint.inverse_transform(value))
-   
+            self.initialize(raw_u3=self.raw_u3_constraint.inverse_transform(value))
+
     @property
     def u4(self):
-        if self.raw_u4<0.0001:
-            return self.init_u4+.001
-        return self.raw_u4
-    
+        return self.raw_u4_constraint.transform(self.raw_u4)
     
     @u4.setter
     def u4(self, value):
@@ -292,16 +298,14 @@ class MyKernel(Kernel):
     def _set_u4(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u4)
-        #self.raw_u1_constraint.inverse_transform(value)
-        self.initialize(raw_u4=self.raw_u4_constraint.inverse_transform(value))
-
+            self.initialize(raw_u4=self.raw_u4_constraint.inverse_transform(value))
+    
+    
     
     @property
     def rho_12(self):
-        if self.raw_rho_12<0.0001:
-            return self.r12+.001
-        return self.raw_rho_12
-
+        return self.raw_rho_12_constraint.transform(self.raw_rho_12)
+    
     @rho_12.setter
     def rho_12(self, value):
         self._set_rho_12(value)
@@ -309,13 +313,11 @@ class MyKernel(Kernel):
     def _set_rho_12(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_12)
-        self.initialize(raw_rho_12=self.raw_rho_12_constraint.inverse_transform(value))
+            self.initialize(raw_rho_12=self.raw_rho_12_constraint.inverse_transform(value))
 
     @property
     def rho_13(self):
-        if self.raw_rho_13<0.0001:
-            return self.r13+.001
-        return self.raw_rho_13
+        return self.raw_rho_13_constraint.transform(self.raw_rho_13)
     
     @rho_13.setter
     def rho_13(self, value):
@@ -324,13 +326,11 @@ class MyKernel(Kernel):
     def _set_rho_13(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_13)
-        self.initialize(raw_rho_13=self.raw_rho_13_constraint.inverse_transform(value))
+            self.initialize(raw_rho_13=self.raw_rho_13_constraint.inverse_transform(value))
 
     @property
     def rho_14(self):
-        if self.raw_rho_14<0.0001:
-            return self.r14+.001
-        return self.raw_rho_14
+        return self.raw_rho_14_constraint.transform(self.raw_rho_14)
     
     @rho_14.setter
     def rho_14(self, value):
@@ -339,13 +339,11 @@ class MyKernel(Kernel):
     def _set_rho_14(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_14)
-        self.initialize(raw_rho_14=self.raw_rho_14_constraint.inverse_transform(value))
+            self.initialize(raw_rho_14=self.raw_rho_14_constraint.inverse_transform(value))
 
     @property
     def rho_23(self):
-        if self.raw_rho_23<0.0001:
-            return self.r23+.001
-        return self.raw_rho_23
+        return self.raw_rho_23_constraint.transform(self.raw_rho_23)
     
     @rho_23.setter
     def rho_23(self, value):
@@ -354,13 +352,11 @@ class MyKernel(Kernel):
     def _set_rho_23(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_23)
-        self.initialize(raw_rho_23=self.raw_rho_23_constraint.inverse_transform(value))
-    
+            self.initialize(raw_rho_23=self.raw_rho_23_constraint.inverse_transform(value))
+
     @property
     def rho_24(self):
-        if self.raw_rho_24<0.0001:
-            return self.r24+.001
-        return self.raw_rho_24
+        return self.raw_rho_24_constraint.transform(self.raw_rho_24)
     
     @rho_24.setter
     def rho_24(self, value):
@@ -369,13 +365,11 @@ class MyKernel(Kernel):
     def _set_rho_24(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_24)
-        self.initialize(raw_rho_24=self.raw_rho_24_constraint.inverse_transform(value))
-    
+            self.initialize(raw_rho_24=self.raw_rho_24_constraint.inverse_transform(value))
+
     @property
     def rho_34(self):
-        if self.raw_rho_34<0.0001:
-            return self.r34+.001
-        return self.raw_rho_34
+        return self.raw_rho_34_constraint.transform(self.raw_rho_34)
     
     @rho_34.setter
     def rho_34(self, value):
@@ -384,7 +378,7 @@ class MyKernel(Kernel):
     def _set_rho_34(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_34)
-        self.initialize(raw_rho_34=self.raw_rho_34_constraint.inverse_transform(value))
+            self.initialize(raw_rho_34=self.raw_rho_34_constraint.inverse_transform(value))
 
 
 
@@ -442,11 +436,11 @@ def run(X,users,y,global_params):
     
     optimizer = torch.optim.Adam([
                                   {'params': model.parameters()},  # Includes GaussianLikelihood parameters
-                                  ], lr=0.05)
+                                  ], lr=0.1)
                                   
     mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
         #def train(num_iter):
-    num_iter=10
+    num_iter=50
     with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
