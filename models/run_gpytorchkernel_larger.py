@@ -123,8 +123,10 @@ class MyKernel(Kernel):
         print('initialized')
         self.u3 = gparams.u3
         print('initialized')
+        
         self.u4 = gparams.u4
         print('initialized')
+        print(gparams.r12)
         self.rho_12 = gparams.r12
         print('initialized')
         self.rho_13 = gparams.r13
