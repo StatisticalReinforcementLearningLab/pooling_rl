@@ -129,6 +129,7 @@ class MyKernel(Kernel):
         print(gparams.r12)
         self.rho_12 = gparams.r12
         print('initialized')
+        print(gparams.r13)
         self.rho_13 = gparams.r13
         print('initialized')
         self.rho_14 = gparams.r14
