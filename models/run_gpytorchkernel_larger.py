@@ -428,8 +428,9 @@ def run(X,users,y,global_params):
     y = torch.from_numpy(y).float()
     #print(X.size())
     first_mat = torch.from_numpy(first_mat).float()
+    print('probs')
     user_mat = torch.from_numpy(user_mat).float()
-    
+    print('probs')
     model = GPRegressionModel(X, y, likelihood,user_mat,first_mat,global_params)
     
     model.train()
