@@ -58,7 +58,7 @@ class MyKernel(Kernel):
         
         self.r12 = gparams.r12*torch.tensor(1.0)
         self.r13 = gparams.r13*torch.tensor(1.0)
-        self.r14 = gparams.init_r14*torch.tensor(1.0)
+        self.r14 = gparams.r14*torch.tensor(1.0)
         
         self.r23 = gparams.r23*torch.tensor(1.0)
         self.r24 = gparams.r24*torch.tensor(1.0)
