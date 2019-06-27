@@ -113,33 +113,33 @@ class MyKernel(Kernel):
         self.register_constraint("raw_rho_23",constraint= constraints.Interval(0.0,2.0))
         self.register_constraint("raw_rho_24",constraint= constraints.Interval(0.0,2.0))
         self.register_constraint("raw_rho_34",constraint= constraints.Interval(0.0,2.0))
-        print('got here')
+        #print('got here')
     
     
         self.u1 = gparams.u1
-        print('initialized')
+        #print('initialized')
         #init_u2 = gparams.sigma_u[1][1]
         self.u2 = gparams.u2
-        print('initialized')
+        #print('initialized')
         self.u3 = gparams.u3
-        print('initialized')
+   
         
         self.u4 = gparams.u4
-        print('initialized')
-        print(gparams.r12)
+        
+     
         self.rho_12 = gparams.r12
-        print('initialized')
-        print(gparams.r13)
+     
+     
         self.rho_13 = gparams.r13
-        print('initialized')
+ 
         self.rho_14 = gparams.r14
-        print('initialized')
+       
         self.rho_23 = gparams.r23
-        print('initialized')
+
         self.rho_24 = gparams.r24
-        print('initialized')
+        
         self.rho_34 = gparams.r34
-        print('initialized')
+    
     
     #self.register_prior("u1_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u1")
     #self.register_prior("u2_prior", gpytorch.priors.SmoothedBoxPrior(a=0,b=10,sigma=1), "u2")
@@ -324,9 +324,9 @@ class MyKernel(Kernel):
     def _set_rho_12(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_12)
-            print('ok')
+        
         self.initialize(raw_rho_12=self.raw_rho_12_constraint.inverse_transform(value))
-        print('ok')
+       
 
     @property
     def rho_13(self):
@@ -405,9 +405,9 @@ class GPRegressionModel(gpytorch.models.ExactGP):
         
         self.mean_module = gpytorch.means.ZeroMean()
         #self.mean_module.constant.requires_grad=False
-        print('no error')
+        
         self.covar_module =  MyKernel(len(gparams.baseline_indices),user_mat,first_mat,gparams)
-        print('error')
+    
     def forward(self, x):
         mean_x = self.mean_module(x)
         covar_x = self.covar_module(x)
@@ -432,9 +432,9 @@ def run(X,users,y,global_params):
     #print(first_mat.shape)
     
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    print('noise one')
+    
     likelihood.noise_covar.initialize(noise=(global_params.o_noise_term)*torch.ones(1))
-    print('noise two')
+    
     X = torch.from_numpy(np.array(X)).float()
     y = torch.from_numpy(y).float()
     #print(X.size())
@@ -471,9 +471,7 @@ def run(X,users,y,global_params):
                     optimizer.step()
                     #sigma_temp = get_sigma_u(model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.rho.item())
                     sigma_temp = [model.covar_module.u1.item(),model.covar_module.u2.item(),model.covar_module.u3.item(),model.covar_module.u4.item(),model.covar_module.rho_12.item(),model.covar_module.rho_13.item(),model.covar_module.rho_14.item(),model.covar_module.rho_23.item(),model.covar_module.rho_24.item(),model.covar_module.rho_34.item()]
-                    print(i)
-                    print('opt')
-                    print(sigma_temp)
+                   
                     f_preds = model(X)
                     f_covar = f_preds.covariance_matrix
                     covtemp = f_covar.detach().numpy()
@@ -493,9 +491,9 @@ def run(X,users,y,global_params):
     
     
 
-    print('cov')
-    print(cov)
-    print(sigma_u)
+#print('cov')
+#print(cov)
+#print(sigma_u)
     return {'uparams':sigma_u,'cov':cov,'noise':noise,'like':0}
 
 
