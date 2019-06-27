@@ -184,9 +184,10 @@ class study:
                 #this_beta[2]=this_beta[2]+Z/2
                 #this_beta[3]=this_beta[3]+Z/2
                         
-                    
+            
             person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg,beta=np.array(this_beta))
             #print(person.rando_gen.uniform())
+            print(person.beta)
             self.population[k]=person
 
 
