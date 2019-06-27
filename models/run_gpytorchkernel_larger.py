@@ -270,7 +270,7 @@ class MyKernel(Kernel):
     def _set_u2(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u2)
-            self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
+        self.initialize(raw_u2=self.raw_u2_constraint.inverse_transform(value))
 
     @property
     def u1(self):
@@ -283,7 +283,7 @@ class MyKernel(Kernel):
     def _set_u1(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u1)
-            self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
+        self.initialize(raw_u1=self.raw_u1_constraint.inverse_transform(value))
 
     @property
     def u3(self):
@@ -296,7 +296,7 @@ class MyKernel(Kernel):
     def _set_u3(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u3)
-            self.initialize(raw_u3=self.raw_u3_constraint.inverse_transform(value))
+        self.initialize(raw_u3=self.raw_u3_constraint.inverse_transform(value))
 
     @property
     def u4(self):
@@ -309,7 +309,7 @@ class MyKernel(Kernel):
     def _set_u4(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_u4)
-            self.initialize(raw_u4=self.raw_u4_constraint.inverse_transform(value))
+        self.initialize(raw_u4=self.raw_u4_constraint.inverse_transform(value))
     
     
     
@@ -324,7 +324,7 @@ class MyKernel(Kernel):
     def _set_rho_12(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_12)
-            self.initialize(raw_rho_12=self.raw_rho_12_constraint.inverse_transform(value))
+        self.initialize(raw_rho_12=self.raw_rho_12_constraint.inverse_transform(value))
 
     @property
     def rho_13(self):
@@ -337,7 +337,7 @@ class MyKernel(Kernel):
     def _set_rho_13(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_13)
-            self.initialize(raw_rho_13=self.raw_rho_13_constraint.inverse_transform(value))
+        self.initialize(raw_rho_13=self.raw_rho_13_constraint.inverse_transform(value))
 
     @property
     def rho_14(self):
@@ -350,7 +350,7 @@ class MyKernel(Kernel):
     def _set_rho_14(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_14)
-            self.initialize(raw_rho_14=self.raw_rho_14_constraint.inverse_transform(value))
+        self.initialize(raw_rho_14=self.raw_rho_14_constraint.inverse_transform(value))
 
     @property
     def rho_23(self):
@@ -363,7 +363,7 @@ class MyKernel(Kernel):
     def _set_rho_23(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_23)
-            self.initialize(raw_rho_23=self.raw_rho_23_constraint.inverse_transform(value))
+        self.initialize(raw_rho_23=self.raw_rho_23_constraint.inverse_transform(value))
 
     @property
     def rho_24(self):
@@ -376,7 +376,7 @@ class MyKernel(Kernel):
     def _set_rho_24(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_24)
-            self.initialize(raw_rho_24=self.raw_rho_24_constraint.inverse_transform(value))
+        self.initialize(raw_rho_24=self.raw_rho_24_constraint.inverse_transform(value))
 
     @property
     def rho_34(self):
@@ -389,7 +389,7 @@ class MyKernel(Kernel):
     def _set_rho_34(self, value):
         if not torch.is_tensor(value):
             value = torch.as_tensor(value).to(self.raw_rho_34)
-            self.initialize(raw_rho_34=self.raw_rho_34_constraint.inverse_transform(value))
+        self.initialize(raw_rho_34=self.raw_rho_34_constraint.inverse_transform(value))
 
 
 
