@@ -395,8 +395,9 @@ class GPRegressionModel(gpytorch.models.ExactGP):
         
         self.mean_module = gpytorch.means.ZeroMean()
         #self.mean_module.constant.requires_grad=False
+        print('no error')
         self.covar_module =  MyKernel(len(gparams.baseline_indices),user_mat,first_mat,gparams)
-    
+        print('error')
     def forward(self, x):
         mean_x = self.mean_module(x)
         covar_x = self.covar_module(x)
