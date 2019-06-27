@@ -460,8 +460,8 @@ def run(X,users,y,global_params):
     with gpytorch.settings.use_toeplitz(False):
             for i in range(num_iter):
                 try:
-                    print('training')
-                    print(i)
+                    #print('training')
+                    #print(i)
                     optimizer.zero_grad()
                     output = model(X)
                 #print(type(output))
