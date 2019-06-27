@@ -49,6 +49,9 @@ class MyKernel(Kernel):
         #print(self.psi_dim_two)
         
         #init_u1 = gparams.sigma_u[0][0]
+        
+        print(gparams.u1)
+        print(gparams.u2)
         self.init_u1 = gparams.u1*torch.tensor(1.0)
         
         #init_u2 = gparams.sigma_u[1][1]
