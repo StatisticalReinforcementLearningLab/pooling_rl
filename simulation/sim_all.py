@@ -375,6 +375,8 @@ def new_kind_of_simulation(experiment,policy=None,personal_policy_params=None,gl
                         prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
                     elif algo_type=='pooling':
                                 prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
+                    elif algo_type=='pooling_four':
+                                prob = TS.prob_cal_ts(z,0,personal_policy_params.mus2[participant.pid],personal_policy_params.sigmas2[participant.pid],global_policy_params,seed=experiment.algo_rando_gen)
                                     
                     action = int(experiment.algo_rando_gen.uniform() < prob)
                     if availability:
@@ -469,7 +471,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
                 
             
             
-                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_four_effects_625.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
+                filename = '{}{}/population_size_{}_update_days_{}_{}_static_sim_{}_four_effects_7_2.pkl'.format('{}{}/'.format(write_directory,algo_type),case,pop_size,u,'short',sim)
                 with open(filename,'wb') as f:
                     pickle.dump({'gids':gids,'regrets':rewards,'actions':actions,'history':to_save,'pprams':personal,'gparams':glob},f)
 
