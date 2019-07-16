@@ -128,7 +128,7 @@ class study:
             #0.12244165000000001
             #0.6304924999999999
     
-        self.init_population(which_gen)
+        self.init_population(which_gen,True)
             
     def get_gid(self):
         #4.0/36
@@ -177,18 +177,28 @@ class study:
             
             #print(k)
             #print(self.sim_number)
-            this_beta = [i for i in [  0.05,  0.25,  0.25,  0.25, -0.3]]
-            if gid==1:
+            ##this_beta = [i for i in [  0.05,  0.25,  0.25,  0.25, -0.3]]
+            ##if gid==1:
             
-                this_beta[-1]=-1*this_beta[-1]
+                ##this_beta[-1]=-1*this_beta[-1]
                 #this_beta[2]=this_beta[2]+Z/2
                 #this_beta[3]=this_beta[3]+Z/2
-                        
+            this_beta = [i for i in [  0.05,  0.25,  0.25,  -0.3, 0.25]]
+            if location:
+                if which_gen=='case_two':
+                    offset = .3
+                    if gid==2:
+                        offset = offset*-1
+                    this_beta[-1]=this_beta[-1]+offset
+                if which_gen=='case_three':
+                                                    
+                    l=rg.normal(loc=0.07,scale=0.323)
+                    this_beta[-1]=this_beta[-1]+l
             
             person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg,beta=np.array(this_beta))
             #print(person.rando_gen.uniform())
-            print(person.beta)
-            print(Z)
+#print(person.beta)
+#print(Z)
             self.population[k]=person
 
 
