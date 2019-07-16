@@ -148,7 +148,7 @@ class study:
     
     
     
-    def init_population(self,which_gen):
+    def init_population(self,which_gen,location):
          
         for k,v in self.person_to_time.items():
             
