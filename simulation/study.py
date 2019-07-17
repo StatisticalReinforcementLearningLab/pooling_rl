@@ -128,7 +128,7 @@ class study:
             #0.12244165000000001
             #0.6304924999999999
     
-        self.init_population(which_gen,True)
+        self.init_population(which_gen,False)
             
     def get_gid(self):
         #4.0/36
