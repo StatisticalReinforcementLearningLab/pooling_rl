@@ -58,7 +58,7 @@ class study:
         self.study_length=study_length
         self.Z_one =0.0
             #-0.10736186999999998
-        self.Z_two =-0.5
+        self.Z_two =-0.35
             #0.10736186999999998
             #0.5922135199999999
             #1.5265399999999998
@@ -119,7 +119,8 @@ class study:
         #self.beta =np.array([-.75,.27,.14,-.04])
         #old
             #np.array([-0.88722  ,1.99952,0.23429])
-        self.sigma = .45
+        self.sigma =.33
+            #.45
             #.38
             #.325**.5
             #0.325
@@ -128,7 +129,7 @@ class study:
             #0.12244165000000001
             #0.6304924999999999
     
-        self.init_population(which_gen,False)
+        self.init_population(which_gen,True)
             
     def get_gid(self):
         #4.0/36
