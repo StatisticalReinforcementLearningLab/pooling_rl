@@ -456,7 +456,7 @@ def run_many(algo_type,cases,sim_start,sim_end,update_time,dist_root,write_direc
             for sim in range(sim_start,sim_end):
                 pop_size=32
                 experiment = study.study(dist_root,pop_size,'_short_unstaggered',which_gen=case,sim_number=sim)
-                experiment.update_beta(set(responsivity_keys))
+                #experiment.update_beta(set(responsivity_keys))
                
                 psi = []
                 if algo_type=='pooling_four':

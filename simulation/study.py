@@ -139,7 +139,7 @@ class study:
     def update_beta(self,features):
         #self.beta =np.array([ 0.05,  0.25,  0.25,  0.25, -0.3 ])
         #0.05,  0.3 ,  0.3 , -0.35
-        self.beta =np.array([  0.05,  0.25,  0.25,  0.25, -0.3 ])
+        self.beta =np.array([   0.05,  0.25,  0.25,  -0.3, 0.25])
         
         potential_features = ['intercept','tod','dow','pretreatment','location']
         new = np.array([self.beta[0]]+[self.beta[i] for i in range(len(self.beta)) if potential_features[i] in features])
