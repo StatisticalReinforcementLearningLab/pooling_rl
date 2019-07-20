@@ -193,7 +193,7 @@ class study:
                     this_beta[-1]=this_beta[-1]+offset
                 if which_gen=='case_three':
                                                     
-                    l=rg.normal(loc=0.07,scale=0.323)
+                    l=rg.normal(loc=0.0,scale=0.23)
                     this_beta[-1]=this_beta[-1]+l
             
             person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg,beta=np.array(this_beta))
