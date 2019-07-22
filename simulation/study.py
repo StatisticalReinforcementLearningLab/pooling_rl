@@ -187,13 +187,13 @@ class study:
             this_beta = [i for i in [  0.05,  0.25,  0.25,  -0.3, 0.25]]
             if location:
                 if which_gen=='case_two':
-                    offset = .3
+                    offset = .25
                     if gid==2:
                         offset = offset*-1
                     this_beta[-1]=this_beta[-1]+offset
                 if which_gen=='case_three':
                                                     
-                    l=rg.normal(loc=0.0,scale=0.23)
+                    l=rg.normal(loc=-0.3,scale=0.25)
                     this_beta[-1]=this_beta[-1]+l
             
             person = participant.participant(pid=k,gid=gid,times=v,decision_times = self.person_to_decision_times[k],Z=Z,rg=rg,beta=np.array(this_beta))
